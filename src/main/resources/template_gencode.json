@@ -1,0 +1,8 @@
+{
+  "className": "MedicalHealthcareRegimen",
+  "listMethod": [{
+    "type": "get",
+    "name": "getPatientRelatives",
+    "sql": "select * from MEDICAL_HEALTHCARE_REGIMENS"
+  }]
+}

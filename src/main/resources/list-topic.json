@@ -1,0 +1,29 @@
+{
+  "configInfor": [
+    {
+      "topicName": "toppic.save.medical_to_healthrecord",
+      "configThreadFileName": "configTopics/consummer",
+      "modelConfigFileName": "modelConfigs/consummer_model_config"
+    },
+    {
+      "topicName": "toppic.save.insurance_medical_to_healthrecord",
+      "configThreadFileName": "configTopics/consummer",
+      "modelConfigFileName": "modelConfigs/consummer_model_config"
+    },
+    {
+      "topicName": "toppic.save_patient_callback_health_record",
+      "configThreadFileName": "configTopics/consummer",
+      "modelConfigFileName": "modelConfigs/consummer_model_config"
+    },
+    {
+      "topicName": "toppic.save_patient_prehistoric_callback_health_record",
+      "configThreadFileName": "configTopics/consummer",
+      "modelConfigFileName": "modelConfigs/consummer_model_config"
+    },
+    {
+      "topicName": "toppic.save.insurance_bhyt_medical_to_healthrecord",
+      "configThreadFileName": "configTopics/consummer",
+      "modelConfigFileName": "modelConfigs/consummer_model_config"
+    }
+  ]
+}
