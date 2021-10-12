@@ -24,6 +24,12 @@
             <url>https://oss.sonatype.org/content/repositories/ksoap2-android-releases/</url>
         </repository>
 
+        <repository>
+            <id>ProjectRepo</id>
+            <name>ProjectRepo</name>
+            <url>file://${project.basedir}/libs</url>
+        </repository>
+
        <!-- <repository>
             <id>maven-releases</id>
             <name>Internal Releases</name>
@@ -222,11 +228,9 @@
             <artifactId>jedis</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.lib</groupId>
-            <artifactId>lib</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/Libs/com/viettel/telecare/libs/telecarelibs/1.0-RELEASE/telecarelibs-1.0-RELEASE.jar</systemPath>
+            <groupId>com.viettel.telecare.libs</groupId>
+            <artifactId>telecarelibs</artifactId>
+            <version>1.0-RELEASE</version>
         </dependency>
 
     </dependencies>
@@ -237,6 +241,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
