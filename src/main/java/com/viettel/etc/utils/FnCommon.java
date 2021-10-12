@@ -11,7 +11,6 @@ import com.viettel.etc.xlibrary.core.entities.ResponseEntity;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
-import org.keycloak.KeycloakPrincipal;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -268,24 +267,6 @@ public class FnCommon extends FunctionCommon {
 
 
 
-
-    /**
-     * lay id thong tin nguoi dung
-     *
-     * @param authentication
-     * @return
-     */
-    public static String getUserIdLogin(Authentication authentication) {
-        try {
-            KeycloakPrincipal principal = (KeycloakPrincipal) authentication.getPrincipal();
-            String userId = principal.getKeycloakSecurityContext().getToken().getSubject();
-            return userId;
-        } catch (Exception e) {
-            LOGGER.info(e);
-            LOGGER.error("Loi! getUserLogin: " + e.getMessage());
-            return null;
-        }
-    }
 
 //    public static boolean validateDate(LocalDate date) {
 //        if (date == null) {

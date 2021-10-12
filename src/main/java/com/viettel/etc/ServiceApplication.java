@@ -11,11 +11,6 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.web.servlet.LocaleResolver;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
 //@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 //        DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
 @SpringBootApplication

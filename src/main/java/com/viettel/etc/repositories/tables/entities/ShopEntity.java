@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -18,46 +17,50 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "USERS")
-public class UsersEntity  implements Serializable {
+@Table(name = "SHOP")
+public class ShopEntity implements Serializable {
 
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
+    @Column(name = "NAME")
+    String name;
+
+    @Column(name = "ADDRESS")
+    String address;
+
     @Column(name = "PHONE")
     String phone;
 
-    @Column(name = "FULL_NAME")
-    String fullName;
+    @Column(name = "CATS_SHOP_ID")
+    Integer catsShopId;
 
-    @Column(name = "AVATAR")
-    String avatar;
+    @Column(name = "LAT")
+    Double lat;
 
-    @JsonIgnore
-    @Column(name = "PASS")
-    String pass;
+    @Column(name = "LNG")
+    Double lng;
 
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
-     Integer isActive;
+    Integer isActive;
 
-    @JsonIgnore
     @Column(name = "CREATE_USER_ID")
-     Integer createUserId;
+    Integer createUserId;
 
     @JsonIgnore
     @Column(name = "CREATE_DATE")
-     Date createDate;
+    Date createDate;
 
     @JsonIgnore
     @Column(name = "UPDATE_DATE")
-      Date updateDate;
+    Date updateDate;
 
     @JsonIgnore
     @Column(name = "UPDATE_USER_ID")
-      Integer updateUserId;
+    Integer updateUserId;
 
     public Integer getIsActive() {
         return isActive;
@@ -98,7 +101,7 @@ public class UsersEntity  implements Serializable {
     public void setUpdateUserId(Integer updateUserId) {
         this.updateUserId = updateUserId;
     }
-    
+
     public Integer getId() {
         return id;
     }
@@ -107,35 +110,51 @@ public class UsersEntity  implements Serializable {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Integer getCatsShopId() {
+        return catsShopId;
+    }
+
+    public void setCatsShopId(Integer catsShopId) {
+        this.catsShopId = catsShopId;
+    }
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
+
     public String getPhone() {
         return phone;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getPass() {
-        return pass;
-    }
-
-    public void setPass(String pass) {
-        this.pass = pass;
     }
 }
