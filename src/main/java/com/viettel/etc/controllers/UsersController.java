@@ -33,8 +33,8 @@ public class UsersController {
     @Autowired
     HttpServletRequest request;
 
-    @GetMapping(value = "/otp",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getCovidPatientFs(@RequestBody  LoginRequest request) {
+    @PostMapping(value = "/otp",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getCovidPatientFs(@RequestBody LoginRequest request) {
         Object result;
         try {
             result = usersService.getOTP(request);
