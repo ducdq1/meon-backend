@@ -2,6 +2,7 @@ package com.viettel.etc.controllers;
 
 import com.viettel.etc.dto.request.LoginRequest;
 import com.viettel.etc.dto.request.RegisterRequest;
+import com.viettel.etc.dto.request.VerifyOTPRequest;
 import com.viettel.etc.services.UsersService;
 import com.viettel.etc.xlibrary.core.constants.FunctionCommon;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,23 +33,37 @@ public class UsersController {
     @Autowired
     HttpServletRequest request;
 
-    /*@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getCovidPatientFs(@AuthenticationPrincipal Authentication authentication,
-                                                    CovidPatientSearchRequestDTO dataParams, @RequestHeader Optional<String> lang) {
+    @GetMapping(value = "/otp",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getCovidPatientFs(@RequestBody  LoginRequest request) {
         Object result;
-        String language = lang.orElse(Constants.VIETNAM_CODE);
         try {
-            result = covidPatientFService.searchCovidPatientF(authentication,dataParams,language);
+            result = usersService.getOTP(request);
         } catch (TeleCareException e) {
-            LoggingUtils.logVTMException(LoggingInfo.getFromHttpRequest(request, e, "getCovidPatientFs"));
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            LoggingUtils.logVTMException(LoggingInfo.getFromHttpRequest(request, e, "getCovidPatientFs"));
+            e.getMessage();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
-    }*/
+    }
+
+    @PostMapping(value = "/verify-otp",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> verifyOTP(@RequestBody VerifyOTPRequest request) {
+        Object result;
+        try {
+            result = usersService.verifyOTP(request);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
 
     @PostMapping(value = "/login",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> login(@RequestBody  LoginRequest request, @RequestHeader Optional<String> lang) {

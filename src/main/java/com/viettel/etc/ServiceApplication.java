@@ -1,5 +1,6 @@
 package com.viettel.etc;
 
+import com.viettel.etc.utils.CustomLocaleResolver;
 import com.viettel.etc.utils.LoggingUtils;
 import org.apache.log4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.web.servlet.LocaleResolver;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 //@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 //        DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
@@ -26,6 +33,10 @@ public class ServiceApplication {
         return rs;
     }
 
+    @Bean
+    public LocaleResolver localeResolver() {
+        return new CustomLocaleResolver("vi");
+    }
 
     public static void main(String[] args) {
 
