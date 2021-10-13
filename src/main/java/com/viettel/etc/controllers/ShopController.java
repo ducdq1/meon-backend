@@ -1,9 +1,6 @@
 package com.viettel.etc.controllers;
 
-import com.viettel.etc.dto.request.CreateShopRequest;
-import com.viettel.etc.dto.request.LoginRequest;
-import com.viettel.etc.dto.request.RegisterRequest;
-import com.viettel.etc.dto.request.VerifyOTPRequest;
+import com.viettel.etc.dto.request.*;
 import com.viettel.etc.services.ShopService;
 import com.viettel.etc.services.UsersService;
 import com.viettel.etc.utils.Constants;
@@ -64,11 +61,11 @@ public class ShopController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{userId}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getShopByUserId(@PathVariable Integer userId) {
+    @GetMapping(value = "/search",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getShopByUserId(@RequestBody SearchShopsRequest request) {
         Object result;
         try {
-            result = shopService.getShopsByUserId(userId);
+            result = shopService.getShopsByUserId(request);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);

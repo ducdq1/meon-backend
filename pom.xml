@@ -8,10 +8,10 @@
         <version>2.2.7.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.viettel.etc</groupId>
-    <artifactId>serviceTelecare</artifactId>
+    <groupId>com.mrteam.meon</groupId>
+    <artifactId>MenuOnline</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>F0 Management Service</name>
+    <name>Menu Online</name>
 
     <properties>
         <java.version>1.8</java.version>

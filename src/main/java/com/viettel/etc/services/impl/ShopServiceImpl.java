@@ -1,6 +1,7 @@
 package com.viettel.etc.services.impl;
 
 import com.viettel.etc.dto.request.CreateShopRequest;
+import com.viettel.etc.dto.request.SearchShopsRequest;
 import com.viettel.etc.repositories.tables.ShopRepositoryJPA;
 import com.viettel.etc.repositories.tables.entities.ShopEntity;
 import com.viettel.etc.services.ShopService;
@@ -52,8 +53,12 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public Object getShopsByUserId(Integer userId) throws TeleCareException {
-        return shopRepositoryJPA.getAllByCreateUserIdAndIsActive(userId,Constants.IS_ACTIVE);
+    public Object getShopsByUserId(SearchShopsRequest request) throws TeleCareException {
+        if(request.getKeySearch() == null){
+            request.setKeySearch("");
+        }
+
+        return shopRepositoryJPA.getAllByCreateUserIdAndIsActive(request.getUserId(),request.getKeySearch().trim().toLowerCase());
     }
 
     @Override
