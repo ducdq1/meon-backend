@@ -4,6 +4,8 @@ public class CreateMenuGroupRequest {
     private String name;
     private Integer createUserId;
     private Integer shopId;
+    private String imageUrl;
+    private String tags;
 
     public String getName() {
         return name;
@@ -29,5 +31,19 @@ public class CreateMenuGroupRequest {
         this.shopId = shopId;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
 }

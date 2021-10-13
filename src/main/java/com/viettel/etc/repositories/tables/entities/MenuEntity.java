@@ -34,10 +34,29 @@ public class MenuEntity implements Serializable {
     @Column(name = "SHOP_ID")
     Integer shopId;
 
+    @Column(name = "IMAGE_URL")
+    private String imageUrl;
+
+    @Column(name = "DESCRIPTION")
+    private String description;
+
+    @Column(name = "DISCOUNT")
+    private String discount;
+
+    @Column(name = "TAGS")
+    private String tags;
+
+    @Column(name = "PRICE")
+    Integer price;
+
+    @Column(name = "ORDER_PRIORITY")
+    Integer orderPriority;
+
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
     Integer isActive;
 
+    @JsonIgnore
     @Column(name = "CREATE_USER_ID")
     Integer createUserId;
 
@@ -125,4 +144,51 @@ public class MenuEntity implements Serializable {
         this.name = name;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public Integer getOrderPriority() {
+        return orderPriority;
+    }
+
+    public void setOrderPriority(Integer orderPriority) {
+        this.orderPriority = orderPriority;
+    }
 }

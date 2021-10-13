@@ -28,13 +28,20 @@ public class MenuGroupEntity implements Serializable {
     @Column(name = "NAME")
     String name;
 
+    @Column(name = "TAGS")
+    String tags;
+
     @Column(name = "SHOP_ID")
     Integer shopId;
+
+    @Column(name = "IMAGE_URL")
+    private String imageUrl;
 
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
     Integer isActive;
 
+    @JsonIgnore
     @Column(name = "CREATE_USER_ID")
     Integer createUserId;
 
@@ -114,4 +121,19 @@ public class MenuGroupEntity implements Serializable {
         this.name = name;
     }
 
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

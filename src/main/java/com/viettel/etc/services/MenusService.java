@@ -14,9 +14,15 @@ import com.viettel.etc.utils.TeleCareException;
  */
 public interface MenusService {
     Object getMenuGroups(Integer shopId) throws TeleCareException;
-    Object createMenuGroup(Integer menuGroupId,CreateMenuGroupRequest request) throws TeleCareException;
+    Object createMenuGroup(CreateMenuGroupRequest request) throws TeleCareException;
+    Object updateMenuGroup(Integer menuGroupId,CreateMenuGroupRequest request) throws TeleCareException;
+    Object deleteMenuGroup(Integer menuGroupId) throws TeleCareException;
 
+    Object getMenus(Integer shopId,Integer menuGroupId) throws TeleCareException;
     Object getMenus(Integer shopId) throws TeleCareException;
-    Object createMenu(Integer menuId, CreateMenuRequest request) throws TeleCareException;
+    Object createMenu(CreateMenuRequest request) throws TeleCareException;
+    Object updateMenu(Integer menuId, CreateMenuRequest request) throws TeleCareException;
+    Object deleteMenu(Integer menuId) throws TeleCareException;
+
 
 }

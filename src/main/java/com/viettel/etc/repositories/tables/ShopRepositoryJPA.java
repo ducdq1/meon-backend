@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface ShopRepositoryJPA extends JpaRepository<ShopEntity, Integer> {
-    @Query(value = "Select * FROM shops WHERE CREATE_USER_ID = :createUserId  AND is_active = 1 AND ( name like %:keySearch% OR address LIKE %:keySearch% OR phone LIKE %:keySearch%') ",nativeQuery = true)
+    @Query(value = "Select * FROM shop WHERE CREATE_USER_ID = :createUserId  AND is_active = 1 AND  (name like concat('%',:keySearch,'%') OR address like concat('%',:keySearch,'%') OR phone like concat('%',:keySearch,'%') ) ",nativeQuery = true)
     List<ShopEntity> getAllByCreateUserIdAndIsActive(Integer createUserId, String keySearch);
 
     List<ShopEntity> getAllByIsActive(Integer isActive);
