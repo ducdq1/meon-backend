@@ -35,8 +35,8 @@ public class ServiceApplication {
 
     public static void main(String[] args) {
 
-        LoggingUtils.setLogger(LoggerFactory.getLogger("f0_management_service"));
-        LoggingUtils.setFunctionCode("F0ManagementService");
+        LoggingUtils.setLogger(LoggerFactory.getLogger("MeOnService"));
+        LoggingUtils.setFunctionCode("MeOnService");
         SpringApplication.run(ServiceApplication.class, args);
     }
 

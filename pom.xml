@@ -227,12 +227,12 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>com.viettel.telecare.libs</groupId>
             <artifactId>telecarelibs</artifactId>
             <version>1.0-RELEASE</version>
         </dependency>
-
+-->
     </dependencies>
 
     <build>
