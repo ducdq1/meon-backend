@@ -4,12 +4,16 @@ import com.viettel.etc.dto.request.CreateMenuGroupRequest;
 import com.viettel.etc.dto.request.CreateMenuRequest;
 import com.viettel.etc.dto.request.CreateShopRequest;
 import com.viettel.etc.dto.request.SearchShopsRequest;
+import com.viettel.etc.dto.response.DetailMemuResponse;
+import com.viettel.etc.repositories.tables.MediaRepositoryJPA;
 import com.viettel.etc.repositories.tables.MenuGroupsRepositoryJPA;
 import com.viettel.etc.repositories.tables.MenusRepositoryJPA;
 import com.viettel.etc.repositories.tables.ShopRepositoryJPA;
+import com.viettel.etc.repositories.tables.entities.MediaEntity;
 import com.viettel.etc.repositories.tables.entities.MenuEntity;
 import com.viettel.etc.repositories.tables.entities.MenuGroupEntity;
 import com.viettel.etc.repositories.tables.entities.ShopEntity;
+import com.viettel.etc.services.MediaService;
 import com.viettel.etc.services.MenusService;
 import com.viettel.etc.services.ShopService;
 import com.viettel.etc.utils.*;
@@ -17,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -32,7 +37,10 @@ public class MenusServiceImpl implements MenusService {
 
     @Autowired
     private MenusRepositoryJPA menuRepositoryJPA;
-
+    @Autowired
+    private MediaRepositoryJPA mediaRepositoryJPA;
+    @Autowired
+    private MediaService mediaService;
 
     @Override
     public Object getMenuGroups(Integer shopId) throws TeleCareException {
@@ -52,6 +60,8 @@ public class MenusServiceImpl implements MenusService {
         entity.setImageUrl(request.getImageUrl());
 
         menuGroupsRepositoryJPA.save(entity);
+        mediaService.saveMedias(request.getMedias(), request.getDeletedMedias(), entity.getId(), Constants.MENU_GROUP_MEDIA_TYPE, request.getCreateUserId());
+
         return entity;
     }
 
@@ -70,6 +80,8 @@ public class MenusServiceImpl implements MenusService {
             entity.setImageUrl(request.getImageUrl());
 
             menuGroupsRepositoryJPA.save(entity);
+            mediaService.saveMedias(request.getMedias(), request.getDeletedMedias(), entity.getId(), Constants.MENU_GROUP_MEDIA_TYPE, request.getCreateUserId());
+
             return entity;
         }
         return null;
@@ -118,7 +130,7 @@ public class MenusServiceImpl implements MenusService {
         entity.setPrice(request.getPrice());
 
         menuRepositoryJPA.save(entity);
-
+        mediaService.saveMedias(request.getMedias(), request.getDeletedMedias(), entity.getId(), Constants.MENU_MEDIA_TYPE, request.getCreateUserId());
         return entity;
     }
 
@@ -143,14 +155,15 @@ public class MenusServiceImpl implements MenusService {
             entity.setOrderPriority(request.getOrderPriority());
             entity.setPrice(request.getPrice());
             menuRepositoryJPA.save(entity);
+            mediaService.saveMedias(request.getMedias(), request.getDeletedMedias(), entity.getId(), Constants.MENU_MEDIA_TYPE, request.getCreateUserId());
             return entity;
         }
 
         return null;
     }
 
-    private void validateMenu(String name) throws TeleCareException{
-        if(StringUtils.isNullOrEmpty(name)){
+    private void validateMenu(String name) throws TeleCareException {
+        if (StringUtils.isNullOrEmpty(name)) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.menu.name.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
     }
@@ -166,6 +179,17 @@ public class MenusServiceImpl implements MenusService {
             return true;
         }
         return null;
+    }
+
+    @Override
+    public Object getMenuDetail(Integer menuId) throws TeleCareException {
+        DetailMemuResponse response = new DetailMemuResponse();
+        MenuEntity menuEntity = menuRepositoryJPA.getByIdAndIsActive(menuId, Constants.IS_ACTIVE);
+        response.setMenu(menuEntity);
+        List<MediaEntity> mediaEntityList = mediaRepositoryJPA.findAllByIsActiveAndObjectTypeAndObjectId(Constants.IS_ACTIVE, Constants.MENU_MEDIA_TYPE, menuId);
+        response.setMedias(mediaEntityList);
+        
+        return response;
     }
 
 

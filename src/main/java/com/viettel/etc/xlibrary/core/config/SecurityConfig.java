@@ -49,15 +49,10 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 /*  46 */       .and())
 /*  47 */       .authorizeRequests()
 /*  48 */       .antMatchers(HttpMethod.GET, new String[] {
-/*     */ 
-/*     */           
 /*     */           "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html**", "/webjars/**", "/**", "favicon.ico"
-/*     */ 
-/*     */ 
-/*     */         
 /*  55 */         })).permitAll();
 /*     */     
-/* 106 */     ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)http.authorizeRequests().anyRequest()).authenticated();
+///* 106 */     ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)http.authorizeRequests().anyRequest()).authenticated();
 /*     */   }
 /*     */   
 /*     */

@@ -139,4 +139,7 @@ public class Constants {
         }
     }
 
+    public  static final String MENU_MEDIA_TYPE ="MENU";
+    public  static final String MENU_GROUP_MEDIA_TYPE ="MENU_GROUP";
+
 }

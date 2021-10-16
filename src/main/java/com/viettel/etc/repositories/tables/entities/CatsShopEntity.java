@@ -28,6 +28,9 @@ public class CatsShopEntity implements Serializable {
     @Column(name = "NAME")
     String name;
 
+    @Column(name = "URL_ICON")
+    String urlIcon;
+
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
     Integer isActive;
@@ -54,5 +57,13 @@ public class CatsShopEntity implements Serializable {
 
     public void setIsActive(Integer isActive) {
         this.isActive = isActive;
+    }
+
+    public String getUrlIcon() {
+        return urlIcon;
+    }
+
+    public void setUrlIcon(String urlIcon) {
+        this.urlIcon = urlIcon;
     }
 }

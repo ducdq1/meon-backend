@@ -11,6 +11,7 @@ import com.viettel.etc.utils.TeleCareException;
  */
 public interface ShopService {
     Object createShop(CreateShopRequest request) throws TeleCareException;
+    Object updateShop(CreateShopRequest request) throws TeleCareException;
     Object getShopsByUserId(SearchShopsRequest request) throws TeleCareException;
     Object getAllShops() throws TeleCareException;
 }

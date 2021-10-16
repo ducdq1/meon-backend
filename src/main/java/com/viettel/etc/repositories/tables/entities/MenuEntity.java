@@ -52,6 +52,9 @@ public class MenuEntity implements Serializable {
     @Column(name = "ORDER_PRIORITY")
     Integer orderPriority;
 
+    @Column(name = "RATING")
+    Double rating;
+
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
     Integer isActive;
@@ -190,5 +193,13 @@ public class MenuEntity implements Serializable {
 
     public void setOrderPriority(Integer orderPriority) {
         this.orderPriority = orderPriority;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 }

@@ -1,6 +1,9 @@
 package com.viettel.etc.dto.request;
 
+import javax.persistence.Column;
+
 public class CreateShopRequest {
+    private Integer id;
     private String name;
     private String address;
     private String phone;
@@ -8,6 +11,9 @@ public class CreateShopRequest {
     private Double lat;
     private Double lng;
     private Integer createUserId;
+    private String description;
+    private String tags;
+    private String imageUrl;
 
     public String getName() {
         return name;
@@ -63,5 +69,37 @@ public class CreateShopRequest {
 
     public void setCreateUserId(Integer createUserId) {
         this.createUserId = createUserId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

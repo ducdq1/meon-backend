@@ -62,6 +62,15 @@ public class ShopEntity implements Serializable {
     @Column(name = "UPDATE_USER_ID")
     Integer updateUserId;
 
+    @Column(name = "DESCRIPTION")
+    private String description;
+
+    @Column(name = "TAGS")
+    private String tags;
+
+    @Column(name = "IMAGE_URL")
+    private String imageUrl;
+
     public Integer getIsActive() {
         return isActive;
     }
@@ -156,5 +165,29 @@ public class ShopEntity implements Serializable {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

@@ -1,11 +1,17 @@
 package com.viettel.etc.dto.request;
 
+import com.viettel.etc.dto.object.MediaItem;
+
+import java.util.List;
+
 public class CreateMenuGroupRequest {
     private String name;
     private Integer createUserId;
     private Integer shopId;
     private String imageUrl;
     private String tags;
+    private List<MediaItem> medias;
+    private List<MediaItem> deletedMedias;
 
     public String getName() {
         return name;
@@ -45,5 +51,21 @@ public class CreateMenuGroupRequest {
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public List<MediaItem> getMedias() {
+        return medias;
+    }
+
+    public void setMedias(List<MediaItem> medias) {
+        this.medias = medias;
+    }
+
+    public List<MediaItem> getDeletedMedias() {
+        return deletedMedias;
+    }
+
+    public void setDeletedMedias(List<MediaItem> deletedMedias) {
+        this.deletedMedias = deletedMedias;
     }
 }

@@ -1,6 +1,8 @@
 package com.viettel.etc.dto.request;
 
-import javax.persistence.Column;
+import com.viettel.etc.dto.object.MediaItem;
+
+import java.util.List;
 
 public class CreateMenuRequest {
     private String name;
@@ -8,16 +10,13 @@ public class CreateMenuRequest {
     private Integer createUserId;
     private Integer shopId;
     private String imageUrl;
-
     private String description;
-
     private String discount;
-
     private String tags;
-
-    Integer price;
-
-    Integer orderPriority;
+    private Integer price;
+    private  Integer orderPriority;
+    private List<MediaItem> medias;
+    private List<MediaItem> deletedMedias;
 
     public String getName() {
         return name;
@@ -97,5 +96,21 @@ public class CreateMenuRequest {
 
     public void setOrderPriority(Integer orderPriority) {
         this.orderPriority = orderPriority;
+    }
+
+    public List<MediaItem> getMedias() {
+        return medias;
+    }
+
+    public void setMedias(List<MediaItem> medias) {
+        this.medias = medias;
+    }
+
+    public List<MediaItem> getDeletedMedias() {
+        return deletedMedias;
+    }
+
+    public void setDeletedMedias(List<MediaItem> deletedMedias) {
+        this.deletedMedias = deletedMedias;
     }
 }

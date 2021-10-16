@@ -24,5 +24,5 @@ public interface MenusService {
     Object updateMenu(Integer menuId, CreateMenuRequest request) throws TeleCareException;
     Object deleteMenu(Integer menuId) throws TeleCareException;
 
-
+    Object getMenuDetail(Integer menuId) throws TeleCareException;
 }

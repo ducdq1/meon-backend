@@ -18,4 +18,5 @@ import java.util.List;
 public interface MenusRepositoryJPA extends JpaRepository<MenuEntity, Integer> {
     List<MenuEntity> getAllByShopIdAndMenuGroupIdAndIsActive(Integer shopId,Integer menuGroupId,Integer isActive);
     List<MenuEntity> getAllByShopIdAndIsActive(Integer shopId,Integer isActive);
+   MenuEntity getByIdAndIsActive(Integer id,Integer isActive);
 }

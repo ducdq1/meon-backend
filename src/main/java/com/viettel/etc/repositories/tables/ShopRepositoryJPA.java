@@ -14,4 +14,8 @@ public interface ShopRepositoryJPA extends JpaRepository<ShopEntity, Integer> {
     List<ShopEntity> getAllByCreateUserIdAndIsActive(Integer createUserId, String keySearch);
 
     List<ShopEntity> getAllByIsActive(Integer isActive);
+
+    @Query(value = "Select * FROM shop WHERE CREATE_USER_ID = :createUserId AND ID =:shopId AND is_active = 1 ",nativeQuery = true)
+    ShopEntity getByCreateUserIdAndShopId(Integer createUserId, Integer shopId);
+
 }

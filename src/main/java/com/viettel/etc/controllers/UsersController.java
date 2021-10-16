@@ -66,9 +66,8 @@ public class UsersController {
     }
 
     @PostMapping(value = "/login",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> login(@RequestBody  LoginRequest request, @RequestHeader Optional<String> lang) {
+    public ResponseEntity<Object> login(@RequestBody  LoginRequest request) {
         Object result;
-        String language = lang.orElse(Constants.VIETNAM_CODE);
         try {
             result = usersService.login(request);
         } catch (TeleCareException e) {

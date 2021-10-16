@@ -114,7 +114,7 @@ public class MenuController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/shop/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllMenus(@PathVariable Integer shopId) {
         Object result;
         try {
@@ -129,6 +129,23 @@ public class MenuController {
 
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/{menuId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getMenuDetail(@PathVariable Integer menuId) {
+        Object result;
+        try {
+            result = menusService.getMenuDetail(menuId);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.getMessage();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createMenu(@RequestBody CreateMenuRequest request) {

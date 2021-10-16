@@ -47,18 +47,46 @@ public class ShopServiceImpl implements ShopService {
         entity.setCreateUserId(request.getCreateUserId());
         entity.setIsActive(Constants.IS_ACTIVE);
         entity.setCreateDate(new Date());
+        entity.setTags(request.getTags());
+        entity.setDescription(request.getDescription());
+        entity.setImageUrl(request.getImageUrl());
 
         shopRepositoryJPA.save(entity);
         return entity;
     }
 
     @Override
+    public Object updateShop(CreateShopRequest request) throws TeleCareException {
+        validateCreateShop(request);
+        ShopEntity entity = shopRepositoryJPA.getByCreateUserIdAndShopId(request.getCreateUserId(),request.getId());
+        if(entity !=null) {
+            entity.setName(request.getName());
+            entity.setAddress(request.getAddress());
+            entity.setCatsShopId(request.getCatsShopId());
+            entity.setPhone(request.getPhone());
+            entity.setLat(request.getLat());
+            entity.setLng(request.getLng());
+            entity.setUpdateUserId(request.getCreateUserId());
+            entity.setIsActive(Constants.IS_ACTIVE);
+            entity.setUpdateDate(new Date());
+            entity.setTags(request.getTags());
+            entity.setDescription(request.getDescription());
+            entity.setImageUrl(request.getImageUrl());
+
+            shopRepositoryJPA.save(entity);
+
+            return entity;
+        }
+        return null;
+    }
+
+    @Override
     public Object getShopsByUserId(SearchShopsRequest request) throws TeleCareException {
-        if(request.getKeySearch() == null){
+        if (request.getKeySearch() == null) {
             request.setKeySearch("");
         }
 
-        return shopRepositoryJPA.getAllByCreateUserIdAndIsActive(request.getUserId(),request.getKeySearch().trim().toLowerCase());
+        return shopRepositoryJPA.getAllByCreateUserIdAndIsActive(request.getUserId(), request.getKeySearch().trim().toLowerCase());
     }
 
     @Override

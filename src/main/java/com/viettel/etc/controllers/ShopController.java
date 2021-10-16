@@ -30,7 +30,7 @@ public class ShopController {
     private ShopService shopService;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> register(@RequestBody CreateShopRequest request) {
+    public ResponseEntity<Object> createShop(@RequestBody CreateShopRequest request) {
         Object result;
         try {
             result = shopService.createShop(request);
@@ -44,6 +44,24 @@ public class ShopController {
 
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
+
+    @PutMapping(value = "/{shopId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> updateShop(@RequestBody CreateShopRequest request,@PathVariable Integer shopId) {
+        Object result;
+        try {
+            request.setId(shopId);
+            result = shopService.updateShop(request);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllShop() {
