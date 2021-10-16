@@ -18,4 +18,7 @@ public interface UsersRepositoryJPA extends JpaRepository<UsersEntity, Integer> 
 
     @Query(value = "SELECT * FROM USERS WHERE PHONE = :phone ", nativeQuery = true)
     UsersEntity getUserByPhone(String phone);
+
+    UsersEntity getByPhoneAndIsActive(String phone,Integer isActive);
+
 }

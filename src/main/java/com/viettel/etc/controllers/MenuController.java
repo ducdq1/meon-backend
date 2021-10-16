@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -50,13 +52,17 @@ public class MenuController {
     }
 
     @PostMapping(value = "/groups", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> createMenuGroup(@RequestBody CreateMenuGroupRequest request) {
+    public ResponseEntity<Object> createMenuGroup(@RequestBody CreateMenuGroupRequest request,@AuthenticationPrincipal Authentication authentication) {
         Object result;
         try {
+
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            request.setCreateUserId(userId);
+
             result = menusService.createMenuGroup(request);
         }  catch (TeleCareException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(FnCommon.responseToClient(e), e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             e.getMessage();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
@@ -66,13 +72,15 @@ public class MenuController {
     }
 
     @PutMapping(value = "/groups/{menuGroupId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateMenuGroup(@RequestBody CreateMenuGroupRequest request, @PathVariable Integer menuGroupId) {
+    public ResponseEntity<Object> updateMenuGroup(@RequestBody CreateMenuGroupRequest request, @PathVariable Integer menuGroupId,@AuthenticationPrincipal Authentication authentication) {
         Object result;
         try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            request.setCreateUserId(userId);
             result = menusService.updateMenuGroup(menuGroupId, request);
         }  catch (TeleCareException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(FnCommon.responseToClient(e), e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             e.getMessage();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
@@ -85,6 +93,7 @@ public class MenuController {
     public ResponseEntity<Object> deleteMenuGroup(@PathVariable Integer menuGroupId) {
         Object result;
         try {
+
             result = menusService.deleteMenuGroup(menuGroupId);
         }  catch (TeleCareException e) {
             e.printStackTrace();
@@ -137,7 +146,7 @@ public class MenuController {
             result = menusService.getMenuDetail(menuId);
         } catch (TeleCareException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(FnCommon.responseToClient(e),e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.getMessage();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
@@ -148,13 +157,15 @@ public class MenuController {
 
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> createMenu(@RequestBody CreateMenuRequest request) {
+    public ResponseEntity<Object> createMenu(@RequestBody CreateMenuRequest request,@AuthenticationPrincipal Authentication authentication) {
         Object result;
         try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            request.setCreateUserId(userId);
             result = menusService.createMenu(request);
         }  catch (TeleCareException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(FnCommon.responseToClient(e),e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             e.getMessage();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
@@ -164,13 +175,15 @@ public class MenuController {
     }
 
     @PutMapping(value = "/{menuId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateMenu(@RequestBody CreateMenuRequest request, @PathVariable Integer menuId) {
+    public ResponseEntity<Object> updateMenu(@RequestBody CreateMenuRequest request, @PathVariable Integer menuId,@AuthenticationPrincipal Authentication authentication) {
         Object result;
         try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            request.setCreateUserId(userId);
             result = menusService.updateMenu(menuId, request);
         } catch (TeleCareException e) {
             e.printStackTrace();
-            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(FnCommon.responseToClient(e), e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.getMessage();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);

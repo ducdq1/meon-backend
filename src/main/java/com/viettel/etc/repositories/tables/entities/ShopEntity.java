@@ -50,6 +50,18 @@ public class ShopEntity implements Serializable {
     @Column(name = "CREATE_USER_ID")
     Integer createUserId;
 
+    @Column(name = "SPECIAL_TAG")
+    String specialTag;
+
+    @Column(name = "RATING")
+    Double rating;
+
+    @Column(name = "OPEN_TIME")
+    Date openTime;
+
+    @Column(name = "CLOSE_TIME")
+    Date close;
+
     @JsonIgnore
     @Column(name = "CREATE_DATE")
     Date createDate;
@@ -189,5 +201,37 @@ public class ShopEntity implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getSpecialTag() {
+        return specialTag;
+    }
+
+    public void setSpecialTag(String specialTag) {
+        this.specialTag = specialTag;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public Date getOpenTime() {
+        return openTime;
+    }
+
+    public void setOpenTime(Date openTime) {
+        this.openTime = openTime;
+    }
+
+    public Date getClose() {
+        return close;
+    }
+
+    public void setClose(Date close) {
+        this.close = close;
     }
 }

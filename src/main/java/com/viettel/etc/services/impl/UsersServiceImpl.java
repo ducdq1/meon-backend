@@ -1,5 +1,6 @@
 package com.viettel.etc.services.impl;
 
+import com.viettel.etc.config.JwtTokenUtil;
 import com.viettel.etc.dto.request.LoginRequest;
 import com.viettel.etc.dto.request.RegisterRequest;
 import com.viettel.etc.dto.request.VerifyOTPRequest;
@@ -11,8 +12,12 @@ import com.viettel.etc.repositories.tables.entities.UsersEntity;
 import com.viettel.etc.services.UsersService;
 import com.viettel.etc.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
@@ -31,6 +36,9 @@ public class UsersServiceImpl implements UsersService {
     @Autowired
     private OTPRepositoryJPA otpRepositoryJPA;
 
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
     @Override
     public Object login(LoginRequest request) throws TeleCareException {
         validateLogin(request);
@@ -39,8 +47,13 @@ public class UsersServiceImpl implements UsersService {
         if(usersEntity == null){
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.login.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
+
         LoginResponse response = new LoginResponse();
-        response.setToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c");
+        final UserDetails userDetails = new User(usersEntity.getPhone(), usersEntity.getPass(),
+                new ArrayList<>());
+
+        String token = jwtTokenUtil.generateToken(userDetails);
+        response.setToken(token);
         response.setUser(usersEntity);
 
         return response;

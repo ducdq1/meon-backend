@@ -10,6 +10,8 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -154,7 +156,6 @@ public class FnCommon extends FunctionCommon {
     }
 
 
-
     /**
      * Thuc hien nem loi thong bao ra ngoai
      *
@@ -255,8 +256,6 @@ public class FnCommon extends FunctionCommon {
     public static void copyProperties(Object src, Object target) {
         BeanUtils.copyProperties(src, target, getNullPropertyNames(src));
     }
-
-
 
 
 //    public static boolean validateDate(LocalDate date) {
@@ -665,5 +664,17 @@ public class FnCommon extends FunctionCommon {
             LOGGER.error("err date:" + e.getMessage(), e);
         }
         return false;
+    }
+
+    public static Integer getUserIdFromToken(Authentication authentication) throws TeleCareException {
+        if (authentication == null) {
+            throw new TeleCareException(ErrorApp.ERR_USER_NOT_PERMISSION, "UnAuthentication", 401);
+        }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        if (userDetails != null && userDetails.getPassword() != null) {
+            return Integer.valueOf(userDetails.getPassword());
+        }
+        return null;
+
     }
 }

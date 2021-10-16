@@ -24,9 +24,9 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 /*     */ import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 /*     */ import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 /*     */ 
-/*     */ @Configuration
-/*     */ @EnableWebSecurity
-/*     */ @EnableGlobalMethodSecurity(jsr250Enabled = true)
+///*     */ @Configuration
+///*     */ @EnableWebSecurity
+///*     */ @EnableGlobalMethodSecurity(jsr250Enabled = true)
 /*     */ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebSecurityConfigurer<WebSecurity> {
 /*     */   //@Bean
 /*     */   public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -51,7 +51,7 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 /*  48 */       .antMatchers(HttpMethod.GET, new String[] {
 /*     */           "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html**", "/webjars/**", "/**", "favicon.ico"
 /*  55 */         })).permitAll();
-/*     */     
+/*     */
 ///* 106 */     ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl)http.authorizeRequests().anyRequest()).authenticated();
 /*     */   }
 /*     */   

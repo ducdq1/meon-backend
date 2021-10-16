@@ -2,12 +2,14 @@ package com.viettel.etc.services.impl;
 
 import com.viettel.etc.dto.request.CreateShopRequest;
 import com.viettel.etc.dto.request.SearchShopsRequest;
+import com.viettel.etc.repositories.ShopRepository;
 import com.viettel.etc.repositories.tables.ShopRepositoryJPA;
 import com.viettel.etc.repositories.tables.entities.ShopEntity;
 import com.viettel.etc.services.ShopService;
 import com.viettel.etc.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.Date;
 
@@ -22,6 +24,9 @@ public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private ShopRepositoryJPA shopRepositoryJPA;
+
+    @Autowired
+    private ShopRepository shopRepository;
 
     private void validateCreateShop(CreateShopRequest request) throws TeleCareException {
 
@@ -87,6 +92,11 @@ public class ShopServiceImpl implements ShopService {
         }
 
         return shopRepositoryJPA.getAllByCreateUserIdAndIsActive(request.getUserId(), request.getKeySearch().trim().toLowerCase());
+    }
+
+    @Override
+    public Object getRecommendShops(SearchShopsRequest request) throws TeleCareException {
+        return shopRepository.getRecommendShop(request);
     }
 
     @Override
