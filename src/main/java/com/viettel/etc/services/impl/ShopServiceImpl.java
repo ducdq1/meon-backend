@@ -2,8 +2,13 @@ package com.viettel.etc.services.impl;
 
 import com.viettel.etc.dto.request.CreateShopRequest;
 import com.viettel.etc.dto.request.SearchShopsRequest;
+import com.viettel.etc.dto.response.DetailMenuResponse;
+import com.viettel.etc.dto.response.DetailShopResponse;
 import com.viettel.etc.repositories.ShopRepository;
+import com.viettel.etc.repositories.tables.MediaRepositoryJPA;
 import com.viettel.etc.repositories.tables.ShopRepositoryJPA;
+import com.viettel.etc.repositories.tables.entities.MediaEntity;
+import com.viettel.etc.repositories.tables.entities.MenuEntity;
 import com.viettel.etc.repositories.tables.entities.ShopEntity;
 import com.viettel.etc.services.ShopService;
 import com.viettel.etc.utils.*;
@@ -12,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Autogen class: Lop danh muc chi so sp02
@@ -63,8 +69,8 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public Object updateShop(CreateShopRequest request) throws TeleCareException {
         validateCreateShop(request);
-        ShopEntity entity = shopRepositoryJPA.getByCreateUserIdAndShopId(request.getCreateUserId(),request.getId());
-        if(entity !=null) {
+        ShopEntity entity = shopRepositoryJPA.getByCreateUserIdAndShopId(request.getCreateUserId(), request.getId());
+        if (entity != null) {
             entity.setName(request.getName());
             entity.setAddress(request.getAddress());
             entity.setCatsShopId(request.getCatsShopId());
@@ -92,6 +98,12 @@ public class ShopServiceImpl implements ShopService {
         }
 
         return shopRepositoryJPA.getAllByCreateUserIdAndIsActive(request.getUserId(), request.getKeySearch().trim().toLowerCase());
+    }
+
+    @Override
+    public Object getShopsById(Integer shopId) throws TeleCareException {
+        ShopEntity entity = shopRepositoryJPA.getByIdAndIsActive(shopId, Constants.IS_ACTIVE);
+        return entity;
     }
 
     @Override

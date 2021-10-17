@@ -69,6 +69,23 @@ public class ShopController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{shopId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getShoppById(@PathVariable Integer shopId) {
+        Object result;
+        try {
+
+            result = shopService.getShopsById(shopId);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAllShop() {

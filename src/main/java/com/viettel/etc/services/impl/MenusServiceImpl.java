@@ -1,19 +1,16 @@
 package com.viettel.etc.services.impl;
 
 import com.viettel.etc.dto.request.*;
-import com.viettel.etc.dto.response.DetailMemuResponse;
+import com.viettel.etc.dto.response.DetailMenuResponse;
 import com.viettel.etc.repositories.MenusRepository;
 import com.viettel.etc.repositories.tables.MediaRepositoryJPA;
 import com.viettel.etc.repositories.tables.MenuGroupsRepositoryJPA;
 import com.viettel.etc.repositories.tables.MenusRepositoryJPA;
-import com.viettel.etc.repositories.tables.ShopRepositoryJPA;
 import com.viettel.etc.repositories.tables.entities.MediaEntity;
 import com.viettel.etc.repositories.tables.entities.MenuEntity;
 import com.viettel.etc.repositories.tables.entities.MenuGroupEntity;
-import com.viettel.etc.repositories.tables.entities.ShopEntity;
 import com.viettel.etc.services.MediaService;
 import com.viettel.etc.services.MenusService;
-import com.viettel.etc.services.ShopService;
 import com.viettel.etc.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -144,8 +141,6 @@ public class MenusServiceImpl implements MenusService {
     @Override
     public Object updateMenu(Integer menuId, CreateMenuRequest request) throws TeleCareException {
         validateMenu(request.getName());
-
-
         Optional<MenuEntity> menuEntityOptional = menuRepositoryJPA.findById(menuId);
         if (menuEntityOptional.isPresent()) {
             MenuEntity entity = menuEntityOptional.get();
@@ -190,7 +185,7 @@ public class MenusServiceImpl implements MenusService {
 
     @Override
     public Object getMenuDetail(Integer menuId) throws TeleCareException {
-        DetailMemuResponse response = new DetailMemuResponse();
+        DetailMenuResponse response = new DetailMenuResponse();
         MenuEntity menuEntity = menuRepositoryJPA.getByIdAndIsActive(menuId, Constants.IS_ACTIVE);
         response.setMenu(menuEntity);
         List<MediaEntity> mediaEntityList = mediaRepositoryJPA.findAllByIsActiveAndObjectTypeAndObjectId(Constants.IS_ACTIVE, Constants.MENU_MEDIA_TYPE, menuId);

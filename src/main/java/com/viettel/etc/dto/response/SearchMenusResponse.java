@@ -13,6 +13,8 @@ public class SearchMenusResponse {
     String name;
     String imageUrl;
     String menuGroupName;
+    Integer shopId;
+    String shopAvatar;
     String shopName;
     String shopAddress;
     String shopPhone;
@@ -181,5 +183,21 @@ public class SearchMenusResponse {
 
     public void setShopName(String shopName) {
         this.shopName = shopName;
+    }
+
+    public Integer getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Integer shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getShopAvatar() {
+        return shopAvatar;
+    }
+
+    public void setShopAvatar(String shopAvatar) {
+        this.shopAvatar = shopAvatar;
     }
 }

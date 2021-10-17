@@ -25,9 +25,9 @@ public class MenusRepositoryImpl extends CommonDataBaseRepository implements Men
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append(" SELECT s.id shopId, s.name shopName, s.address shopAddress, s.phone shopPhone, m.image_url imageUrl, " +
+        sql.append(" SELECT s.id shopId, s.name shopName, s.address shopAddress, s.phone shopPhone,s.image_url shopAvatar,  m.image_url imageUrl, " +
                 " m.tags , cs.name shopTypeName,");
-        sql.append(" s.open_time openTime,s.close_time closeTime, s.is_verify isVerifyShop, m.name, m.price, m.discount, m.description, 100 AS numberOrder, ");
+        sql.append(" s.open_time openTime,s.close_time closeTime, s.is_verify isVerifyShop, m.name, m.price, m.discount, m.description, 100 AS numberOrder, m.rating, " );
         sql.append("mg.name menuGroupName, m.id, ");
 
         if (request.getLat() != null && request.getLng() != null) {

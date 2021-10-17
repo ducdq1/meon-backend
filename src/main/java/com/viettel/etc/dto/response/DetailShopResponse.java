@@ -3,22 +3,23 @@ package com.viettel.etc.dto.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.viettel.etc.repositories.tables.entities.MediaEntity;
 import com.viettel.etc.repositories.tables.entities.MenuEntity;
+import com.viettel.etc.repositories.tables.entities.ShopEntity;
 import lombok.Data;
 
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-public class DetailMemuResponse {
-  private MenuEntity menu;
-  private List<MediaEntity> medias;
+public class DetailShopResponse {
+    private ShopEntity shop;
+    private List<MediaEntity> medias;
 
-    public MenuEntity getMenu() {
-        return menu;
+    public ShopEntity getShop() {
+        return shop;
     }
 
-    public void setMenu(MenuEntity menu) {
-        this.menu = menu;
+    public void setShop(ShopEntity shop) {
+        this.shop = shop;
     }
 
     public List<MediaEntity> getMedias() {
