@@ -2,6 +2,7 @@ package com.viettel.etc.controllers;
 
 import com.viettel.etc.dto.request.CreateMenuGroupRequest;
 import com.viettel.etc.dto.request.CreateMenuRequest;
+import com.viettel.etc.dto.request.SearchMenusRequest;
 import com.viettel.etc.repositories.tables.CatsShopRepositoryJPA;
 import com.viettel.etc.repositories.tables.MenuGroupsRepositoryJPA;
 import com.viettel.etc.services.MenusService;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("menus")
+@CrossOrigin(origins = "*")
 public class MenuController {
 
     @Autowired
@@ -208,4 +210,20 @@ public class MenuController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
+
+    @PostMapping(value = "/recommend", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getMenuRecommend(@RequestBody SearchMenusRequest request) {
+        Object result;
+        try {
+            result = menusService.getRecommendMenus(request);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e),e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.getMessage();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
 }

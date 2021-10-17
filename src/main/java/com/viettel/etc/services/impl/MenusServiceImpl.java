@@ -1,10 +1,8 @@
 package com.viettel.etc.services.impl;
 
-import com.viettel.etc.dto.request.CreateMenuGroupRequest;
-import com.viettel.etc.dto.request.CreateMenuRequest;
-import com.viettel.etc.dto.request.CreateShopRequest;
-import com.viettel.etc.dto.request.SearchShopsRequest;
+import com.viettel.etc.dto.request.*;
 import com.viettel.etc.dto.response.DetailMemuResponse;
+import com.viettel.etc.repositories.MenusRepository;
 import com.viettel.etc.repositories.tables.MediaRepositoryJPA;
 import com.viettel.etc.repositories.tables.MenuGroupsRepositoryJPA;
 import com.viettel.etc.repositories.tables.MenusRepositoryJPA;
@@ -37,10 +35,15 @@ public class MenusServiceImpl implements MenusService {
 
     @Autowired
     private MenusRepositoryJPA menuRepositoryJPA;
+
     @Autowired
     private MediaRepositoryJPA mediaRepositoryJPA;
+
     @Autowired
     private MediaService mediaService;
+
+    @Autowired
+    private MenusRepository menusRepository;
 
     @Override
     public Object getMenuGroups(Integer shopId) throws TeleCareException {
@@ -103,7 +106,11 @@ public class MenusServiceImpl implements MenusService {
 
     @Override
     public Object getMenus(Integer shopId, Integer menuGroupId) throws TeleCareException {
-        return menuRepositoryJPA.getAllByShopIdAndMenuGroupIdAndIsActive(shopId, menuGroupId, Constants.IS_ACTIVE);
+        if(menuGroupId >=0) {
+            return menuRepositoryJPA.getAllByShopIdAndMenuGroupIdAndIsActive(shopId, menuGroupId, Constants.IS_ACTIVE);
+        }else{
+            return menuRepositoryJPA.getAllByShopIdAndIsActive(shopId,Constants.IS_ACTIVE);
+        }
     }
 
     @Override
@@ -192,5 +199,9 @@ public class MenusServiceImpl implements MenusService {
         return response;
     }
 
+    @Override
+    public Object getRecommendMenus(SearchMenusRequest request) throws TeleCareException {
+        return menusRepository.getRecommendMenus(request);
+    }
 
 }

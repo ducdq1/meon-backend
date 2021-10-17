@@ -44,8 +44,7 @@
 /*    */ 
 /*    */   
 /*    */   public void addCorsMappings(CorsRegistry registry) {
-/* 47 */     registry.addMapping("/**")
-/* 48 */       .allowedMethods(new String[] { "GET", "POST", "PUT", "DELETE" });
+/* 47 */      registry.addMapping("/**").allowedMethods(new String[]{"GET", "POST", "PUT", "DELETE"});
 /*    */   }
 /*    */ }
 

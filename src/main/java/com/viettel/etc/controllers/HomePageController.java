@@ -1,22 +1,20 @@
 package com.viettel.etc.controllers;
 
-import com.viettel.etc.dto.request.LoginRequest;
-import com.viettel.etc.dto.request.RegisterRequest;
-import com.viettel.etc.dto.request.VerifyOTPRequest;
 import com.viettel.etc.repositories.tables.CatsShopRepositoryJPA;
-import com.viettel.etc.services.UsersService;
+import com.viettel.etc.services.HomeBanenrService;
 import com.viettel.etc.utils.Constants;
 import com.viettel.etc.utils.FnCommon;
-import com.viettel.etc.utils.TeleCareException;
 import com.viettel.etc.xlibrary.core.constants.FunctionCommon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 /**
  * Autogen class: Lop thong tin benh nhan covid F
@@ -25,21 +23,21 @@ import java.util.Optional;
  * @date Thu Sep 23 09:18:59 ICT 2021
  */
 @RestController
-@RequestMapping("category")
+@RequestMapping("home")
 @CrossOrigin(origins = "*")
-public class CatsShopController {
+public class HomePageController {
 
     @Autowired
-    private CatsShopRepositoryJPA catsShopRepositoryJPA;
+    private HomeBanenrService homeBanenrService;
 
     @Autowired
     HttpServletRequest request;
 
-    @GetMapping(value = "/shop",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/banners",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getCatsShop() {
         Object result;
         try {
-            result = catsShopRepositoryJPA.getAllByIsActive(Constants.IS_ACTIVE);
+            result = homeBanenrService.getHomeBanners();
         } catch (Exception e) {
             e.getMessage();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);

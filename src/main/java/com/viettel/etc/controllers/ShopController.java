@@ -26,6 +26,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("shops")
+@CrossOrigin(origins = "*")
 public class ShopController {
 
     @Autowired

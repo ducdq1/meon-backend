@@ -42,7 +42,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			} catch (IllegalArgumentException e) {
 				System.out.println("Unable to get JWT Token");
 			} catch (ExpiredJwtException e) {
-				System.out.println("JWT Token has expired");
+//				System.out.println("JWT Token has expired");
 			}
 		} else {
 //			logger.warn("JWT Token does not begin with Bearer String");
@@ -66,8 +66,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			}
 		}
 		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setHeader("Access-Control-Allow-Headers", " Origin, Content-Type, X-Auth-Token");
-//		response.setHeader("Access-Control-Allow-Credentials", "true");
+		response.setHeader("Access-Control-Allow-Headers", "*");
 		response.setHeader("Access-Control-Allow-Methods", "GET, POST,PATCH, PUT, DELETE, OPTIONS, HEAD");
 		chain.doFilter(request, response);
 	}

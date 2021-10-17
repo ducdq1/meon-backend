@@ -142,4 +142,9 @@ public class Constants {
     public  static final String MENU_MEDIA_TYPE ="MENU";
     public  static final String MENU_GROUP_MEDIA_TYPE ="MENU_GROUP";
 
+    public  static final String ORDER_BY_POPULAR ="popular";
+    public  static final String ORDER_BY_NEW ="new";
+    public  static final String ORDER_BY_NEAREST ="nearest";
+    public  static final String ORDER_BY_TRENDING ="trending";
+
 }

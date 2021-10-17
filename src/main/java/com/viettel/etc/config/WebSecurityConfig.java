@@ -3,12 +3,14 @@ package com.viettel.etc.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -51,15 +53,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		// We don't need CSRF for this example
-		httpSecurity.csrf().disable()
+		httpSecurity.csrf().disable().cors().disable()
 				// dont authenticate this particular request
 				.authorizeRequests().antMatchers("/users/login").permitAll()
 				.antMatchers("/users/verify-otp").permitAll()
 				.antMatchers("/users/register").permitAll()
 				.antMatchers("/users/otp").permitAll()
 				.antMatchers("/shops/recommend").permitAll()
+				.antMatchers("/category/**").permitAll()
 				.antMatchers("/menus/**").permitAll()
-
+				.antMatchers("/home/**").permitAll()
+	 			.antMatchers(HttpMethod.OPTIONS, new String[]{"/**"}).permitAll()
 				// all other requests need to be authenticated
 				.anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to

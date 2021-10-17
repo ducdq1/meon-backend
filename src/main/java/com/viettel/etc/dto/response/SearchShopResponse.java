@@ -9,11 +9,12 @@ import java.util.Date;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class SearchShopResponse {
+    Integer id;
     String name;
     String address;
     String phone;
     String imageUrl;
-    Integer distance;
+    String distance;
     String shopTypeName;
     String shopTypeIcon;
     String tags;
@@ -55,11 +56,20 @@ public class SearchShopResponse {
         this.imageUrl = imageUrl;
     }
 
-    public Integer getDistance() {
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getDistance() {
         return distance;
     }
 
-    public void setDistance(Integer distance) {
+    public void setDistance(String distance) {
         this.distance = distance;
     }
 

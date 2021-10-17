@@ -1,9 +1,6 @@
 package com.viettel.etc.services;
 
-import com.viettel.etc.dto.request.CreateMenuGroupRequest;
-import com.viettel.etc.dto.request.CreateMenuRequest;
-import com.viettel.etc.dto.request.CreateShopRequest;
-import com.viettel.etc.dto.request.SearchShopsRequest;
+import com.viettel.etc.dto.request.*;
 import com.viettel.etc.utils.TeleCareException;
 
 /**
@@ -23,6 +20,7 @@ public interface MenusService {
     Object createMenu(CreateMenuRequest request) throws TeleCareException;
     Object updateMenu(Integer menuId, CreateMenuRequest request) throws TeleCareException;
     Object deleteMenu(Integer menuId) throws TeleCareException;
-
     Object getMenuDetail(Integer menuId) throws TeleCareException;
+
+    Object getRecommendMenus(SearchMenusRequest request) throws TeleCareException;
 }
