@@ -1,8 +1,7 @@
-import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
-import java.text.DecimalFormat
 import hudson.tasks.test.AbstractTestResultAction
-import groovy.json.*
+import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 
+import java.text.DecimalFormat
 
 //functions scan source code
 def getSonarQubeAnalysisResult(sonarQubeURL, projectKey) {

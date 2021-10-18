@@ -50,7 +50,7 @@ I. Huong dan lap trinh su dung gencode va cac ham co san
     Neu muon tra ve ma loi tu custom thi su dung ham nhu sau
     return new ResponseEntity<>(FnCommon.responseToClient(ErrorApp.ERR_DATA,resultObj), HttpStatus.OK);
     class dinh nghĩa mã Loi:
-    com.viettel.etc.utils.ErrorApp
+    ErrorApp
     -  thuc hien gan  thong tin mo ta ma loi nhu sau:
     FnCommon.getValueFileMess("err.data")
     - bo sung them key cau hinh duong dan api
@@ -126,7 +126,7 @@ I. Huong dan lap trinh su dung gencode va cac ham co san
     
 8.Thuc hien ky chung thu so tu usb, Gom 2 buoc
   Thuc hien add khai bao thong tin ma loi
-    - file bo sung: com.viettel.etc.utils.Constants
+    - file bo sung: Constants
         /**
          * Ma loi tra ve cua ki tren di dong
          */
@@ -139,7 +139,7 @@ I. Huong dan lap trinh su dung gencode va cac ham co san
             public static final Integer ERR_CODE_NOTFOUND = 3;
     
         }
-    - file bo sung com.viettel.etc.utils.FnCommon:
+    - file bo sung FnCommon:
         /**
          * loai bo gio trong date
          *
