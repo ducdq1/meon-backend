@@ -64,6 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/category/**").permitAll()
 				.antMatchers("/menus/**").permitAll()
 				.antMatchers("/home/**").permitAll()
+				.antMatchers("/tables/*").permitAll()
 	 			.antMatchers(HttpMethod.OPTIONS, new String[]{"/**"}).permitAll()
 				// all other requests need to be authenticated
 				.anyRequest().authenticated().and().

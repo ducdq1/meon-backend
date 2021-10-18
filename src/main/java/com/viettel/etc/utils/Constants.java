@@ -147,4 +147,6 @@ public class Constants {
     public  static final String ORDER_BY_NEAREST ="nearest";
     public  static final String ORDER_BY_TRENDING ="trending";
 
+
+    public  static final int TABLE_STATUS_READY = 0;
 }
