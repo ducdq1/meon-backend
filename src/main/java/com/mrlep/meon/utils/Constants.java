@@ -136,18 +136,29 @@ public class Constants {
         }
     }
 
-    public  static final String MENU_MEDIA_TYPE ="MENU";
-    public  static final String MENU_GROUP_MEDIA_TYPE ="MENU_GROUP";
+    public static final String MENU_MEDIA_TYPE = "MENU";
+    public static final String MENU_GROUP_MEDIA_TYPE = "MENU_GROUP";
 
-    public  static final String ORDER_BY_POPULAR ="popular";
-    public  static final String ORDER_BY_NEW ="new";
-    public  static final String ORDER_BY_NEAREST ="nearest";
-    public  static final String ORDER_BY_TRENDING ="trending";
+    public static final String ORDER_BY_POPULAR = "popular";
+    public static final String ORDER_BY_NEW = "new";
+    public static final String ORDER_BY_NEAREST = "nearest";
+    public static final String ORDER_BY_TRENDING = "trending";
 
 
-    public  static final int TABLE_STATUS_READY = 0;
-    public  static final int TABLE_STATUS_IN_USE = 1;
+    public static final int TABLE_STATUS_READY = 0;
+    public static final int TABLE_STATUS_IN_USE = 1;
 
-    public  static final int BILL_STATUS_NEW = 0;
-    public  static final int BILL_STATUS_PAID = 1;
+    public static final int BILL_STATUS_PROGRESS = 0;
+    public static final int BILL_STATUS_ACCEPTED = 1;
+    public static final int BILL_STATUS_DONE = 2;
+    public static final int BILL_STATUS_CANCEL = 3;
+    public static final int BILL_STATUS_RECONFIRM = 4;
+
+    public static final int ORDER_ITEM_STSTUS_PROGRESS =0;
+    public static final int ORDER_ITEM_STSTUS_ACCEPTED =1;
+    public static final int ORDER_ITEM_STSTUS_DONE = 2;
+    public static final int ORDER_ITEM_STSTUS_DELIVERED =3;
+    public static final int ORDER_ITEM_STSTUS_RECONFIRM =4;
+    public static final int ORDER_ITEM_STSTUS_CANCEL = 5;
+
 }

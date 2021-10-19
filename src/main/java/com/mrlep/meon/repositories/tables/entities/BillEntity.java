@@ -41,7 +41,7 @@ public class BillEntity implements Serializable {
     Integer status;
 
     @Column(name = "members")
-    Integer members;
+    String members;
 
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
@@ -159,11 +159,11 @@ public class BillEntity implements Serializable {
         this.status = status;
     }
 
-    public Integer getMembers() {
+    public String getMembers() {
         return members;
     }
 
-    public void setMembers(Integer members) {
+    public void setMembers(String members) {
         this.members = members;
     }
 

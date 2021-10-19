@@ -21,4 +21,6 @@ public interface BillRepositoryJPA extends JpaRepository<BillEntity, Integer> {
 
     @Query(value = "SELECT count(*) FROM BILL WHERE is_active =1 AND shop_id =:shopId AND table_id =:tableId AND status = 0",nativeQuery = true)
     Integer checkExistBillAndTable(Integer shopId,Integer tableId);
+
+    BillEntity findByIdAndIsActive(Integer id,Integer isActive);
 }

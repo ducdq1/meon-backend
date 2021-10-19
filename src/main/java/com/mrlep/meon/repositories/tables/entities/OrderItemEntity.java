@@ -41,7 +41,7 @@ public class OrderItemEntity implements Serializable {
     Integer status;
 
     @Column(name = "AMOUNT")
-    Integer amount;
+    Double amount;
 
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
@@ -133,11 +133,11 @@ public class OrderItemEntity implements Serializable {
         this.status = status;
     }
 
-    public Integer getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
