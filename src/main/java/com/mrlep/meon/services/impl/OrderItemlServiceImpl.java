@@ -53,8 +53,8 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
 
     @Override
-    public Object getOrderitemsByBill(Integer billId) throws TeleCareException {
-        return null;
+    public Object getOrderItemsByBill(Integer billId) throws TeleCareException {
+        return orderItemlRepositoryJPA.getAllByBillIdAndIsActive(billId,Constants.IS_ACTIVE);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
     @Override
     public Object updateOrderItem(AddOrderItemRequest request) throws TeleCareException {
-        Optional<OrderItemEntity> entityOptional = orderItemlRepositoryJPA.findById(request.getBillId());
+        Optional<OrderItemEntity> entityOptional = orderItemlRepositoryJPA.findById(request.getOrderItemId());
         if (entityOptional.isPresent()) {
             OrderItemEntity entity = entityOptional.get();
             validateAddOrderItem(request);

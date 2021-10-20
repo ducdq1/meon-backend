@@ -2,12 +2,16 @@ package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.dto.request.CreateBillRequest;
 import com.mrlep.meon.dto.request.CreateShopTableRequest;
+import com.mrlep.meon.dto.response.DetailBillResponse;
+import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.ShopRepository;
 import com.mrlep.meon.repositories.tables.BillRepositoryJPA;
 import com.mrlep.meon.repositories.tables.ShopTableRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.BillEntity;
+import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
 import com.mrlep.meon.repositories.tables.entities.ShopTableEntity;
 import com.mrlep.meon.services.BillService;
+import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.services.ShopTableService;
 import com.mrlep.meon.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +27,15 @@ public class BillServiceImpl implements BillService {
     @Autowired
     private BillRepositoryJPA billRepositoryJPA;
 
+    @Autowired
+    private BillRepository billRepository;
 
     @Autowired
     private ShopTableService shopTableService;
 
+
+    @Autowired
+    private OrderItemService orderItemlService;
 
     @Autowired
     private ShopRepository shopRepository;
@@ -38,6 +47,14 @@ public class BillServiceImpl implements BillService {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.table.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
+    }
+
+    @Override
+    public Object getDetailBills(Integer billId) throws TeleCareException {
+        DetailBillResponse detailBillResponse = billRepository.getDetailBill(billId);
+        List<OrderItemEntity> orderItemEntitiesList = (List<OrderItemEntity>) orderItemlService.getOrderItemsByBill(billId);
+        detailBillResponse.setOrderItems(orderItemEntitiesList);
+        return detailBillResponse;
     }
 
     @Override

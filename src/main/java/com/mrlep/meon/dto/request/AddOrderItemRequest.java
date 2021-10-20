@@ -1,6 +1,7 @@
 package com.mrlep.meon.dto.request;
 
 public class AddOrderItemRequest {
+    private Integer orderItemId;
     private Integer billId;
     private Integer shopId;
     private Integer menuId;
@@ -11,6 +12,14 @@ public class AddOrderItemRequest {
     private String description;
     private Integer priority;
     private String cancelMessage;
+
+    public Integer getOrderItemId() {
+        return orderItemId;
+    }
+
+    public void setOrderItemId(Integer orderItemId) {
+        this.orderItemId = orderItemId;
+    }
 
     public Integer getBillId() {
         return billId;
