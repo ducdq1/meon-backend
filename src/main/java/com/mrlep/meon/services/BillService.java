@@ -9,6 +9,7 @@ public interface BillService {
     Object getBillsByShop(Integer shopId) throws TeleCareException;
     Object createBill(CreateBillRequest request) throws TeleCareException;
     Object updateBill(CreateBillRequest request) throws TeleCareException;
-    Object updateBillStatus(Integer userId, Integer tableId, Integer status) throws TeleCareException;
+
+    Object updateBillStatus(Integer userId, Integer billId, Integer status) throws TeleCareException;
     Object deleteBill(Integer billId, Integer userId) throws TeleCareException;
 }

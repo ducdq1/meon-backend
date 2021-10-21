@@ -32,7 +32,8 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
     @Autowired
     private ShopTableService shopTableService;
-
+    @Autowired
+    private BillService billService;
 
     @Autowired
     private ShopRepository shopRepository;
@@ -64,11 +65,10 @@ public class OrderItemlServiceImpl implements OrderItemService {
         entity.setCreateDate(new Date());
         entity.setCreateUserId(request.getCreateUserId());
         entity.setIsActive(Constants.IS_ACTIVE);
-
         entity.setStatus(Constants.ORDER_ITEM_STSTUS_PROGRESS);
         entity = setOrderInfo(request, entity);
         orderItemlRepositoryJPA.save(entity);
-
+        billService.updateBillStatus(request.getCreateUserId(),entity.getBillId(), null);
         return entity.getId();
     }
 

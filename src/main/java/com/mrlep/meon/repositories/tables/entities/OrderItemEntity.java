@@ -47,6 +47,12 @@ public class OrderItemEntity implements Serializable {
     @Column(name = "IS_ACTIVE")
     Integer isActive;
 
+    @Column(name = "MONEY")
+    Integer money;
+
+    @Column(name = "PRICE")
+    Integer price;
+
     @JsonIgnore
     @Column(name = "CREATE_USER_ID")
     Integer createUserId;
@@ -181,5 +187,19 @@ public class OrderItemEntity implements Serializable {
         this.updateUserId = updateUserId;
     }
 
+    public Integer getMoney() {
+        return money;
+    }
 
+    public void setMoney(Integer money) {
+        this.money = money;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 }

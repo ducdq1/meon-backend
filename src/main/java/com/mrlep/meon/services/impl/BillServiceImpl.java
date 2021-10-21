@@ -28,6 +28,9 @@ public class BillServiceImpl implements BillService {
     private BillRepositoryJPA billRepositoryJPA;
 
     @Autowired
+    private OrderItemService orderItemService;
+
+    @Autowired
     private BillRepository billRepository;
 
     @Autowired
@@ -115,9 +118,19 @@ public class BillServiceImpl implements BillService {
         Optional<BillEntity> entityOptional = billRepositoryJPA.findById(billId);
         if (entityOptional.isPresent()) {
             BillEntity entity = entityOptional.get();
-            entity.setStatus(status);
+
+            if (entity.getStatus() == Constants.BILL_STATUS_DONE) {
+                throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.status"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+            }
+
+            if (status != null) {
+                entity.setStatus(status);
+            }
+
             entity.setUpdateDate(new Date());
             entity.setUpdateUserId(userId);
+
+            entity.setTotalMoney(getTotalMoney(entity.getId()));
             billRepositoryJPA.save(entity);
 
             if (status.intValue() == Constants.BILL_STATUS_DONE
@@ -125,9 +138,23 @@ public class BillServiceImpl implements BillService {
                 //cap nhat lai trang thai ban OK
                 shopTableService.updateShopTableStatus(userId, entity.getTableId(), Constants.TABLE_STATUS_READY);
             }
+
+
             return true;
         }
         return null;
+    }
+
+
+    private Integer getTotalMoney(Integer billId) throws TeleCareException {
+        List<OrderItemEntity> orderItemEntities = (List<OrderItemEntity>) orderItemService.getOrderItemsByBill(billId);
+        Integer totalMoney = 0;
+        for (OrderItemEntity orderItemEntity : orderItemEntities) {
+            if (orderItemEntity.getAmount() != null && orderItemEntity.getPrice() != null) {
+                totalMoney += (int) (orderItemEntity.getPrice() * orderItemEntity.getAmount());
+            }
+        }
+        return totalMoney;
     }
 
     @Override
