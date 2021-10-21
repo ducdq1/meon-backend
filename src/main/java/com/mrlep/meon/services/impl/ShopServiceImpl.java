@@ -9,6 +9,7 @@ import com.mrlep.meon.services.ShopService;
 import com.mrlep.meon.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -39,6 +40,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object createShop(CreateShopRequest request) throws TeleCareException {
         validateCreateShop(request);
         ShopEntity entity = new ShopEntity();
@@ -60,6 +62,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object updateShop(CreateShopRequest request) throws TeleCareException {
         validateCreateShop(request);
         ShopEntity entity = shopRepositoryJPA.getByCreateUserIdAndShopId(request.getCreateUserId(), request.getId());
@@ -85,6 +88,7 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object getShopsByUserId(SearchShopsRequest request) throws TeleCareException {
         if (request.getKeySearch() == null) {
             request.setKeySearch("");

@@ -9,6 +9,7 @@ import com.mrlep.meon.utils.Constants;
 import com.mrlep.meon.utils.TeleCareException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -30,6 +31,7 @@ public class MediasServiceImpl implements MediaService {
     private MediaRepositoryJPA mediaRepositoryJPA;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object saveMedias(List<MediaItem> medias, List<MediaItem> deletedMedias, Integer objectId, String objectType, Integer createUser) throws TeleCareException {
         if (medias != null) {
             for (MediaItem media : medias) {

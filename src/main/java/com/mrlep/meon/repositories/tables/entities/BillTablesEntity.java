@@ -17,31 +17,19 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "BILL")
-public class BillEntity implements Serializable {
+@Table(name = "BILL_TABLES")
+public class BillTablesEntity implements Serializable {
 
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @Column(name = "NAME")
-    String name;
-
-    @Column(name = "SHOP_ID")
-    Integer shopId;
+    @Column(name = "BILL_ID")
+    Integer billId;
 
     @Column(name = "TABLE_ID")
-    private Integer tableId;
-
-    @Column(name = "reconfirm_message")
-    private String reconfirmMessage;
-
-    @Column(name = "STATUS")
-    Integer status;
-
-    @Column(name = "members")
-    String members;
+    Integer tableId;
 
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
@@ -63,19 +51,6 @@ public class BillEntity implements Serializable {
     @Column(name = "UPDATE_USER_ID")
     Integer updateUserId;
 
-    @Column(name = "description")
-    String description;
-
-    @Column(name = "total_money")
-    Integer totalMoney;
-
-    public Integer getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(Integer shopId) {
-        this.shopId = shopId;
-    }
 
     public Integer getIsActive() {
         return isActive;
@@ -125,12 +100,12 @@ public class BillEntity implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Integer getBillId() {
+        return billId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setBillId(Integer billId) {
+        this.billId = billId;
     }
 
     public Integer getTableId() {
@@ -139,45 +114,5 @@ public class BillEntity implements Serializable {
 
     public void setTableId(Integer tableId) {
         this.tableId = tableId;
-    }
-
-    public String getReconfirmMessage() {
-        return reconfirmMessage;
-    }
-
-    public void setReconfirmMessage(String reconfirmMessage) {
-        this.reconfirmMessage = reconfirmMessage;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getMembers() {
-        return members;
-    }
-
-    public void setMembers(String members) {
-        this.members = members;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getTotalMoney() {
-        return totalMoney;
-    }
-
-    public void setTotalMoney(Integer totalMoney) {
-        this.totalMoney = totalMoney;
     }
 }

@@ -16,6 +16,7 @@ import com.mrlep.meon.services.MenusService;
 import com.mrlep.meon.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -50,6 +51,7 @@ public class MenusServiceImpl implements MenusService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object createMenuGroup(CreateMenuGroupRequest request) throws TeleCareException {
         validateMenu(request.getName());
         MenuGroupEntity entity = new MenuGroupEntity();
@@ -68,6 +70,7 @@ public class MenusServiceImpl implements MenusService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object updateMenuGroup(Integer menuGroupId, CreateMenuGroupRequest request) throws TeleCareException {
         validateMenu(request.getName());
 
@@ -90,6 +93,7 @@ public class MenusServiceImpl implements MenusService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object deleteMenuGroup(Integer menuGroupId) throws TeleCareException {
         Optional<MenuGroupEntity> menuGroupEntityOptional = menuGroupsRepositoryJPA.findById(menuGroupId);
         if (menuGroupEntityOptional.isPresent()) {
@@ -118,6 +122,7 @@ public class MenusServiceImpl implements MenusService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object createMenu(CreateMenuRequest request) throws TeleCareException {
         validateMenu(request.getName());
 
@@ -141,6 +146,7 @@ public class MenusServiceImpl implements MenusService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object updateMenu(Integer menuId, CreateMenuRequest request) throws TeleCareException {
         validateMenu(request.getName());
         Optional<MenuEntity> menuEntityOptional = menuRepositoryJPA.findById(menuId);
@@ -173,6 +179,7 @@ public class MenusServiceImpl implements MenusService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object deleteMenu(Integer menuId) throws TeleCareException {
         Optional<MenuEntity> menuEntityOptional = menuRepositoryJPA.findById(menuId);
         if (menuEntityOptional.isPresent()) {

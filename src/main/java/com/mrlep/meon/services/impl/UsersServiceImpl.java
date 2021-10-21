@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,6 +60,7 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object register(RegisterRequest request) throws TeleCareException {
         validateRegister(request);
 

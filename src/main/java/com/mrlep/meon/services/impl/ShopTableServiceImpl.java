@@ -8,6 +8,7 @@ import com.mrlep.meon.services.ShopTableService;
 import com.mrlep.meon.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -43,6 +44,7 @@ public class ShopTableServiceImpl implements ShopTableService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object createShopTable(CreateShopTableRequest request) throws TeleCareException {
         validateCreateShop(request);
         List<ShopTableEntity> shopTableEntityList = shopTableRepositoryJPA.getAllByShopIdAndIsActiveAndUniqueNumber(request.getShopId(), Constants.IS_ACTIVE, request.getUniqueNumber());
@@ -64,6 +66,7 @@ public class ShopTableServiceImpl implements ShopTableService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object updateShopTable(CreateShopTableRequest request) throws TeleCareException {
         validateCreateShop(request);
 
@@ -93,6 +96,7 @@ public class ShopTableServiceImpl implements ShopTableService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object updateShopTableStatus(Integer userId, Integer tableId, Integer status) throws TeleCareException {
         Optional<ShopTableEntity> entityOptional = shopTableRepositoryJPA.findById(tableId);
         if (entityOptional.isPresent()) {
@@ -107,6 +111,7 @@ public class ShopTableServiceImpl implements ShopTableService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object deleteShopTable(Integer tableId, Integer userId) throws TeleCareException {
         Optional<ShopTableEntity> entityOptional = shopTableRepositoryJPA.findById(tableId);
         if (entityOptional.isPresent()) {

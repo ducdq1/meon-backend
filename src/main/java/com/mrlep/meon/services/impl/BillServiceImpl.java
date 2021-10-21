@@ -5,18 +5,20 @@ import com.mrlep.meon.dto.request.CreateShopTableRequest;
 import com.mrlep.meon.dto.response.DetailBillResponse;
 import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.ShopRepository;
+import com.mrlep.meon.repositories.tables.BillMembersRepositoryJPA;
 import com.mrlep.meon.repositories.tables.BillRepositoryJPA;
+import com.mrlep.meon.repositories.tables.BillTablesRepositoryJPA;
 import com.mrlep.meon.repositories.tables.ShopTableRepositoryJPA;
-import com.mrlep.meon.repositories.tables.entities.BillEntity;
-import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
-import com.mrlep.meon.repositories.tables.entities.ShopTableEntity;
+import com.mrlep.meon.repositories.tables.entities.*;
 import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.services.ShopTableService;
 import com.mrlep.meon.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.RollbackException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +43,14 @@ public class BillServiceImpl implements BillService {
     private OrderItemService orderItemlService;
 
     @Autowired
+    private BillTablesRepositoryJPA billTablesRepositoryJPA;
+
+
+    @Autowired
+    private BillMembersRepositoryJPA billMembersRepositoryJPA;
+
+
+    @Autowired
     private ShopRepository shopRepository;
 
     private void validateCreateBill(CreateBillRequest request) throws TeleCareException {
@@ -53,6 +63,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object getDetailBills(Integer billId) throws TeleCareException {
         DetailBillResponse detailBillResponse = billRepository.getDetailBill(billId);
         List<OrderItemEntity> orderItemEntitiesList = (List<OrderItemEntity>) orderItemlService.getOrderItemsByBill(billId);
@@ -66,6 +77,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object createBill(CreateBillRequest request) throws TeleCareException {
         validateCreateBill(request);
 
@@ -82,11 +94,30 @@ public class BillServiceImpl implements BillService {
         entity.setReconfirmMessage(request.getReconfirmMessage());
         billRepositoryJPA.save(entity);
 
+        //luu ban
+        BillTablesEntity billTablesEntity = new BillTablesEntity();
+        billTablesEntity.setBillId(entity.getId());
+        billTablesEntity.setCreateDate(new Date());
+        billTablesEntity.setIsActive(Constants.IS_ACTIVE);
+        billTablesEntity.setCreateUserId(entity.getCreateUserId());
+        billTablesEntity.setTableId(request.getTableId());
+        billTablesRepositoryJPA.save(billTablesEntity);
+
+        //Luu bill members
+        BillMembersEntity billMembersEntity = new BillMembersEntity();
+        billMembersEntity.setBillId(entity.getId());
+        billMembersEntity.setUserId(entity.getCreateUserId());
+        billMembersEntity.setCreateDate(new Date());
+        billMembersEntity.setCreateUserId(entity.getCreateUserId());
+        billMembersEntity.setIsActive(Constants.IS_ACTIVE);
+        billMembersRepositoryJPA.save(billMembersEntity);
+
         shopTableService.updateShopTableStatus(request.getCreateUserId(), request.getTableId(), Constants.TABLE_STATUS_IN_USE);
         return entity.getId();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object updateBill(CreateBillRequest request) throws TeleCareException {
         Optional<BillEntity> entityOptional = billRepositoryJPA.findById(request.getBillId());
         if (entityOptional.isPresent()) {
@@ -114,6 +145,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object updateBillStatus(Integer userId, Integer billId, Integer status) throws TeleCareException {
         Optional<BillEntity> entityOptional = billRepositoryJPA.findById(billId);
         if (entityOptional.isPresent()) {
@@ -158,6 +190,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Object deleteBill(Integer billId, Integer userId) throws TeleCareException {
         Optional<BillEntity> entityOptional = billRepositoryJPA.findById(billId);
         if (entityOptional.isPresent()) {

@@ -2,8 +2,8 @@ package com.mrlep.meon.utils;
 
 
 import java.util.function.Supplier;
+
 /**
- *
  * @author datnv5
  */
 public class TeleCareException extends Exception implements Supplier<TeleCareException> {
@@ -25,10 +25,11 @@ public class TeleCareException extends Exception implements Supplier<TeleCareExc
     }
 
 
-    public TeleCareException(ErrorApp errorApp, String message,int code) {
+    public TeleCareException(ErrorApp errorApp, String message, int code) {
         this.errorApp = errorApp;
         this.errorApp.setDescription(message);
         this.errorApp.setCode(code);
+        this.codeError = code;
     }
 
 
