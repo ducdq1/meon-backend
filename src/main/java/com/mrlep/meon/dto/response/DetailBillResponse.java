@@ -1,7 +1,11 @@
 package com.mrlep.meon.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.mrlep.meon.dto.object.BillMembersObject;
+import com.mrlep.meon.dto.object.BillTablesObject;
+import com.mrlep.meon.repositories.tables.entities.BillMembersEntity;
 import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
+import com.mrlep.meon.repositories.tables.entities.ShopTableEntity;
 import lombok.Data;
 
 import java.sql.Time;
@@ -20,6 +24,8 @@ public class DetailBillResponse {
     String phone;
     String avatar;
     List<OrderItemEntity> orderItems;
+    List<BillTablesObject> tables;
+    List<BillMembersObject> members;
 
     public Integer getBillId() {
         return billId;
@@ -91,5 +97,21 @@ public class DetailBillResponse {
 
     public void setOrderItems(List<OrderItemEntity> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public List<BillTablesObject> getTables() {
+        return tables;
+    }
+
+    public void setTables(List<BillTablesObject> tables) {
+        this.tables = tables;
+    }
+
+    public List<BillMembersObject> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<BillMembersObject> members) {
+        this.members = members;
     }
 }

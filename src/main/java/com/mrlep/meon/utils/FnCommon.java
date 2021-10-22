@@ -677,4 +677,20 @@ public class FnCommon extends FunctionCommon {
         return null;
 
     }
+
+    public static boolean validateBillStatus(Integer status) {
+        if (status != null && status != Constants.BILL_STATUS_DONE
+                && status != Constants.BILL_STATUS_CANCEL) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean validateTableStatus(Integer status) {
+        if (status != null && status != Constants.TABLE_STATUS_READY) {
+            return true;
+        }
+        return false;
+    }
+
 }

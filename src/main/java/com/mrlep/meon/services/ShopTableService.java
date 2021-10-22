@@ -9,4 +9,5 @@ public interface ShopTableService {
     Object updateShopTable(CreateShopTableRequest request) throws TeleCareException;
     Object updateShopTableStatus(Integer userId, Integer tableId,Integer status) throws TeleCareException;
     Object deleteShopTable(Integer tableId,Integer userId) throws TeleCareException;
+    Object getTableDetail(Integer id)throws TeleCareException;
 }

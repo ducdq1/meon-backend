@@ -68,6 +68,9 @@ public class BillServiceImpl implements BillService {
         DetailBillResponse detailBillResponse = billRepository.getDetailBill(billId);
         List<OrderItemEntity> orderItemEntitiesList = (List<OrderItemEntity>) orderItemlService.getOrderItemsByBill(billId);
         detailBillResponse.setOrderItems(orderItemEntitiesList);
+        detailBillResponse.setMembers(billRepository.getBillMembers(billId));
+        detailBillResponse.setTables(billRepository.getBillTables(billId));
+
         return detailBillResponse;
     }
 
@@ -103,25 +106,27 @@ public class BillServiceImpl implements BillService {
         billTablesEntity.setTableId(request.getTableId());
         billTablesRepositoryJPA.save(billTablesEntity);
 
-        //Luu bill members
-        BillMembersEntity billMembersEntity = new BillMembersEntity();
-        billMembersEntity.setBillId(entity.getId());
-        billMembersEntity.setUserId(entity.getCreateUserId());
-        billMembersEntity.setCreateDate(new Date());
-        billMembersEntity.setCreateUserId(entity.getCreateUserId());
-        billMembersEntity.setIsActive(Constants.IS_ACTIVE);
-        billMembersRepositoryJPA.save(billMembersEntity);
-
+        addBillMembers(entity.getId(), request.getCreateUserId());
         shopTableService.updateShopTableStatus(request.getCreateUserId(), request.getTableId(), Constants.TABLE_STATUS_IN_USE);
         return entity.getId();
+    }
+
+    private void addBillMembers(Integer billId, Integer userId) {
+        //Luu bill members
+        BillMembersEntity billMembersEntity = new BillMembersEntity();
+        billMembersEntity.setBillId(billId);
+        billMembersEntity.setUserId(userId);
+        billMembersEntity.setCreateDate(new Date());
+        billMembersEntity.setCreateUserId(userId);
+        billMembersEntity.setIsActive(Constants.IS_ACTIVE);
+        billMembersRepositoryJPA.save(billMembersEntity);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Object updateBill(CreateBillRequest request) throws TeleCareException {
-        Optional<BillEntity> entityOptional = billRepositoryJPA.findById(request.getBillId());
-        if (entityOptional.isPresent()) {
-            BillEntity entity = entityOptional.get();
+        BillEntity entity = billRepositoryJPA.findByIdAndIsActive(request.getBillId(), Constants.IS_ACTIVE);
+        if (entity != null) {
             if (Constants.BILL_STATUS_DONE == entity.getStatus().intValue()) {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.status"), ErrorApp.ERROR_INPUTPARAMS.getCode());
             }
@@ -147,9 +152,8 @@ public class BillServiceImpl implements BillService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Object updateBillStatus(Integer userId, Integer billId, Integer status) throws TeleCareException {
-        Optional<BillEntity> entityOptional = billRepositoryJPA.findById(billId);
-        if (entityOptional.isPresent()) {
-            BillEntity entity = entityOptional.get();
+        BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
+        if (entity != null) {
 
             if (entity.getStatus() == Constants.BILL_STATUS_DONE) {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.status"), ErrorApp.ERROR_INPUTPARAMS.getCode());
@@ -192,9 +196,8 @@ public class BillServiceImpl implements BillService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Object deleteBill(Integer billId, Integer userId) throws TeleCareException {
-        Optional<BillEntity> entityOptional = billRepositoryJPA.findById(billId);
-        if (entityOptional.isPresent()) {
-            BillEntity entity = entityOptional.get();
+        BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
+        if (entity != null) {
             entity.setIsActive(Constants.IS_NOT_ACTIVE);
             entity.setUpdateDate(new Date());
             entity.setUpdateUserId(userId);
@@ -202,5 +205,15 @@ public class BillServiceImpl implements BillService {
             return true;
         }
         return null;
+    }
+
+    @Override
+    public Object joinBill(Integer billId, Integer userId) throws TeleCareException {
+        BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
+        if (entity != null && FnCommon.validateBillStatus(entity.getStatus())) {
+            addBillMembers(billId, userId);
+        }
+
+        return true;
     }
 }

@@ -1,11 +1,17 @@
 package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.dto.request.CreateShopTableRequest;
+import com.mrlep.meon.dto.response.DetailTableResponse;
 import com.mrlep.meon.repositories.ShopRepository;
+import com.mrlep.meon.repositories.tables.BillRepositoryJPA;
+import com.mrlep.meon.repositories.tables.BillTablesRepositoryJPA;
 import com.mrlep.meon.repositories.tables.ShopTableRepositoryJPA;
+import com.mrlep.meon.repositories.tables.entities.BillEntity;
+import com.mrlep.meon.repositories.tables.entities.BillTablesEntity;
 import com.mrlep.meon.repositories.tables.entities.ShopTableEntity;
 import com.mrlep.meon.services.ShopTableService;
 import com.mrlep.meon.utils.*;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +31,10 @@ public class ShopTableServiceImpl implements ShopTableService {
 
     @Autowired
     private ShopTableRepositoryJPA shopTableRepositoryJPA;
-
+    @Autowired
+    private BillTablesRepositoryJPA billTablesRepositoryJPA;
+    @Autowired
+    private BillRepositoryJPA billRepositoryJPA;
     @Autowired
     private ShopRepository shopRepository;
 
@@ -125,4 +134,24 @@ public class ShopTableServiceImpl implements ShopTableService {
         return null;
     }
 
+    @Override
+    public Object getTableDetail(Integer id) throws TeleCareException {
+        DetailTableResponse response = new DetailTableResponse();
+        ShopTableEntity shopTableEntity = shopTableRepositoryJPA.getByIdAndIsActive(id, Constants.IS_ACTIVE);
+        if (shopTableEntity != null) {
+            response.setTable(shopTableEntity);
+            List<BillTablesEntity> billTablesEntitys = billTablesRepositoryJPA.findByTableIdAndIsActiveOrderByCreateDateDesc(id, Constants.IS_ACTIVE);
+            if (billTablesEntitys != null && !billTablesEntitys.isEmpty()) {
+                for (BillTablesEntity billTablesEntity : billTablesEntitys) {
+                    Integer billId = billTablesEntity.getBillId();
+                    BillEntity billEntity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
+                    if (billEntity != null && billEntity.getStatus().intValue() != Constants.BILL_STATUS_DONE
+                            && billEntity.getStatus().intValue() != Constants.BILL_STATUS_CANCEL) {
+                        response.setBillInfo(billEntity);
+                    }
+                }
+            }
+        }
+        return response;
+    }
 }

@@ -10,4 +10,5 @@ import java.util.List;
 public interface ShopTableRepositoryJPA extends JpaRepository<ShopTableEntity, Integer> {
     List<ShopTableEntity> getAllByShopIdAndIsActiveOrderByUniqueNumberAsc(Integer shopId, Integer isActive);
     List<ShopTableEntity> getAllByShopIdAndIsActiveAndUniqueNumber(Integer shopId, Integer isActive,Integer uinqueNumber);
+    ShopTableEntity getByIdAndIsActive(Integer id, Integer isActive);
 }

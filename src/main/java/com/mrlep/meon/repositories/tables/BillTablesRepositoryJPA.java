@@ -18,4 +18,5 @@ public interface BillTablesRepositoryJPA extends JpaRepository<BillTablesEntity,
     BillTablesEntity findByIdAndIsActive(Integer id, Integer isActive);
     List<BillTablesEntity> findAllByBillIdAndIsActive(Integer billId,  Integer isActive);
     List<BillTablesEntity> findAllByBillIdAndTableIdAndIsActive(Integer billId, Integer tableId, Integer isActive);
+    List<BillTablesEntity> findByTableIdAndIsActiveOrderByCreateDateDesc(Integer tableId, Integer isActive);
 }

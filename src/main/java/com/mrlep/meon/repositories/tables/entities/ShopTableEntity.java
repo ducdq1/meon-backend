@@ -28,10 +28,8 @@ public class ShopTableEntity implements Serializable {
     @Column(name = "NAME")
     String name;
 
-
     @Column(name = "SHOP_ID")
     Integer shopId;
-
 
     @Column(name = "UNIQUE_NUMBER")
     private Integer uniqueNumber;
@@ -41,7 +39,6 @@ public class ShopTableEntity implements Serializable {
 
     @Column(name = "STATUS")
     Integer status;
-
 
     @JsonIgnore
     @Column(name = "IS_ACTIVE")

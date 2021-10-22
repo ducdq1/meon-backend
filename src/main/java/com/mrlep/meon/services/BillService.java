@@ -12,4 +12,6 @@ public interface BillService {
 
     Object updateBillStatus(Integer userId, Integer billId, Integer status) throws TeleCareException;
     Object deleteBill(Integer billId, Integer userId) throws TeleCareException;
+    Object joinBill(Integer billId, Integer userId) throws TeleCareException;
+    Object addTableBill(Integer billId, Integer userId,Integer tableId) throws TeleCareException;
 }
