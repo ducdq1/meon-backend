@@ -23,7 +23,8 @@ public class SearchMenusResponse {
     String tags;
     Time openTime;
     Time closeTime;
-    Double rating;
+    Integer likeNumber;
+    Integer orderNumber;
     Boolean isVerifyShop;
     Integer numberOrder;
     Integer price;
@@ -81,12 +82,20 @@ public class SearchMenusResponse {
         this.closeTime = closeTime;
     }
 
-    public Double getRating() {
-        return rating;
+    public Integer getLikeNumber() {
+        return likeNumber;
     }
 
-    public void setRating(Double rating) {
-        this.rating = rating;
+    public void setLikeNumber(Integer likeNumber) {
+        this.likeNumber = likeNumber;
+    }
+
+    public Integer getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(Integer orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     public String getShopAddress() {

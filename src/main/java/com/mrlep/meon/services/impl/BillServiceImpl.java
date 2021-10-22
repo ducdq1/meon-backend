@@ -14,6 +14,7 @@ import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.services.ShopTableService;
 import com.mrlep.meon.utils.*;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,16 +55,18 @@ public class BillServiceImpl implements BillService {
     private ShopRepository shopRepository;
 
     private void validateCreateBill(CreateBillRequest request) throws TeleCareException {
-        Integer countTableAndBill = billRepositoryJPA.checkExistBillAndTable(request.getShopId(), request.getTableId());
-
-        if (countTableAndBill != null && countTableAndBill > 0) {
-            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.table.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        if (request.getTableIds() != null) {
+            for (Integer tableId : request.getTableIds()) {
+                Integer countTableAndBill = billRepositoryJPA.checkExistBillAndTable(request.getShopId(), tableId);
+                if (countTableAndBill != null && countTableAndBill > 0) {
+                    throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.table.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+                }
+            }
         }
 
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public Object getDetailBills(Integer billId) throws TeleCareException {
         DetailBillResponse detailBillResponse = billRepository.getDetailBill(billId);
         List<OrderItemEntity> orderItemEntitiesList = (List<OrderItemEntity>) orderItemlService.getOrderItemsByBill(billId);
@@ -75,8 +78,8 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Object getBillsByShop(Integer shopId) throws TeleCareException {
-        return billRepositoryJPA.getAllByShopIdAndIsActiveOrderByCreateDateDesc(shopId, Constants.IS_ACTIVE);
+    public Object getBillsByShop(Integer shopId, Integer offset, Integer pageSize) throws TeleCareException {
+        return billRepository.getBillOfShop(shopId, offset, pageSize);
     }
 
     @Override
@@ -92,22 +95,20 @@ public class BillServiceImpl implements BillService {
         entity.setIsActive(Constants.IS_ACTIVE);
         entity.setStatus(Constants.TABLE_STATUS_READY);
         entity.setCreateDate(new Date());
-        entity.setTableId(request.getTableId());
         entity.setStatus(Constants.BILL_STATUS_PROGRESS);
         entity.setReconfirmMessage(request.getReconfirmMessage());
+        entity.setIsCreateByStaff(request.getIsCreateByStaff());
         billRepositoryJPA.save(entity);
 
-        //luu ban
-        BillTablesEntity billTablesEntity = new BillTablesEntity();
-        billTablesEntity.setBillId(entity.getId());
-        billTablesEntity.setCreateDate(new Date());
-        billTablesEntity.setIsActive(Constants.IS_ACTIVE);
-        billTablesEntity.setCreateUserId(entity.getCreateUserId());
-        billTablesEntity.setTableId(request.getTableId());
-        billTablesRepositoryJPA.save(billTablesEntity);
+        if (request.getTableIds() != null) {
+            for (Integer tableId : request.getTableIds()) {
+                addTableBill(entity.getId(), request.getCreateUserId(), tableId);
+                shopTableService.updateShopTableStatus(request.getCreateUserId(), tableId, Constants.TABLE_STATUS_IN_USE);
+            }
+        }
 
         addBillMembers(entity.getId(), request.getCreateUserId());
-        shopTableService.updateShopTableStatus(request.getCreateUserId(), request.getTableId(), Constants.TABLE_STATUS_IN_USE);
+
         return entity.getId();
     }
 
@@ -120,6 +121,17 @@ public class BillServiceImpl implements BillService {
         billMembersEntity.setCreateUserId(userId);
         billMembersEntity.setIsActive(Constants.IS_ACTIVE);
         billMembersRepositoryJPA.save(billMembersEntity);
+    }
+
+    private void addBillTables(Integer billId, Integer userId, Integer tableId) {
+        //luu ban
+        BillTablesEntity billTablesEntity = new BillTablesEntity();
+        billTablesEntity.setBillId(billId);
+        billTablesEntity.setCreateDate(new Date());
+        billTablesEntity.setIsActive(Constants.IS_ACTIVE);
+        billTablesEntity.setCreateUserId(userId);
+        billTablesEntity.setTableId(tableId);
+        billTablesRepositoryJPA.save(billTablesEntity);
     }
 
     @Override
@@ -139,10 +151,32 @@ public class BillServiceImpl implements BillService {
             entity.setIsActive(Constants.IS_ACTIVE);
             entity.setUpdateDate(new Date());
             entity.setUpdateUserId(request.getCreateUserId());
-            entity.setTableId(request.getTableId());
             entity.setReconfirmMessage(request.getReconfirmMessage());
             entity.setTotalMoney(request.getTotalMoney());
+            entity.setIsCreateByStaff(request.getIsCreateByStaff());
             billRepositoryJPA.save(entity);
+
+            if (request.getTableIds() != null) {
+                for (Integer tableId : request.getTableIds()) {
+                    BillTablesEntity billTablesEntity = billTablesRepositoryJPA.findByTableIdAndBillIdAndIsActive(tableId, entity.getId(), Constants.IS_ACTIVE);
+                    if (billTablesEntity == null) {
+                        addTableBill(entity.getId(), request.getCreateUserId(), tableId);
+                    }
+                }
+            }
+
+            if (request.getDeletedTableIds() != null) {
+                for (Integer tableId : request.getDeletedTableIds()) {
+                    BillTablesEntity billTablesEntity = billTablesRepositoryJPA.findByTableIdAndBillIdAndIsActive(tableId, entity.getId(), Constants.IS_ACTIVE);
+                    if (billTablesEntity != null) {
+                        billTablesEntity.setIsActive(Constants.IS_NOT_ACTIVE);
+                        billTablesEntity.setUpdateDate(new Date());
+                        billTablesEntity.setUpdateUserId(request.getCreateUserId());
+                        billTablesRepositoryJPA.save(billTablesEntity);
+                    }
+                }
+            }
+
             return true;
         }
 
@@ -172,7 +206,11 @@ public class BillServiceImpl implements BillService {
             if (status.intValue() == Constants.BILL_STATUS_DONE
                     || status.intValue() == Constants.BILL_STATUS_CANCEL) {
                 //cap nhat lai trang thai ban OK
-                shopTableService.updateShopTableStatus(userId, entity.getTableId(), Constants.TABLE_STATUS_READY);
+                List<BillTablesEntity> tablesEntities = billTablesRepositoryJPA.findAllByBillIdAndIsActive(entity.getId(), Constants.IS_ACTIVE);
+                for (BillTablesEntity billTable : tablesEntities) {
+                    shopTableService.updateShopTableStatus(userId, billTable.getTableId(), Constants.TABLE_STATUS_READY);
+                }
+
             }
 
 
@@ -212,8 +250,19 @@ public class BillServiceImpl implements BillService {
         BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
         if (entity != null && FnCommon.validateBillStatus(entity.getStatus())) {
             addBillMembers(billId, userId);
+            return true;
         }
 
-        return true;
+        return null;
+    }
+
+    @Override
+    public Object addTableBill(Integer billId, Integer userId, Integer tableId) throws TeleCareException {
+        BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
+        if (entity != null && FnCommon.validateBillStatus(entity.getStatus())) {
+            addBillTables(billId, userId, tableId);
+            return true;
+        }
+        return null;
     }
 }

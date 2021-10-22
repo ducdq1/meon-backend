@@ -31,17 +31,11 @@ public class BillEntity implements Serializable {
     @Column(name = "SHOP_ID")
     Integer shopId;
 
-    @Column(name = "TABLE_ID")
-    private Integer tableId;
-
     @Column(name = "reconfirm_message")
     private String reconfirmMessage;
 
     @Column(name = "STATUS")
     Integer status;
-
-    @Column(name = "members")
-    String members;
 
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
@@ -68,6 +62,9 @@ public class BillEntity implements Serializable {
 
     @Column(name = "total_money")
     Integer totalMoney;
+
+    @Column(name = "is_create_by_staff")
+    Integer isCreateByStaff;
 
     public Integer getShopId() {
         return shopId;
@@ -133,13 +130,6 @@ public class BillEntity implements Serializable {
         this.name = name;
     }
 
-    public Integer getTableId() {
-        return tableId;
-    }
-
-    public void setTableId(Integer tableId) {
-        this.tableId = tableId;
-    }
 
     public String getReconfirmMessage() {
         return reconfirmMessage;
@@ -157,14 +147,6 @@ public class BillEntity implements Serializable {
         this.status = status;
     }
 
-    public String getMembers() {
-        return members;
-    }
-
-    public void setMembers(String members) {
-        this.members = members;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -179,5 +161,13 @@ public class BillEntity implements Serializable {
 
     public void setTotalMoney(Integer totalMoney) {
         this.totalMoney = totalMoney;
+    }
+
+    public Integer getIsCreateByStaff() {
+        return isCreateByStaff;
+    }
+
+    public void setIsCreateByStaff(Integer isCreateByStaff) {
+        this.isCreateByStaff = isCreateByStaff;
     }
 }

@@ -113,10 +113,10 @@ public class BillController {
 
 
     @GetMapping(value = "/shop/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getBillByShopId(@PathVariable Integer shopId) {
+    public ResponseEntity<Object> getBillByShopId(@PathVariable Integer shopId,@RequestParam(value = "0",required = false) Integer offset,@RequestParam(value = "10",required = false) Integer pageSize) {
         Object result;
         try {
-            result = billService.getBillsByShop(shopId);
+            result = billService.getBillsByShop(shopId,  offset, pageSize);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);

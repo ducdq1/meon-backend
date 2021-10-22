@@ -1,18 +1,21 @@
 package com.mrlep.meon.dto.request;
 
 import javax.persistence.Column;
+import java.util.List;
 
 public class CreateBillRequest {
     private Integer billId;
     private String name;
     private Integer shopId;
-    private Integer tableId;
+    private List<Integer> tableIds;
+    private List<Integer> deletedTableIds;
     private String reconfirmMessage;
     private Integer status = 0;
     private Integer createUserId;
     private Integer members;
     private String description;
     private Integer totalMoney;
+    private Integer isCreateByStaff;
 
     public Integer getBillId() {
         return billId;
@@ -38,12 +41,12 @@ public class CreateBillRequest {
         this.shopId = shopId;
     }
 
-    public Integer getTableId() {
-        return tableId;
+    public List<Integer> getTableIds() {
+        return tableIds;
     }
 
-    public void setTableId(Integer tableId) {
-        this.tableId = tableId;
+    public void setTableIds(List<Integer> tableIds) {
+        this.tableIds = tableIds;
     }
 
     public String getReconfirmMessage() {
@@ -92,5 +95,21 @@ public class CreateBillRequest {
 
     public void setTotalMoney(Integer totalMoney) {
         this.totalMoney = totalMoney;
+    }
+
+    public Integer getIsCreateByStaff() {
+        return isCreateByStaff;
+    }
+
+    public void setIsCreateByStaff(Integer isCreateByStaff) {
+        this.isCreateByStaff = isCreateByStaff;
+    }
+
+    public List<Integer> getDeletedTableIds() {
+        return deletedTableIds;
+    }
+
+    public void setDeletedTableIds(List<Integer> deletedTableIds) {
+        this.deletedTableIds = deletedTableIds;
     }
 }

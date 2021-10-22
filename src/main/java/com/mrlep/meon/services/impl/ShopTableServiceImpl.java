@@ -140,15 +140,15 @@ public class ShopTableServiceImpl implements ShopTableService {
         ShopTableEntity shopTableEntity = shopTableRepositoryJPA.getByIdAndIsActive(id, Constants.IS_ACTIVE);
         if (shopTableEntity != null) {
             response.setTable(shopTableEntity);
-            List<BillTablesEntity> billTablesEntitys = billTablesRepositoryJPA.findByTableIdAndIsActiveOrderByCreateDateDesc(id, Constants.IS_ACTIVE);
-            if (billTablesEntitys != null && !billTablesEntitys.isEmpty()) {
-                for (BillTablesEntity billTablesEntity : billTablesEntitys) {
-                    Integer billId = billTablesEntity.getBillId();
-                    BillEntity billEntity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
-                    if (billEntity != null && billEntity.getStatus().intValue() != Constants.BILL_STATUS_DONE
-                            && billEntity.getStatus().intValue() != Constants.BILL_STATUS_CANCEL) {
+            List<BillEntity> billEntitys = billRepositoryJPA.findByTableIdAndIsActive(id);
+            if (billEntitys != null && !billEntitys.isEmpty()) {
+                for (BillEntity billEntity : billEntitys) {
+//                    Integer billId = billTablesEntity.getBillId();
+//                    BillEntity billEntity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
+//                    if (billEntity != null && billEntity.getStatus().intValue() != Constants.BILL_STATUS_DONE
+//                            && billEntity.getStatus().intValue() != Constants.BILL_STATUS_CANCEL) {
                         response.setBillInfo(billEntity);
-                    }
+//                    }
                 }
             }
         }

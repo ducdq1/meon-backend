@@ -1,8 +1,10 @@
 package com.mrlep.meon.repositories.tables;
 
+import com.mrlep.meon.repositories.tables.entities.BillEntity;
 import com.mrlep.meon.repositories.tables.entities.BillMembersEntity;
 import com.mrlep.meon.repositories.tables.entities.BillTablesEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,7 +18,8 @@ import java.util.List;
 @Repository
 public interface BillTablesRepositoryJPA extends JpaRepository<BillTablesEntity, Integer> {
     BillTablesEntity findByIdAndIsActive(Integer id, Integer isActive);
+    BillTablesEntity findByTableIdAndBillIdAndIsActive(Integer id, Integer billId,Integer isActive);
     List<BillTablesEntity> findAllByBillIdAndIsActive(Integer billId,  Integer isActive);
     List<BillTablesEntity> findAllByBillIdAndTableIdAndIsActive(Integer billId, Integer tableId, Integer isActive);
-    List<BillTablesEntity> findByTableIdAndIsActiveOrderByCreateDateDesc(Integer tableId, Integer isActive);
+
 }

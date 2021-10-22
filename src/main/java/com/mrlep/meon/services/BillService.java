@@ -6,7 +6,7 @@ import com.mrlep.meon.utils.TeleCareException;
 
 public interface BillService {
     Object getDetailBills(Integer billId) throws TeleCareException;
-    Object getBillsByShop(Integer shopId) throws TeleCareException;
+    Object getBillsByShop(Integer shopId,Integer offset,Integer pageSize) throws TeleCareException;
     Object createBill(CreateBillRequest request) throws TeleCareException;
     Object updateBill(CreateBillRequest request) throws TeleCareException;
 

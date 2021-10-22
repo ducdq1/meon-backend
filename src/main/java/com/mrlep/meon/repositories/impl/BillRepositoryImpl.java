@@ -3,6 +3,7 @@ package com.mrlep.meon.repositories.impl;
 import com.mrlep.meon.dto.object.BillMembersObject;
 import com.mrlep.meon.dto.object.BillTablesObject;
 import com.mrlep.meon.dto.request.SearchShopsRequest;
+import com.mrlep.meon.dto.response.BillItem;
 import com.mrlep.meon.dto.response.DetailBillResponse;
 import com.mrlep.meon.dto.response.SearchShopResponse;
 import com.mrlep.meon.repositories.BillRepository;
@@ -26,9 +27,9 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append(" SELECT b.id billId, b.name billName, b.status billStatus,b.description,b.totalMoney,u.full_name userName ");
+        sql.append(" SELECT b.id billId, b.name billName, b.status billStatus,b.description,b.total_Money totalMoney,u.full_name userName, ");
         sql.append(" u.phone, u.avatar ");
-        sql.append("  FROM BILL b. JOIN USERS u on u.id = create_user_id  ");
+        sql.append("  FROM BILL b JOIN USERS u on u.id = b.create_user_id  ");
         sql.append("  WHERE b.id=:billId AND b.is_active = 1 ");
         params.put("billId", billId);
 
@@ -41,7 +42,7 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT u.id userId, u.full_name userName, u.phone ,u.avatar ");
-        sql.append("  FROM BILL b. JOIN BILL_MEMBERS bm on b.id = bm.bill_id AND bm.is_active = 1  ");
+        sql.append("  FROM BILL b JOIN BILL_MEMBERS bm on b.id = bm.bill_id AND bm.is_active = 1  ");
         sql.append("  JOIN USERS u on u.id = bm.user_id AND u.is_active = 1  ");
         sql.append("  WHERE b.id=:billId AND b.is_active = 1 ");
         params.put("billId", billId);
@@ -61,5 +62,19 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         params.put("billId", billId);
 
         return (List<BillTablesObject>) getListData(sql, params, 0, null, BillTablesObject.class);
+    }
+
+    @Override
+    public ResultSelectEntity getBillOfShop(Integer shopId, Integer offset, Integer pageSize) {
+        HashMap<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder();
+
+        sql.append(" SELECT b.id billId, b.name billName, b.status billStatus,b.description,b.total_Money totalMoney,u.full_name userName, ");
+        sql.append(" u.phone, u.avatar ");
+        sql.append("  FROM BILL b JOIN USERS u on u.id = b.create_user_id  ");
+        sql.append("  WHERE b.shop_id=:shopId AND b.is_active = 1 ORDER BY b.create_date DESC ");
+        params.put("shopId", shopId);
+
+        return getListDataAndCount(sql, params, offset, pageSize, BillItem.class);
     }
 }
