@@ -23,9 +23,11 @@ public class ShopRepositoryImpl extends CommonDataBaseRepository implements Shop
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT s.id ,s.name, s.address, s.phone, s.image_url imageUrl, s.description,s.tags, cs.name shopTypeName,cs.url_icon shopTypeIcon, ");
-        sql.append(" s.rating, s.open_time openTime,s.close_time closeTime,s.special_tag, s.is_verify isVerify, ");
+        sql.append(" s.like_number likeNumber, s.open_time openTime,s.close_time closeTime,s.special_tag, s.is_verify isVerify, ");
         if (request.getLat() != null && request.getLng() != null) {
-            sql.append(" concat(ABS(lat-$user_lat) + ABS(lng - $user_lng),'m')  AS distance ");
+            sql.append(" concat(ABS(lat - :userLat) + ABS(lng - :userLng),'m')  AS distance ");
+            params.put("userLat",request.getLat());
+            params.put("userLng",request.getLng());
         } else {
             sql.append(" '0m' AS distance ");
         }
@@ -42,13 +44,13 @@ public class ShopRepositoryImpl extends CommonDataBaseRepository implements Shop
             params.put("keySearch", FnCommon.getSearchLikeValue(keySearch.trim().toLowerCase()));
         }
 
-        if (Constants.ORDER_BY_POPULAR.equals(request.getOrderBy())) {
+        if (Constants.ORDER_BY_POPULAR.equals(orderBy)) {
             sql.append(" ORDER BY s.create_date DESC ");
-        } else if (Constants.ORDER_BY_NEW.equals(request.getOrderBy())) {
+        } else if (Constants.ORDER_BY_NEW.equals(orderBy)) {
             sql.append(" ORDER BY s.create_date DESC ");
-        } else if (Constants.ORDER_BY_NEAREST.equals(request.getOrderBy())) {
+        } else if (Constants.ORDER_BY_NEAREST.equals(orderBy)) {
             sql.append(" ORDER BY distance ASC ");
-        } else if (Constants.ORDER_BY_TRENDING.equals(request.getOrderBy())) {
+        } else if (Constants.ORDER_BY_TRENDING.equals(orderBy)) {
             sql.append(" ORDER BY s.create_date DESC ");
         } else {
             sql.append(" ORDER BY s.create_date DESC ");

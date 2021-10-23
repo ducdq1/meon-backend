@@ -6,8 +6,10 @@ import com.mrlep.meon.dto.request.RegisterRequest;
 import com.mrlep.meon.dto.request.VerifyOTPRequest;
 import com.mrlep.meon.dto.response.LoginResponse;
 import com.mrlep.meon.repositories.tables.OTPRepositoryJPA;
+import com.mrlep.meon.repositories.tables.StaffRepositoryJPA;
 import com.mrlep.meon.repositories.tables.UsersRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.OTPEntity;
+import com.mrlep.meon.repositories.tables.entities.StaffEntity;
 import com.mrlep.meon.repositories.tables.entities.UsersEntity;
 import com.mrlep.meon.services.UsersService;
 import com.mrlep.meon.utils.*;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -39,12 +42,15 @@ public class UsersServiceImpl implements UsersService {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private StaffRepositoryJPA staffRepositoryJPA;
+
     @Override
     public Object login(LoginRequest request) throws TeleCareException {
         validateLogin(request);
 
         UsersEntity usersEntity = usersRepositoryJPA.getUserByPhoneAndPass(request.getPhone().trim(), request.getPass());
-        if(usersEntity == null){
+        if (usersEntity == null) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.login.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
@@ -55,6 +61,10 @@ public class UsersServiceImpl implements UsersService {
         String token = jwtTokenUtil.generateToken(userDetails);
         response.setToken(token);
         response.setUser(usersEntity);
+        if (request.isShopMode()) {
+            List<StaffEntity> staffEntityList = staffRepositoryJPA.getAllByUserIdAndIsActive(usersEntity.getId(), Constants.IS_ACTIVE);
+            response.setStaffs(staffEntityList);
+        }
 
         return response;
     }

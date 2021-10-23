@@ -1,7 +1,7 @@
 package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.repositories.tables.HomeBannerRepositoryJPA;
-import com.mrlep.meon.services.HomeBanenrService;
+import com.mrlep.meon.services.HomeBannerService;
 import com.mrlep.meon.utils.Constants;
 import com.mrlep.meon.utils.TeleCareException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * @date Thu Sep 23 08:29:44 ICT 2021
  */
 @Service
-public class HomeBannersServiceImpl implements HomeBanenrService {
+public class HomeBannersServiceImpl implements HomeBannerService {
 
     @Autowired
     private HomeBannerRepositoryJPA homeBannerRepositoryJPA;

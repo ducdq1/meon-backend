@@ -12,6 +12,8 @@ public class CreateShopRequest {
     private String description;
     private String tags;
     private String imageUrl;
+    private String openTime;
+    private String closeTime;
 
     public String getName() {
         return name;
@@ -100,4 +102,21 @@ public class CreateShopRequest {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public String getOpenTime() {
+        return openTime;
+    }
+
+    public void setOpenTime(String openTime) {
+        this.openTime = openTime;
+    }
+
+    public String getCloseTime() {
+        return closeTime;
+    }
+
+    public void setCloseTime(String closeTime) {
+        this.closeTime = closeTime;
+    }
 }
+

@@ -67,8 +67,28 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
+    public Object getBillActiveByUser(Integer userId) throws TeleCareException {
+        DetailBillResponse detailBillResponse = billRepository.getBillActiveByUser(userId);
+        if (detailBillResponse == null) {
+            return null;
+        }
+
+        List<OrderItemEntity> orderItemEntitiesList = (List<OrderItemEntity>) orderItemlService.getOrderItemsByBill(detailBillResponse.getBillId());
+        detailBillResponse.setOrderItems(orderItemEntitiesList);
+        detailBillResponse.setMembers(billRepository.getBillMembers(detailBillResponse.getBillId()));
+        detailBillResponse.setTables(billRepository.getBillTables(detailBillResponse.getBillId()));
+
+        return detailBillResponse;
+
+    }
+
+    @Override
     public Object getDetailBills(Integer billId) throws TeleCareException {
         DetailBillResponse detailBillResponse = billRepository.getDetailBill(billId);
+        if (detailBillResponse == null) {
+            return null;
+        }
+
         List<OrderItemEntity> orderItemEntitiesList = (List<OrderItemEntity>) orderItemlService.getOrderItemsByBill(billId);
         detailBillResponse.setOrderItems(orderItemEntitiesList);
         detailBillResponse.setMembers(billRepository.getBillMembers(billId));

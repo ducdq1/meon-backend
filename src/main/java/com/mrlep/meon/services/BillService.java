@@ -5,6 +5,7 @@ import com.mrlep.meon.dto.request.CreateShopTableRequest;
 import com.mrlep.meon.utils.TeleCareException;
 
 public interface BillService {
+    Object getBillActiveByUser(Integer userId) throws TeleCareException;
     Object getDetailBills(Integer billId) throws TeleCareException;
     Object getBillsByShop(Integer shopId,Integer offset,Integer pageSize) throws TeleCareException;
     Object createBill(CreateBillRequest request) throws TeleCareException;

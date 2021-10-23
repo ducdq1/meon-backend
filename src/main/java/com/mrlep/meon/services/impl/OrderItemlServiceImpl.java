@@ -65,7 +65,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
         entity.setCreateDate(new Date());
         entity.setCreateUserId(request.getCreateUserId());
         entity.setIsActive(Constants.IS_ACTIVE);
-        entity.setStatus(Constants.ORDER_ITEM_STSTUS_PROGRESS);
+        entity.setStatus(Constants.ORDER_ITEM_STATUS_PROGRESS);
         entity = setOrderInfo(request, entity);
         orderItemlRepositoryJPA.save(entity);
         billService.updateBillStatus(request.getCreateUserId(),entity.getBillId(), null);

@@ -16,6 +16,7 @@ import java.util.List;
 @Data
 public class DetailBillResponse {
     Integer billId;
+    Integer shopId;
     String billName;
     Integer billStatus;
     String description;
@@ -113,5 +114,13 @@ public class DetailBillResponse {
 
     public void setMembers(List<BillMembersObject> members) {
         this.members = members;
+    }
+
+    public Integer getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Integer shopId) {
+        this.shopId = shopId;
     }
 }

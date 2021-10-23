@@ -8,6 +8,6 @@ import com.mrlep.meon.utils.TeleCareException;
  * @author ToolGen
  * @date Thu Sep 23 09:15:40 ICT 2021
  */
-public interface HomeBanenrService {
+public interface HomeBannerService {
     Object getHomeBanners() throws TeleCareException;
 }

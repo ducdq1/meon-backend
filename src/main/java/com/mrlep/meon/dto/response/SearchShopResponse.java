@@ -18,9 +18,9 @@ public class SearchShopResponse {
     String shopTypeName;
     String shopTypeIcon;
     String tags;
-    Time openTime;
-    Time closeTime;
-    Double rating;
+    String openTime;
+    String closeTime;
+    Integer likeNumber;
     String specialTag;
     Boolean isVerify;
 
@@ -97,22 +97,6 @@ public class SearchShopResponse {
         this.tags = tags;
     }
 
-    public Date getOpenTime() {
-        return openTime;
-    }
-
-    public void setOpenTime(Time openTime) {
-        this.openTime = openTime;
-    }
-
-    public Time getCloseTime() {
-        return closeTime;
-    }
-
-    public void setCloseTime(Time closeTime) {
-        this.closeTime = closeTime;
-    }
-
     public Boolean getVerify() {
         return isVerify;
     }
@@ -121,12 +105,28 @@ public class SearchShopResponse {
         isVerify = verify;
     }
 
-    public Double getRating() {
-        return rating;
+    public void setOpenTime(String openTime) {
+        this.openTime = openTime;
     }
 
-    public void setRating(Double rating) {
-        this.rating = rating;
+    public void setCloseTime(String closeTime) {
+        this.closeTime = closeTime;
+    }
+
+    public String getOpenTime() {
+        return openTime;
+    }
+
+    public String getCloseTime() {
+        return closeTime;
+    }
+
+    public Integer getLikeNumber() {
+        return likeNumber;
+    }
+
+    public void setLikeNumber(Integer likeNumber) {
+        this.likeNumber = likeNumber;
     }
 
     public String getSpecialTag() {

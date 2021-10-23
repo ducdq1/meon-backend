@@ -21,4 +21,6 @@ public interface UsersRepositoryJPA extends JpaRepository<UsersEntity, Integer> 
 
     UsersEntity getByPhoneAndIsActive(String phone,Integer isActive);
 
+    UsersEntity getByIdAndIsActive(Integer id,Integer isActive);
+
 }

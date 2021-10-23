@@ -144,6 +144,23 @@ public class BillController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/check-bill", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getBillActiveByUser(@AuthenticationPrincipal Authentication authentication) {
+        Object result;
+        try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            result = billService.getBillActiveByUser(userId);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "/{billId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteBill(@PathVariable Integer billId, @AuthenticationPrincipal Authentication authentication) {
         Object result;

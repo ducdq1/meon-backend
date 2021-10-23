@@ -28,7 +28,7 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT b.id billId, b.name billName, b.status billStatus,b.description,b.total_Money totalMoney,u.full_name userName, ");
-        sql.append(" u.phone, u.avatar ");
+        sql.append(" u.phone, u.avatar,b.shop_id shopId ");
         sql.append("  FROM BILL b JOIN USERS u on u.id = b.create_user_id  ");
         sql.append("  WHERE b.id=:billId AND b.is_active = 1 ");
         params.put("billId", billId);
@@ -76,5 +76,19 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         params.put("shopId", shopId);
 
         return getListDataAndCount(sql, params, offset, pageSize, BillItem.class);
+    }
+
+    @Override
+    public DetailBillResponse getBillActiveByUser(Integer userId) {
+        HashMap<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder();
+
+        sql.append(" SELECT b.id billId, b.name billName, b.status billStatus,b.description,b.total_Money totalMoney,u.full_name userName, ");
+        sql.append(" u.phone, u.avatar,b.shop_id shopId ");
+        sql.append("  FROM BILL b JOIN USERS u on u.id = b.create_user_id  ");
+        sql.append("  WHERE u.id=:userId AND b.is_active = 1 AND b.status <> 2 AND b.status <> 5 AND u.is_active = 1");
+        params.put("userId", userId);
+
+        return (DetailBillResponse) getFirstData(sql, params, DetailBillResponse.class);
     }
 }

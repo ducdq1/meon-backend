@@ -1,8 +1,9 @@
 package com.mrlep.meon.controllers;
 
-import com.mrlep.meon.dto.request.CreateShopRequest;
-import com.mrlep.meon.dto.request.SearchShopsRequest;
-import com.mrlep.meon.services.ShopService;
+import com.mrlep.meon.dto.request.CreateBillRequest;
+import com.mrlep.meon.dto.request.CreateStaffRequest;
+import com.mrlep.meon.services.BillService;
+import com.mrlep.meon.services.StaffService;
 import com.mrlep.meon.utils.FnCommon;
 import com.mrlep.meon.utils.TeleCareException;
 import com.mrlep.meon.xlibrary.core.constants.FunctionCommon;
@@ -14,31 +15,26 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Autogen class: Lop thong tin benh nhan covid F
- *
- * @author ToolGen
- * @date Thu Sep 23 09:18:59 ICT 2021
- */
 @RestController
-@RequestMapping("shops")
+@RequestMapping("staff")
 @CrossOrigin(origins = "*")
-public class ShopController {
+public class StaffController {
 
     @Autowired
-    private ShopService shopService;
+    private StaffService staffService;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> createShop(@RequestBody CreateShopRequest request, @AuthenticationPrincipal Authentication authentication) {
+    public ResponseEntity<Object> createStaff(@RequestBody CreateStaffRequest request, @AuthenticationPrincipal Authentication authentication) {
         Object result;
         try {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             request.setCreateUserId(userId);
-            result = shopService.createShop(request);
+            result = staffService.createStaff(request);
+
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
@@ -46,18 +42,18 @@ public class ShopController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{shopId}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateShp(@RequestBody CreateShopRequest request,@PathVariable Integer shopId,@AuthenticationPrincipal Authentication authentication) {
+    @PutMapping(value = "/{staffId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> updateStaff(@RequestBody CreateStaffRequest request, @PathVariable Integer staffId, @AuthenticationPrincipal Authentication authentication) {
         Object result;
         try {
-            request.setId(shopId);
+            request.setStaffId(staffId);
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             request.setCreateUserId(userId);
-            result = shopService.updateShop(request);
+            result = staffService.updateStaff(request);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
@@ -65,16 +61,15 @@ public class ShopController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{shopId}",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getShopById(@PathVariable Integer shopId) {
+    @GetMapping(value = "/shop/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getStaffsByShopId(@PathVariable Integer shopId) {
         Object result;
         try {
-
-            result = shopService.getShopsById(shopId);
+            result = staffService.getStaffsByShop(shopId);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
@@ -82,16 +77,15 @@ public class ShopController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
-
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getAllShop() {
+    @GetMapping(value = "/{staffId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getBillDetail(@PathVariable Integer staffId) {
         Object result;
         try {
-            result = shopService.getAllShops();
+            result = staffService.getStaffDetail(staffId);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
@@ -99,39 +93,21 @@ public class ShopController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/search",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getShopByUserId(@RequestBody SearchShopsRequest request, @AuthenticationPrincipal Authentication authentication) {
+    @DeleteMapping(value = "/{staffId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> deleteStaff(@PathVariable Integer staffId, @AuthenticationPrincipal Authentication authentication) {
         Object result;
         try {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
-            request.setUserId(userId);
-            result = shopService.getShopsByUserId(request);
+            result = staffService.deleteStaff(staffId,userId);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
-
-    @PostMapping(value = "/recommend",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getRecommendedShop(@RequestBody SearchShopsRequest request) {
-        Object result;
-        try {
-            result = shopService.getRecommendShops(request);
-        } catch (TeleCareException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
-        }catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
-    }
-
 
 }

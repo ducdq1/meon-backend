@@ -56,6 +56,8 @@ public class ShopServiceImpl implements ShopService {
         entity.setTags(request.getTags());
         entity.setDescription(request.getDescription());
         entity.setImageUrl(request.getImageUrl());
+        entity.setOpenTime(request.getOpenTime());
+        entity.setCloseTime(request.getCloseTime());
 
         shopRepositoryJPA.save(entity);
         return entity;
@@ -79,7 +81,8 @@ public class ShopServiceImpl implements ShopService {
             entity.setTags(request.getTags());
             entity.setDescription(request.getDescription());
             entity.setImageUrl(request.getImageUrl());
-
+            entity.setOpenTime(request.getOpenTime());
+            entity.setCloseTime(request.getCloseTime());
             shopRepositoryJPA.save(entity);
 
             return entity;

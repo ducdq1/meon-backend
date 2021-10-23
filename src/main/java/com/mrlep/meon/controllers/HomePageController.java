@@ -1,6 +1,6 @@
 package com.mrlep.meon.controllers;
 
-import com.mrlep.meon.services.HomeBanenrService;
+import com.mrlep.meon.services.HomeBannerService;
 import com.mrlep.meon.utils.FnCommon;
 import com.mrlep.meon.xlibrary.core.constants.FunctionCommon;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 public class HomePageController {
 
     @Autowired
-    private HomeBanenrService homeBanenrService;
+    private HomeBannerService homeBanenrService;
 
     @Autowired
     HttpServletRequest request;

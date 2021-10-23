@@ -53,14 +53,14 @@ public class ShopEntity implements Serializable {
     @Column(name = "SPECIAL_TAG")
     String specialTag;
 
-    @Column(name = "RATING")
-    Double rating;
+    @Column(name = "like_number")
+    Integer likeNumber;
 
     @Column(name = "OPEN_TIME")
-    Date openTime;
+    String openTime;
 
     @Column(name = "CLOSE_TIME")
-    Date close;
+    String closeTime;
 
     @JsonIgnore
     @Column(name = "CREATE_DATE")
@@ -211,27 +211,27 @@ public class ShopEntity implements Serializable {
         this.specialTag = specialTag;
     }
 
-    public Double getRating() {
-        return rating;
+    public Integer getLikeNumber() {
+        return likeNumber;
     }
 
-    public void setRating(Double rating) {
-        this.rating = rating;
+    public void setLikeNumber(Integer likeNumber) {
+        this.likeNumber = likeNumber;
     }
 
-    public Date getOpenTime() {
+    public String getOpenTime() {
         return openTime;
     }
 
-    public void setOpenTime(Date openTime) {
+    public void setOpenTime(String openTime) {
         this.openTime = openTime;
     }
 
-    public Date getClose() {
-        return close;
+    public String getCloseTime() {
+        return closeTime;
     }
 
-    public void setClose(Date close) {
-        this.close = close;
+    public void setCloseTime(String closeTime) {
+        this.closeTime = closeTime;
     }
 }
