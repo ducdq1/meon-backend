@@ -1,6 +1,6 @@
 package com.mrlep.meon.dto.object;
 
-public class BillMembersObject {
+public class BillMembersItem {
     String userName;
     Integer userId;
     String phone;

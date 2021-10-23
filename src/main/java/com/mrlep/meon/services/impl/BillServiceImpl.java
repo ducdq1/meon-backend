@@ -1,5 +1,6 @@
 package com.mrlep.meon.services.impl;
 
+import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.dto.request.CreateBillRequest;
 import com.mrlep.meon.dto.request.CreateShopTableRequest;
 import com.mrlep.meon.dto.response.DetailBillResponse;
@@ -39,7 +40,6 @@ public class BillServiceImpl implements BillService {
     @Autowired
     private ShopTableService shopTableService;
 
-
     @Autowired
     private OrderItemService orderItemlService;
 
@@ -73,7 +73,7 @@ public class BillServiceImpl implements BillService {
             return null;
         }
 
-        List<OrderItemEntity> orderItemEntitiesList = (List<OrderItemEntity>) orderItemlService.getOrderItemsByBill(detailBillResponse.getBillId());
+        List<OrderItem> orderItemEntitiesList = (List<OrderItem>) orderItemlService.getOrderItemsByBill(detailBillResponse.getBillId());
         detailBillResponse.setOrderItems(orderItemEntitiesList);
         detailBillResponse.setMembers(billRepository.getBillMembers(detailBillResponse.getBillId()));
         detailBillResponse.setTables(billRepository.getBillTables(detailBillResponse.getBillId()));
@@ -89,7 +89,7 @@ public class BillServiceImpl implements BillService {
             return null;
         }
 
-        List<OrderItemEntity> orderItemEntitiesList = (List<OrderItemEntity>) orderItemlService.getOrderItemsByBill(billId);
+        List<OrderItem> orderItemEntitiesList = (List<OrderItem>) orderItemlService.getOrderItemsByBill(billId);
         detailBillResponse.setOrderItems(orderItemEntitiesList);
         detailBillResponse.setMembers(billRepository.getBillMembers(billId));
         detailBillResponse.setTables(billRepository.getBillTables(billId));
@@ -223,14 +223,13 @@ public class BillServiceImpl implements BillService {
             entity.setTotalMoney(getTotalMoney(entity.getId()));
             billRepositoryJPA.save(entity);
 
-            if (status.intValue() == Constants.BILL_STATUS_DONE
-                    || status.intValue() == Constants.BILL_STATUS_CANCEL) {
+            if (status != null && (status.intValue() == Constants.BILL_STATUS_DONE
+                    || status.intValue() == Constants.BILL_STATUS_CANCEL)) {
                 //cap nhat lai trang thai ban OK
                 List<BillTablesEntity> tablesEntities = billTablesRepositoryJPA.findAllByBillIdAndIsActive(entity.getId(), Constants.IS_ACTIVE);
                 for (BillTablesEntity billTable : tablesEntities) {
                     shopTableService.updateShopTableStatus(userId, billTable.getTableId(), Constants.TABLE_STATUS_READY);
                 }
-
             }
 
 

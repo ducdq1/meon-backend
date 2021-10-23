@@ -1,6 +1,6 @@
 package com.mrlep.meon.dto.object;
 
-public class BillTablesObject {
+public class BillTablesItem {
     Integer tableId;
     String tableName;
     Integer tableNumber;

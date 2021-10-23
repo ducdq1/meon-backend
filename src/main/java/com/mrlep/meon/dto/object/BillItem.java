@@ -1,12 +1,7 @@
-package com.mrlep.meon.dto.response;
+package com.mrlep.meon.dto.object;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mrlep.meon.dto.object.BillMembersObject;
-import com.mrlep.meon.dto.object.BillTablesObject;
-import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
 import lombok.Data;
-
-import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data

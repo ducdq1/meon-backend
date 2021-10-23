@@ -15,6 +15,6 @@ import java.util.List;
  * @date Thu Sep 23 08:19:38 ICT 2021
  */
 @Repository
-public interface OrderItemlRepositoryJPA extends JpaRepository<OrderItemEntity, Integer> {
+public interface OrderItemRepositoryJPA extends JpaRepository<OrderItemEntity, Integer> {
     List<OrderItemEntity> getAllByBillIdAndIsActive(Integer billId, Integer isActive);
 }

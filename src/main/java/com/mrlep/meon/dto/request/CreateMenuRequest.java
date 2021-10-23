@@ -1,6 +1,7 @@
 package com.mrlep.meon.dto.request;
 
 import com.mrlep.meon.dto.object.MediaItem;
+import com.mrlep.meon.repositories.tables.entities.MenuOptionEntity;
 
 import java.util.List;
 
@@ -14,7 +15,12 @@ public class CreateMenuRequest {
     private String discount;
     private String tags;
     private Integer price;
-    private  Integer orderPriority;
+    private Integer orderPriority;
+    private String unit;
+
+    private List<MenuOptionEntity> options;
+    private List<Integer> deletedOptions;
+
     private List<MediaItem> medias;
     private List<MediaItem> deletedMedias;
 
@@ -112,5 +118,29 @@ public class CreateMenuRequest {
 
     public void setDeletedMedias(List<MediaItem> deletedMedias) {
         this.deletedMedias = deletedMedias;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public List<MenuOptionEntity> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<MenuOptionEntity> options) {
+        this.options = options;
+    }
+
+    public List<Integer> getDeletedOptions() {
+        return deletedOptions;
+    }
+
+    public void setDeletedOptions(List<Integer> deletedOptions) {
+        this.deletedOptions = deletedOptions;
     }
 }

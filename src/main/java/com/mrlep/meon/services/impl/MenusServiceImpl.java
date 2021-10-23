@@ -7,10 +7,12 @@ import com.mrlep.meon.dto.response.DetailMenuResponse;
 import com.mrlep.meon.repositories.MenusRepository;
 import com.mrlep.meon.repositories.tables.MediaRepositoryJPA;
 import com.mrlep.meon.repositories.tables.MenuGroupsRepositoryJPA;
+import com.mrlep.meon.repositories.tables.MenusOptionRepositoryJPA;
 import com.mrlep.meon.repositories.tables.MenusRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.MediaEntity;
 import com.mrlep.meon.repositories.tables.entities.MenuEntity;
 import com.mrlep.meon.repositories.tables.entities.MenuGroupEntity;
+import com.mrlep.meon.repositories.tables.entities.MenuOptionEntity;
 import com.mrlep.meon.services.MediaService;
 import com.mrlep.meon.services.MenusService;
 import com.mrlep.meon.utils.*;
@@ -41,6 +43,9 @@ public class MenusServiceImpl implements MenusService {
 
     @Autowired
     private MediaService mediaService;
+
+    @Autowired
+    private MenusOptionRepositoryJPA menusOptionRepositoryJPA;
 
     @Autowired
     private MenusRepository menusRepository;
@@ -109,10 +114,10 @@ public class MenusServiceImpl implements MenusService {
 
     @Override
     public Object getMenus(Integer shopId, Integer menuGroupId) throws TeleCareException {
-        if(menuGroupId >=0) {
+        if (menuGroupId >= 0) {
             return menuRepositoryJPA.getAllByShopIdAndMenuGroupIdAndIsActive(shopId, menuGroupId, Constants.IS_ACTIVE);
-        }else{
-            return menuRepositoryJPA.getAllByShopIdAndIsActive(shopId,Constants.IS_ACTIVE);
+        } else {
+            return menuRepositoryJPA.getAllByShopIdAndIsActive(shopId, Constants.IS_ACTIVE);
         }
     }
 
@@ -127,6 +132,68 @@ public class MenusServiceImpl implements MenusService {
         validateMenu(request.getName());
 
         MenuEntity entity = new MenuEntity();
+        entity = setMenuInfo(request, entity);
+        saveMenuOption(request, entity);
+        mediaService.saveMedias(request.getMedias(), request.getDeletedMedias(), entity.getId(), Constants.MENU_MEDIA_TYPE, request.getCreateUserId());
+        return entity;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Object updateMenu(Integer menuId, CreateMenuRequest request) throws TeleCareException {
+        validateMenu(request.getName());
+        Optional<MenuEntity> menuEntityOptional = menuRepositoryJPA.findById(menuId);
+        if (menuEntityOptional.isPresent()) {
+            MenuEntity entity = menuEntityOptional.get();
+            entity = setMenuInfo(request, entity);
+            mediaService.saveMedias(request.getMedias(), request.getDeletedMedias(), entity.getId(), Constants.MENU_MEDIA_TYPE, request.getCreateUserId());
+            saveMenuOption(request, entity);
+
+            return entity;
+        }
+
+        return null;
+    }
+
+    private void saveMenuOption(CreateMenuRequest request, MenuEntity entity) {
+        if (request.getOptions() != null) {
+            for (MenuOptionEntity menuOptionEntity : request.getOptions()) {
+                MenuOptionEntity updateMenu = null;
+                if (menuOptionEntity.getId() != null) {
+                    updateMenu = menusOptionRepositoryJPA.getByIdAndIsActive(menuOptionEntity.getId(), Constants.IS_ACTIVE);
+                    if (updateMenu == null) {
+                        continue;
+                    }
+                    updateMenu.setUpdateDate(new Date());
+                    updateMenu.setUpdateUserId(request.getCreateUserId());
+                } else {
+                    updateMenu = new MenuOptionEntity();
+                    updateMenu.setCreateDate(new Date());
+                    updateMenu.setCreateUserId(request.getCreateUserId());
+                }
+
+                updateMenu.setName(menuOptionEntity.getName());
+                updateMenu.setPrice(menuOptionEntity.getPrice());
+                updateMenu.setMenuId(entity.getId());
+                updateMenu.setIsActive(Constants.IS_ACTIVE);
+                menusOptionRepositoryJPA.save(updateMenu);
+            }
+        }
+
+        if (request.getDeletedOptions() != null) {
+            for (Integer optionId : request.getDeletedOptions()) {
+                MenuOptionEntity menuOptionEntity = menusOptionRepositoryJPA.getByIdAndIsActive(optionId, Constants.IS_ACTIVE);
+                if (menuOptionEntity != null) {
+                    menuOptionEntity.setIsActive(Constants.IS_NOT_ACTIVE);
+                    menuOptionEntity.setUpdateDate(new Date());
+                    menuOptionEntity.setUpdateUserId(request.getCreateUserId());
+                    menusOptionRepositoryJPA.save(menuOptionEntity);
+                }
+            }
+        }
+    }
+
+    private MenuEntity setMenuInfo(CreateMenuRequest request, MenuEntity entity) {
         entity.setName(request.getName());
         entity.setShopId(request.getShopId());
         entity.setIsActive(Constants.IS_ACTIVE);
@@ -139,37 +206,11 @@ public class MenusServiceImpl implements MenusService {
         entity.setDiscount(request.getDiscount());
         entity.setOrderPriority(request.getOrderPriority());
         entity.setPrice(request.getPrice());
+        entity.setUnit(request.getUnit());
 
         menuRepositoryJPA.save(entity);
-        mediaService.saveMedias(request.getMedias(), request.getDeletedMedias(), entity.getId(), Constants.MENU_MEDIA_TYPE, request.getCreateUserId());
+
         return entity;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Object updateMenu(Integer menuId, CreateMenuRequest request) throws TeleCareException {
-        validateMenu(request.getName());
-        Optional<MenuEntity> menuEntityOptional = menuRepositoryJPA.findById(menuId);
-        if (menuEntityOptional.isPresent()) {
-            MenuEntity entity = menuEntityOptional.get();
-            entity.setName(request.getName());
-            entity.setUpdateDate(new Date());
-            entity.setShopId(request.getShopId());
-            entity.setUpdateUserId(request.getCreateUserId());
-            entity.setMenuGroupId(request.getMenuGroupId());
-            entity.setTags(request.getTags());
-            entity.setImageUrl(request.getImageUrl());
-            entity.setMenuGroupId(request.getMenuGroupId());
-            entity.setDescription(request.getDescription());
-            entity.setDiscount(request.getDiscount());
-            entity.setOrderPriority(request.getOrderPriority());
-            entity.setPrice(request.getPrice());
-            menuRepositoryJPA.save(entity);
-            mediaService.saveMedias(request.getMedias(), request.getDeletedMedias(), entity.getId(), Constants.MENU_MEDIA_TYPE, request.getCreateUserId());
-            return entity;
-        }
-
-        return null;
     }
 
     private void validateMenu(String name) throws TeleCareException {
@@ -199,7 +240,8 @@ public class MenusServiceImpl implements MenusService {
         response.setMenu(menuEntity);
         List<MediaEntity> mediaEntityList = mediaRepositoryJPA.findAllByIsActiveAndObjectTypeAndObjectId(Constants.IS_ACTIVE, Constants.MENU_MEDIA_TYPE, menuId);
         response.setMedias(mediaEntityList);
-        
+        response.setOptions(menusOptionRepositoryJPA.getAllByMenuIdAndIsActive(menuId, Constants.IS_ACTIVE));
+
         return response;
     }
 

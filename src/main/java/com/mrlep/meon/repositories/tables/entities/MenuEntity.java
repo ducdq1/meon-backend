@@ -40,6 +40,9 @@ public class MenuEntity implements Serializable {
     @Column(name = "DESCRIPTION")
     private String description;
 
+    @Column(name = "UNIT")
+    private String unit;
+
     @Column(name = "DISCOUNT")
     private String discount;
 
@@ -212,5 +215,13 @@ public class MenuEntity implements Serializable {
 
     public void setOrderNumber(Integer orderNumber) {
         this.orderNumber = orderNumber;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }

@@ -1,15 +1,12 @@
 package com.mrlep.meon.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.mrlep.meon.dto.object.BillMembersObject;
-import com.mrlep.meon.dto.object.BillTablesObject;
-import com.mrlep.meon.repositories.tables.entities.BillMembersEntity;
+import com.mrlep.meon.dto.object.BillMembersItem;
+import com.mrlep.meon.dto.object.BillTablesItem;
+import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
-import com.mrlep.meon.repositories.tables.entities.ShopTableEntity;
 import lombok.Data;
 
-import java.sql.Time;
-import java.util.Date;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -24,9 +21,9 @@ public class DetailBillResponse {
     String userName;
     String phone;
     String avatar;
-    List<OrderItemEntity> orderItems;
-    List<BillTablesObject> tables;
-    List<BillMembersObject> members;
+    List<OrderItem> orderItems;
+    List<BillTablesItem> tables;
+    List<BillMembersItem> members;
 
     public Integer getBillId() {
         return billId;
@@ -92,27 +89,27 @@ public class DetailBillResponse {
         this.avatar = avatar;
     }
 
-    public List<OrderItemEntity> getOrderItems() {
+    public List<OrderItem> getOrderItems() {
         return orderItems;
     }
 
-    public void setOrderItems(List<OrderItemEntity> orderItems) {
+    public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
     }
 
-    public List<BillTablesObject> getTables() {
+    public List<BillTablesItem> getTables() {
         return tables;
     }
 
-    public void setTables(List<BillTablesObject> tables) {
+    public void setTables(List<BillTablesItem> tables) {
         this.tables = tables;
     }
 
-    public List<BillMembersObject> getMembers() {
+    public List<BillMembersItem> getMembers() {
         return members;
     }
 
-    public void setMembers(List<BillMembersObject> members) {
+    public void setMembers(List<BillMembersItem> members) {
         this.members = members;
     }
 

@@ -11,6 +11,7 @@ public class AddOrderItemRequest {
     private Double amount;
     private String description;
     private Integer priority;
+    private Integer price;
     private String cancelMessage;
 
     public Integer getOrderItemId() {
@@ -99,5 +100,13 @@ public class AddOrderItemRequest {
 
     public void setCancelMessage(String cancelMessage) {
         this.cancelMessage = cancelMessage;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 }

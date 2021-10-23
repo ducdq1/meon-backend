@@ -1,16 +1,10 @@
 package com.mrlep.meon.repositories.impl;
 
-import com.mrlep.meon.dto.object.BillMembersObject;
-import com.mrlep.meon.dto.object.BillTablesObject;
-import com.mrlep.meon.dto.request.SearchShopsRequest;
-import com.mrlep.meon.dto.response.BillItem;
+import com.mrlep.meon.dto.object.BillMembersItem;
+import com.mrlep.meon.dto.object.BillTablesItem;
+import com.mrlep.meon.dto.object.BillItem;
 import com.mrlep.meon.dto.response.DetailBillResponse;
-import com.mrlep.meon.dto.response.SearchShopResponse;
 import com.mrlep.meon.repositories.BillRepository;
-import com.mrlep.meon.repositories.ShopRepository;
-import com.mrlep.meon.utils.Constants;
-import com.mrlep.meon.utils.FnCommon;
-import com.mrlep.meon.utils.StringUtils;
 import com.mrlep.meon.xlibrary.core.entities.ResultSelectEntity;
 import com.mrlep.meon.xlibrary.core.repositories.CommonDataBaseRepository;
 import org.springframework.stereotype.Repository;
@@ -37,7 +31,7 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
     }
 
     @Override
-    public List<BillMembersObject> getBillMembers(Integer billId) {
+    public List<BillMembersItem> getBillMembers(Integer billId) {
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
@@ -47,11 +41,11 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         sql.append("  WHERE b.id=:billId AND b.is_active = 1 ");
         params.put("billId", billId);
 
-        return (List<BillMembersObject>) getListData(sql, params, 0, null, BillMembersObject.class);
+        return (List<BillMembersItem>) getListData(sql, params, 0, null, BillMembersItem.class);
     }
 
     @Override
-    public List<BillTablesObject> getBillTables(Integer billId) {
+    public List<BillTablesItem> getBillTables(Integer billId) {
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
@@ -61,7 +55,7 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         sql.append("  WHERE b.id=:billId AND b.is_active = 1 ");
         params.put("billId", billId);
 
-        return (List<BillTablesObject>) getListData(sql, params, 0, null, BillTablesObject.class);
+        return (List<BillTablesItem>) getListData(sql, params, 0, null, BillTablesItem.class);
     }
 
     @Override

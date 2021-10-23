@@ -1,23 +1,19 @@
 package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.dto.request.AddOrderItemRequest;
-import com.mrlep.meon.dto.request.CreateBillRequest;
+import com.mrlep.meon.repositories.OrderItemRepository;
 import com.mrlep.meon.repositories.ShopRepository;
 import com.mrlep.meon.repositories.tables.BillRepositoryJPA;
-import com.mrlep.meon.repositories.tables.OrderItemlRepositoryJPA;
+import com.mrlep.meon.repositories.tables.OrderItemRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.BillEntity;
 import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
 import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.services.ShopTableService;
-import com.mrlep.meon.utils.Constants;
-import com.mrlep.meon.utils.ErrorApp;
-import com.mrlep.meon.utils.MessagesUtils;
-import com.mrlep.meon.utils.TeleCareException;
+import com.mrlep.meon.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 
@@ -28,10 +24,14 @@ public class OrderItemlServiceImpl implements OrderItemService {
     private BillRepositoryJPA billRepositoryJPA;
 
     @Autowired
-    private OrderItemlRepositoryJPA orderItemlRepositoryJPA;
+    private OrderItemRepositoryJPA orderItemRepositoryJPA;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Autowired
     private ShopTableService shopTableService;
+
     @Autowired
     private BillService billService;
 
@@ -40,22 +40,22 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
     private void validateAddOrderItem(AddOrderItemRequest request) throws TeleCareException {
         BillEntity billEntity = billRepositoryJPA.findByIdAndIsActive(request.getBillId(), Constants.IS_ACTIVE);
-        if (billEntity == null || billEntity.getStatus().intValue() == Constants.BILL_STATUS_DONE) {
+        if (billEntity == null || !FnCommon.validateBillStatus(billEntity.getStatus())) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
 //        Integer countTableAndBill = billRepositoryJPA.checkExistBillAndTable(request.getShopId(), request.getTableId());
 //
-//        if (countTableAndBill != null && countTableAndBill > 0) {
-//            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.table.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
-//        }
+        if (request.getAmount() == null || request.getPrice() == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, "Invalid input param", ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
 
     }
 
 
     @Override
     public Object getOrderItemsByBill(Integer billId) throws TeleCareException {
-        return orderItemlRepositoryJPA.getAllByBillIdAndIsActive(billId,Constants.IS_ACTIVE);
+        return orderItemRepository.getOrderItemOfBill(billId);
     }
 
     @Override
@@ -66,9 +66,12 @@ public class OrderItemlServiceImpl implements OrderItemService {
         entity.setCreateUserId(request.getCreateUserId());
         entity.setIsActive(Constants.IS_ACTIVE);
         entity.setStatus(Constants.ORDER_ITEM_STATUS_PROGRESS);
+        entity.setPrice(request.getPrice());
+        entity.setAmount(request.getAmount());
+        entity.setMoney((int) (request.getPrice() * request.getAmount()));
         entity = setOrderInfo(request, entity);
-        orderItemlRepositoryJPA.save(entity);
-        billService.updateBillStatus(request.getCreateUserId(),entity.getBillId(), null);
+        orderItemRepositoryJPA.save(entity);
+        billService.updateBillStatus(request.getCreateUserId(), entity.getBillId(), null);
         return entity.getId();
     }
 
@@ -88,7 +91,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
     @Override
     public Object updateOrderItem(AddOrderItemRequest request) throws TeleCareException {
-        Optional<OrderItemEntity> entityOptional = orderItemlRepositoryJPA.findById(request.getOrderItemId());
+        Optional<OrderItemEntity> entityOptional = orderItemRepositoryJPA.findById(request.getOrderItemId());
         if (entityOptional.isPresent()) {
             OrderItemEntity entity = entityOptional.get();
             validateAddOrderItem(request);
@@ -98,7 +101,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
             entity.setUpdateDate(new Date());
             entity.setUpdateUserId(request.getCreateUserId());
             entity = setOrderInfo(request, entity);
-            orderItemlRepositoryJPA.save(entity);
+            orderItemRepositoryJPA.save(entity);
             return true;
         }
 
@@ -107,13 +110,13 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
     @Override
     public Object updateOrderItemStatus(Integer userId, Integer orderItemId, Integer status) throws TeleCareException {
-        Optional<OrderItemEntity> entityOptional = orderItemlRepositoryJPA.findById(orderItemId);
+        Optional<OrderItemEntity> entityOptional = orderItemRepositoryJPA.findById(orderItemId);
         if (entityOptional.isPresent()) {
             OrderItemEntity entity = entityOptional.get();
             entity.setStatus(status);
             entity.setUpdateDate(new Date());
             entity.setUpdateUserId(userId);
-            orderItemlRepositoryJPA.save(entity);
+            orderItemRepositoryJPA.save(entity);
 
             return true;
         }
@@ -122,13 +125,13 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
     @Override
     public Object deleteOrderItem(Integer orderItemId, Integer userId) throws TeleCareException {
-        Optional<OrderItemEntity> entityOptional = orderItemlRepositoryJPA.findById(orderItemId);
+        Optional<OrderItemEntity> entityOptional = orderItemRepositoryJPA.findById(orderItemId);
         if (entityOptional.isPresent()) {
             OrderItemEntity entity = entityOptional.get();
             entity.setIsActive(Constants.IS_NOT_ACTIVE);
             entity.setUpdateDate(new Date());
             entity.setUpdateUserId(userId);
-            orderItemlRepositoryJPA.save(entity);
+            orderItemRepositoryJPA.save(entity);
             return true;
         }
         return null;
