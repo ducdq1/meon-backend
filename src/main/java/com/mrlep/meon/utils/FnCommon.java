@@ -686,6 +686,15 @@ public class FnCommon extends FunctionCommon {
         return false;
     }
 
+
+    public static boolean validateOrderItemStatus(Integer status) {
+        if (status != null &&status != Constants.ORDER_ITEM_STATUS_CANCEL){
+            return true;
+        }
+        return false;
+    }
+
+
     public static boolean validateTableStatus(Integer status) {
         if (status != null && status != Constants.TABLE_STATUS_READY) {
             return true;

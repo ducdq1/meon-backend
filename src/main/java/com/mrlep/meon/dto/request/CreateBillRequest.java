@@ -1,6 +1,5 @@
 package com.mrlep.meon.dto.request;
 
-import javax.persistence.Column;
 import java.util.List;
 
 public class CreateBillRequest {

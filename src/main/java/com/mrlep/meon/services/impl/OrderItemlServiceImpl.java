@@ -4,12 +4,12 @@ import com.mrlep.meon.dto.request.AddOrderItemRequest;
 import com.mrlep.meon.repositories.OrderItemRepository;
 import com.mrlep.meon.repositories.ShopRepository;
 import com.mrlep.meon.repositories.tables.BillRepositoryJPA;
+import com.mrlep.meon.repositories.tables.MenusRepositoryJPA;
 import com.mrlep.meon.repositories.tables.OrderItemRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.BillEntity;
 import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
 import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.services.OrderItemService;
-import com.mrlep.meon.services.ShopTableService;
 import com.mrlep.meon.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,9 +28,8 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
     @Autowired
     private OrderItemRepository orderItemRepository;
-
     @Autowired
-    private ShopTableService shopTableService;
+    private MenusRepositoryJPA menusRepositoryJPA;
 
     @Autowired
     private BillService billService;
@@ -44,8 +43,6 @@ public class OrderItemlServiceImpl implements OrderItemService {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
-//        Integer countTableAndBill = billRepositoryJPA.checkExistBillAndTable(request.getShopId(), request.getTableId());
-//
         if (request.getAmount() == null || request.getPrice() == null) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, "Invalid input param", ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
@@ -72,6 +69,8 @@ public class OrderItemlServiceImpl implements OrderItemService {
         entity = setOrderInfo(request, entity);
         orderItemRepositoryJPA.save(entity);
         billService.updateBillStatus(request.getCreateUserId(), entity.getBillId(), null);
+        menusRepositoryJPA.updateOrderNumber(request.getMenuId());
+
         return entity.getId();
     }
 
@@ -86,6 +85,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
         entity.setMenuId(request.getMenuId());
         entity.setCancelMessage(request.getCancelMessage());
         entity.setDescription(request.getDescription());
+        entity.setMenuOptionIds(request.getMenuOptionIds());
         return entity;
     }
 
@@ -94,15 +94,18 @@ public class OrderItemlServiceImpl implements OrderItemService {
         Optional<OrderItemEntity> entityOptional = orderItemRepositoryJPA.findById(request.getOrderItemId());
         if (entityOptional.isPresent()) {
             OrderItemEntity entity = entityOptional.get();
-            validateAddOrderItem(request);
+            if (entity.getStatus() != Constants.ORDER_ITEM_STATUS_DELIVERED) {
+                validateAddOrderItem(request);
 
-            entity.setStatus(request.getStatus());
-            entity.setIsActive(Constants.IS_ACTIVE);
-            entity.setUpdateDate(new Date());
-            entity.setUpdateUserId(request.getCreateUserId());
-            entity = setOrderInfo(request, entity);
-            orderItemRepositoryJPA.save(entity);
-            return true;
+                entity.setStatus(request.getStatus());
+                entity.setIsActive(Constants.IS_ACTIVE);
+                entity.setUpdateDate(new Date());
+                entity.setUpdateUserId(request.getCreateUserId());
+                entity = setOrderInfo(request, entity);
+                orderItemRepositoryJPA.save(entity);
+                billService.updateBillStatus(request.getCreateUserId(), entity.getBillId(), null);
+                return true;
+            }
         }
 
         return null;
@@ -113,12 +116,14 @@ public class OrderItemlServiceImpl implements OrderItemService {
         Optional<OrderItemEntity> entityOptional = orderItemRepositoryJPA.findById(orderItemId);
         if (entityOptional.isPresent()) {
             OrderItemEntity entity = entityOptional.get();
-            entity.setStatus(status);
-            entity.setUpdateDate(new Date());
-            entity.setUpdateUserId(userId);
-            orderItemRepositoryJPA.save(entity);
-
-            return true;
+            if (entity.getStatus() != Constants.ORDER_ITEM_STATUS_DELIVERED) {
+                entity.setStatus(status);
+                entity.setUpdateDate(new Date());
+                entity.setUpdateUserId(userId);
+                orderItemRepositoryJPA.save(entity);
+                billService.updateBillStatus(userId, entity.getBillId(), null);
+                return true;
+            }
         }
         return null;
     }
@@ -128,11 +133,15 @@ public class OrderItemlServiceImpl implements OrderItemService {
         Optional<OrderItemEntity> entityOptional = orderItemRepositoryJPA.findById(orderItemId);
         if (entityOptional.isPresent()) {
             OrderItemEntity entity = entityOptional.get();
-            entity.setIsActive(Constants.IS_NOT_ACTIVE);
-            entity.setUpdateDate(new Date());
-            entity.setUpdateUserId(userId);
-            orderItemRepositoryJPA.save(entity);
-            return true;
+            if (entity.getStatus() != Constants.ORDER_ITEM_STATUS_DELIVERED) {
+                entity.setIsActive(Constants.IS_NOT_ACTIVE);
+                entity.setUpdateDate(new Date());
+                entity.setUpdateUserId(userId);
+                orderItemRepositoryJPA.save(entity);
+                billService.updateBillStatus(userId, entity.getBillId(), null);
+                return true;
+            }
+
         }
         return null;
     }

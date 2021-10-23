@@ -2,28 +2,27 @@ package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.dto.request.CreateBillRequest;
-import com.mrlep.meon.dto.request.CreateShopTableRequest;
 import com.mrlep.meon.dto.response.DetailBillResponse;
 import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.ShopRepository;
 import com.mrlep.meon.repositories.tables.BillMembersRepositoryJPA;
 import com.mrlep.meon.repositories.tables.BillRepositoryJPA;
 import com.mrlep.meon.repositories.tables.BillTablesRepositoryJPA;
-import com.mrlep.meon.repositories.tables.ShopTableRepositoryJPA;
-import com.mrlep.meon.repositories.tables.entities.*;
+import com.mrlep.meon.repositories.tables.ShopRepositoryJPA;
+import com.mrlep.meon.repositories.tables.entities.BillEntity;
+import com.mrlep.meon.repositories.tables.entities.BillMembersEntity;
+import com.mrlep.meon.repositories.tables.entities.BillTablesEntity;
+import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
 import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.services.ShopTableService;
 import com.mrlep.meon.utils.*;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.RollbackException;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BillServiceImpl implements BillService {
@@ -39,6 +38,9 @@ public class BillServiceImpl implements BillService {
 
     @Autowired
     private ShopTableService shopTableService;
+
+    @Autowired
+    private ShopRepositoryJPA shopRepositoryJPA;
 
     @Autowired
     private OrderItemService orderItemlService;
@@ -118,7 +120,9 @@ public class BillServiceImpl implements BillService {
         entity.setStatus(Constants.BILL_STATUS_PROGRESS);
         entity.setReconfirmMessage(request.getReconfirmMessage());
         entity.setIsCreateByStaff(request.getIsCreateByStaff());
+
         billRepositoryJPA.save(entity);
+        shopRepositoryJPA.updateOrderNumber(request.getShopId());
 
         if (request.getTableIds() != null) {
             for (Integer tableId : request.getTableIds()) {
@@ -240,11 +244,11 @@ public class BillServiceImpl implements BillService {
 
 
     private Integer getTotalMoney(Integer billId) throws TeleCareException {
-        List<OrderItemEntity> orderItemEntities = (List<OrderItemEntity>) orderItemService.getOrderItemsByBill(billId);
+        List<OrderItem> orderItemEntities = (List<OrderItem>) orderItemService.getOrderItemsByBill(billId);
         Integer totalMoney = 0;
-        for (OrderItemEntity orderItemEntity : orderItemEntities) {
-            if (orderItemEntity.getAmount() != null && orderItemEntity.getPrice() != null) {
-                totalMoney += (int) (orderItemEntity.getPrice() * orderItemEntity.getAmount());
+        for (OrderItem orderItemEntity : orderItemEntities) {
+            if (FnCommon.validateOrderItemStatus(orderItemEntity.getStatus())) {
+                totalMoney += orderItemEntity.getMoney() == null ? 0 : orderItemEntity.getMoney();
             }
         }
         return totalMoney;
@@ -259,6 +263,7 @@ public class BillServiceImpl implements BillService {
             entity.setUpdateDate(new Date());
             entity.setUpdateUserId(userId);
             billRepositoryJPA.save(entity);
+
             return true;
         }
         return null;
@@ -280,6 +285,7 @@ public class BillServiceImpl implements BillService {
         BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
         if (entity != null && FnCommon.validateBillStatus(entity.getStatus())) {
             addBillTables(billId, userId, tableId);
+            shopTableService.updateShopTableStatus(userId, tableId, Constants.TABLE_STATUS_IN_USE);
             return true;
         }
         return null;

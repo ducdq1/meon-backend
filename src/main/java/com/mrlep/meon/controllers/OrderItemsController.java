@@ -62,7 +62,7 @@ public class OrderItemsController {
     }
 
     @PutMapping(value = "/{orderItemId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateTableStatus(@PathVariable Integer orderItemId, @PathVariable Integer status, @AuthenticationPrincipal Authentication authentication) {
+    public ResponseEntity<Object> updateOrderItemStatus(@PathVariable Integer orderItemId, @PathVariable Integer status, @AuthenticationPrincipal Authentication authentication) {
         Object result;
         try {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
@@ -78,7 +78,7 @@ public class OrderItemsController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{billId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/bill/{billId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getOrderItemByBill(@PathVariable Integer billId) {
         Object result;
         try {

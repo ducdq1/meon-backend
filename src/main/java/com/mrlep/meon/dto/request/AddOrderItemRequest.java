@@ -13,6 +13,7 @@ public class AddOrderItemRequest {
     private Integer priority;
     private Integer price;
     private String cancelMessage;
+    private String menuOptionIds;
 
     public Integer getOrderItemId() {
         return orderItemId;
@@ -108,5 +109,13 @@ public class AddOrderItemRequest {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public String getMenuOptionIds() {
+        return menuOptionIds;
+    }
+
+    public void setMenuOptionIds(String menuOptionIds) {
+        this.menuOptionIds = menuOptionIds;
     }
 }

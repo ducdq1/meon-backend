@@ -75,6 +75,9 @@ public class OrderItemEntity implements Serializable {
     @Column(name = "priority")
     Integer priority;
 
+    @Column(name = "menu_option_ids")
+    String menuOptionIds;
+
     public Integer getId() {
         return id;
     }
@@ -201,5 +204,13 @@ public class OrderItemEntity implements Serializable {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public String getMenuOptionIds() {
+        return menuOptionIds;
+    }
+
+    public void setMenuOptionIds(String menuOptionIds) {
+        this.menuOptionIds = menuOptionIds;
     }
 }

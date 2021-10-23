@@ -44,21 +44,9 @@ public class ShopServiceImpl implements ShopService {
     public Object createShop(CreateShopRequest request) throws TeleCareException {
         validateCreateShop(request);
         ShopEntity entity = new ShopEntity();
-        entity.setName(request.getName());
-        entity.setAddress(request.getAddress());
-        entity.setCatsShopId(request.getCatsShopId());
-        entity.setPhone(request.getPhone());
-        entity.setLat(request.getLat());
-        entity.setLng(request.getLng());
-        entity.setCreateUserId(request.getCreateUserId());
-        entity.setIsActive(Constants.IS_ACTIVE);
+        entity = setShopEntityInfo(entity, request);
         entity.setCreateDate(new Date());
-        entity.setTags(request.getTags());
-        entity.setDescription(request.getDescription());
-        entity.setImageUrl(request.getImageUrl());
-        entity.setOpenTime(request.getOpenTime());
-        entity.setCloseTime(request.getCloseTime());
-
+        entity.setCreateUserId(request.getCreateUserId());
         shopRepositoryJPA.save(entity);
         return entity;
     }
@@ -69,25 +57,34 @@ public class ShopServiceImpl implements ShopService {
         validateCreateShop(request);
         ShopEntity entity = shopRepositoryJPA.getByCreateUserIdAndShopId(request.getCreateUserId(), request.getId());
         if (entity != null) {
-            entity.setName(request.getName());
-            entity.setAddress(request.getAddress());
-            entity.setCatsShopId(request.getCatsShopId());
-            entity.setPhone(request.getPhone());
-            entity.setLat(request.getLat());
-            entity.setLng(request.getLng());
+            entity = setShopEntityInfo(entity, request);
             entity.setUpdateUserId(request.getCreateUserId());
-            entity.setIsActive(Constants.IS_ACTIVE);
             entity.setUpdateDate(new Date());
-            entity.setTags(request.getTags());
-            entity.setDescription(request.getDescription());
-            entity.setImageUrl(request.getImageUrl());
-            entity.setOpenTime(request.getOpenTime());
-            entity.setCloseTime(request.getCloseTime());
             shopRepositoryJPA.save(entity);
 
             return entity;
         }
         return null;
+    }
+
+    private ShopEntity setShopEntityInfo(ShopEntity entity, CreateShopRequest request) {
+        entity.setName(request.getName());
+        entity.setAddress(request.getAddress());
+        entity.setCatsShopId(request.getCatsShopId());
+        entity.setPhone(request.getPhone());
+        entity.setLat(request.getLat());
+        entity.setLng(request.getLng());
+        entity.setIsActive(Constants.IS_ACTIVE);
+        entity.setTags(request.getTags());
+        entity.setDescription(request.getDescription());
+        entity.setImageUrl(request.getImageUrl());
+        entity.setOpenTime(request.getOpenTime());
+        entity.setCloseTime(request.getCloseTime());
+        if (entity.getLikeNumber() == null) {
+            entity.setLikeNumber(0);
+        }
+        return entity;
+
     }
 
     @Override

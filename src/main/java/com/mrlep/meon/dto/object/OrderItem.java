@@ -19,6 +19,7 @@ public class OrderItem {
     Integer price;
     String reconfirms;
     Integer priority;
+    String menuOptionIds;
 
     public Integer getId() {
         return id;
@@ -122,5 +123,13 @@ public class OrderItem {
 
     public void setPriority(Integer priority) {
         this.priority = priority;
+    }
+
+    public String getMenuOptionIds() {
+        return menuOptionIds;
+    }
+
+    public void setMenuOptionIds(String menuOptionIds) {
+        this.menuOptionIds = menuOptionIds;
     }
 }
