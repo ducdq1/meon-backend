@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "710083154196",
+    "project_id": "meon-7a487",
+    "storage_bucket": "meon-7a487.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:710083154196:android:a8d2eb768dfe30b5d43201",
+        "android_client_info": {
+          "package_name": "com.example.meon_customer_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "710083154196-f9irbn9upl6cr4290cadbldaic6slk6f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKo75Mb4AtG878GVBcp2ijaVtxBqzxzkU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "710083154196-f9irbn9upl6cr4290cadbldaic6slk6f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

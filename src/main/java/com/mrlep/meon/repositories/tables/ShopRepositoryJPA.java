@@ -18,6 +18,6 @@ public interface ShopRepositoryJPA extends JpaRepository<ShopEntity, Integer> {
     ShopEntity getByCreateUserIdAndShopId(Integer createUserId, Integer shopId);
     ShopEntity getByIdAndIsActive(Integer id,Integer isActive);
 
-    @Query(value = "UPDATE shop m SET m.order_number = m.order_number + 1 WHERE m.id= :shopId ", nativeQuery = true)
-    void updateOrderNumber(Integer shopId);
+//    @Query(value = "UPDATE shop m SET m.order_number = m.order_number + 1 WHERE m.id= :shopId ", nativeQuery = true)
+//    void updateOrderNumber(Integer shopId);
 }

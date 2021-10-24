@@ -14,6 +14,8 @@ import java.util.List;
 public class DetailBillResponse {
     Integer billId;
     Integer shopId;
+    String shopAvatar;
+    String shopName;
     String billName;
     Integer billStatus;
     String description;
@@ -24,6 +26,22 @@ public class DetailBillResponse {
     List<OrderItem> orderItems;
     List<BillTablesItem> tables;
     List<BillMembersItem> members;
+
+    public String getShopAvatar() {
+        return shopAvatar;
+    }
+
+    public void setShopAvatar(String shopAvatar) {
+        this.shopAvatar = shopAvatar;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
 
     public Integer getBillId() {
         return billId;

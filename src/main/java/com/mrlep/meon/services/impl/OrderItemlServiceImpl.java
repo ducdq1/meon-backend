@@ -1,12 +1,14 @@
 package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.dto.request.AddOrderItemRequest;
+import com.mrlep.meon.firebase.FirestoreBillManagement;
 import com.mrlep.meon.repositories.OrderItemRepository;
 import com.mrlep.meon.repositories.ShopRepository;
 import com.mrlep.meon.repositories.tables.BillRepositoryJPA;
 import com.mrlep.meon.repositories.tables.MenusRepositoryJPA;
 import com.mrlep.meon.repositories.tables.OrderItemRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.BillEntity;
+import com.mrlep.meon.repositories.tables.entities.MenuEntity;
 import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
 import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.services.OrderItemService;
@@ -28,11 +30,15 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
     @Autowired
     private OrderItemRepository orderItemRepository;
+
     @Autowired
     private MenusRepositoryJPA menusRepositoryJPA;
 
     @Autowired
     private BillService billService;
+
+    @Autowired
+    private FirestoreBillManagement firestoreBillManagement;
 
     @Autowired
     private ShopRepository shopRepository;
@@ -67,14 +73,26 @@ public class OrderItemlServiceImpl implements OrderItemService {
         entity.setAmount(request.getAmount());
         entity.setMoney((int) (request.getPrice() * request.getAmount()));
         entity = setOrderInfo(request, entity);
+
         orderItemRepositoryJPA.save(entity);
+
         billService.updateBillStatus(request.getCreateUserId(), entity.getBillId(), null);
+
         menusRepositoryJPA.updateOrderNumber(request.getMenuId());
+
+        firestoreBillManagement.updateBillOrderItem(entity.getBillId(), entity.getId(), entity);
 
         return entity.getId();
     }
 
-    private OrderItemEntity setOrderInfo(AddOrderItemRequest request, OrderItemEntity entity) {
+    private OrderItemEntity setOrderInfo(AddOrderItemRequest request, OrderItemEntity entity) throws TeleCareException {
+        MenuEntity menuEntity = menusRepositoryJPA.getByIdAndIsActive(request.getMenuId(), Constants.IS_ACTIVE);
+        if (menuEntity == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, "Invalid input param menu Id", ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        entity.setUnit(menuEntity.getUnit());
+        entity.setMenuName(menuEntity.getName());
         entity.setAmount(request.getAmount());
         entity.setReconfirms(request.getReconfirm());
         entity.setIsActive(Constants.IS_ACTIVE);

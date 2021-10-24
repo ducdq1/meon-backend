@@ -53,6 +53,12 @@ public class OrderItemEntity implements Serializable {
     @Column(name = "PRICE")
     Integer price;
 
+    @Column(name = "UNIT")
+    private String unit;
+
+    @Column(name = "MENU_NAME")
+    private String menuName;
+
     @JsonIgnore
     @Column(name = "CREATE_USER_ID")
     Integer createUserId;
@@ -212,5 +218,21 @@ public class OrderItemEntity implements Serializable {
 
     public void setMenuOptionIds(String menuOptionIds) {
         this.menuOptionIds = menuOptionIds;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public String getMenuName() {
+        return menuName;
+    }
+
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
     }
 }

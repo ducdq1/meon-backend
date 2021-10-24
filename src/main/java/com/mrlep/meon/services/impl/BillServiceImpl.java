@@ -3,6 +3,8 @@ package com.mrlep.meon.services.impl;
 import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.dto.request.CreateBillRequest;
 import com.mrlep.meon.dto.response.DetailBillResponse;
+import com.mrlep.meon.dto.response.DetailTableResponse;
+import com.mrlep.meon.firebase.FirestoreBillManagement;
 import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.ShopRepository;
 import com.mrlep.meon.repositories.tables.*;
@@ -35,19 +37,25 @@ public class BillServiceImpl implements BillService {
     private ShopTableService shopTableService;
 
     @Autowired
+    private ShopTableRepositoryJPA shopTableRepositoryJPA;
+
+    @Autowired
     private ShopRepositoryJPA shopRepositoryJPA;
 
     @Autowired
     private OrderItemService orderItemlService;
+
     @Autowired
     private MenusOptionRepositoryJPA menusOptionRepositoryJPA;
+
     @Autowired
     private BillTablesRepositoryJPA billTablesRepositoryJPA;
 
 
     @Autowired
     private BillMembersRepositoryJPA billMembersRepositoryJPA;
-
+    @Autowired
+    private FirestoreBillManagement firestoreBillManagement;
 
     @Autowired
     private ShopRepository shopRepository;
@@ -55,7 +63,7 @@ public class BillServiceImpl implements BillService {
     private void validateCreateBill(CreateBillRequest request) throws TeleCareException {
         if (request.getTableIds() != null) {
             for (Integer tableId : request.getTableIds()) {
-                Integer countTableAndBill = billRepositoryJPA.checkExistBillAndTable(request.getShopId(), tableId);
+                Integer countTableAndBill = billRepositoryJPA.checkExistBillAndTable(tableId);
                 if (countTableAndBill != null && countTableAndBill > 0) {
                     throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.table.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
                 }
@@ -92,9 +100,11 @@ public class BillServiceImpl implements BillService {
             if (!StringUtils.isNullOrEmpty(menuOptionIds)) {
                 String[] ids = menuOptionIds.split(";");
                 for (String id : ids) {
-                    MenuOptionEntity menuOptionEntity = menusOptionRepositoryJPA.getByIdAndIsActive(Integer.valueOf(id), Constants.IS_ACTIVE);
-                    if (menuOptionEntity != null) {
-                        menuOptionEntities.add(menuOptionEntity);
+                    if (FnCommon.getIntegerFromString(id) != null) {
+                        MenuOptionEntity menuOptionEntity = menusOptionRepositoryJPA.getByIdAndIsActive(FnCommon.getIntegerFromString(id), Constants.IS_ACTIVE);
+                        if (menuOptionEntity != null) {
+                            menuOptionEntities.add(menuOptionEntity);
+                        }
                     }
                 }
                 orderItem.setMenuOptions(menuOptionEntities);
@@ -113,6 +123,7 @@ public class BillServiceImpl implements BillService {
         if (orderItemEntitiesList != null) {
             getMenuOptions(orderItemEntitiesList);
         }
+
         detailBillResponse.setOrderItems(orderItemEntitiesList);
         detailBillResponse.setMembers(billRepository.getBillMembers(billId));
         detailBillResponse.setTables(billRepository.getBillTables(billId));
@@ -130,6 +141,10 @@ public class BillServiceImpl implements BillService {
     public Object createBill(CreateBillRequest request) throws TeleCareException {
         validateCreateBill(request);
 
+        if (request.getIsCreateByStaff() != 1 && getBillActiveByUser(request.getCreateUserId()) != null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.user.bill.exists.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
         BillEntity entity = new BillEntity();
         entity.setName(request.getName());
         entity.setDescription(request.getDescription());
@@ -143,7 +158,6 @@ public class BillServiceImpl implements BillService {
         entity.setIsCreateByStaff(request.getIsCreateByStaff());
 
         billRepositoryJPA.save(entity);
-        shopRepositoryJPA.updateOrderNumber(request.getShopId());
 
         if (request.getTableIds() != null) {
             for (Integer tableId : request.getTableIds()) {
@@ -154,6 +168,7 @@ public class BillServiceImpl implements BillService {
 
         addBillMembers(entity.getId(), request.getCreateUserId());
 
+        firestoreBillManagement.updateBill(entity.getId(), entity);
         return entity.getId();
     }
 
@@ -168,10 +183,23 @@ public class BillServiceImpl implements BillService {
         billMembersRepositoryJPA.save(billMembersEntity);
     }
 
-    private void addBillTables(Integer billId, Integer userId, Integer tableId) {
+    private void addBillTables(Integer billId, Integer userId, Integer tableId) throws TeleCareException {
         //luu ban
+
+        Integer countTableAndBill = billRepositoryJPA.checkExistBillAndTable(tableId);
+        if (countTableAndBill != null && countTableAndBill > 0) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.table.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        ShopTableEntity shopTableEntity = shopTableRepositoryJPA.getByIdAndIsActive(tableId, Constants.IS_ACTIVE);
+        if (shopTableEntity == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, " Invalid table", ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
         BillTablesEntity billTablesEntity = new BillTablesEntity();
+
         billTablesEntity.setBillId(billId);
+        billTablesEntity.setTableName(shopTableEntity.getName());
         billTablesEntity.setCreateDate(new Date());
         billTablesEntity.setIsActive(Constants.IS_ACTIVE);
         billTablesEntity.setCreateUserId(userId);
@@ -222,6 +250,7 @@ public class BillServiceImpl implements BillService {
                 }
             }
 
+            firestoreBillManagement.updateBill(entity.getId(), entity);
             return true;
         }
 

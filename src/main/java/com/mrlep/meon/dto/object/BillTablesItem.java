@@ -3,8 +3,6 @@ package com.mrlep.meon.dto.object;
 public class BillTablesItem {
     Integer tableId;
     String tableName;
-    Integer tableNumber;
-    Integer status;
 
     public Integer getTableId() {
         return tableId;
@@ -22,19 +20,4 @@ public class BillTablesItem {
         this.tableName = tableName;
     }
 
-    public Integer getTableNumber() {
-        return tableNumber;
-    }
-
-    public void setTableNumber(Integer tableNumber) {
-        this.tableNumber = tableNumber;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
 }

@@ -20,7 +20,10 @@ import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.*;
 import com.google.common.collect.ImmutableMap;
+import org.springframework.core.io.ClassPathResource;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,40 +35,24 @@ import java.util.Map;
  * A simple Quick start application demonstrating how to connect to Firestore
  * and add and query documents.
  */
-public class Quickstart {
+public class FirebaseFirestore {
 
   private Firestore db;
 
-  public Quickstart(String projectId) throws Exception {
-    // [START firestore_setup_client_create]
-    // Option 1: Initialize a Firestore client with a specific `projectId` and
-    //           authorization credential.
-    // [START fs_initialize_project_id]
-    // [START firestore_setup_client_create_with_project_id]
+  public FirebaseFirestore() throws Exception {
+//    FirebaseAuth.getInstance().
+
+    ClassPathResource resource = new  ClassPathResource("serviceAccountKey.json");
+//    InputStream serviceAccount = new FileInputStream("D:\\DATA\\DU_AN\\MeOn\\f0_management\\src\\main\\resources\\serviceAccountKey.json");
+    InputStream serviceAccount = new FileInputStream(resource.getFile());
+    GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
     FirestoreOptions firestoreOptions =
         FirestoreOptions.getDefaultInstance().toBuilder()
-            .setProjectId(projectId)
-            .setCredentials(GoogleCredentials.getApplicationDefault())
+//            .setProjectId("meon-7a487")
+            .setCredentials(credentials)
             .build();
+
     Firestore db = firestoreOptions.getService();
-    // [END fs_initialize_project_id]
-    // [END firestore_setup_client_create_with_project_id]
-    // [END firestore_setup_client_create]
-    this.db = db;
-  }
-
-  /**
-   * Initialize Firestore using default project ID.
-   */
-  public Quickstart() {
-    // [START firestore_setup_client_create]
-
-    // Option 2: Initialize a Firestore client with default values inferred from
-    //           your environment.
-    // [START fs_initialize]
-    Firestore db = FirestoreOptions.getDefaultInstance().getService();
-    // [END firestore_setup_client_create]
-    // [END fs_initialize]
     this.db = db;
   }
 
@@ -205,7 +192,7 @@ public class Quickstart {
   public static void main(String[] args) throws Exception {
     // default project is will be used if project-id argument is not available
     String projectId = (args.length == 0) ? null : args[0];
-    Quickstart quickStart = (projectId != null) ? new Quickstart(projectId) : new Quickstart();
+    FirebaseFirestore quickStart = (projectId != null) ? new FirebaseFirestore() : new FirebaseFirestore();
     quickStart.run();
     quickStart.close();
   }

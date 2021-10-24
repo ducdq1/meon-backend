@@ -1,7 +1,6 @@
 package com.mrlep.meon.utils;
 
 import com.google.gson.Gson;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 
 import java.util.Date;
@@ -108,41 +107,9 @@ public class LoggingUtils {
         sb.append(functionCode).append("||"); /** function_code  */
         sb.append(funcType).append("||");  /** action_type  */
         sb.append("N/A").append("||");  /** object_id  */
-        if (exception != null) {   /** content  */
-            sb.append(ExceptionUtils.getStackTrace(exception));
-        }
 
         logger.error(sb.toString());
     }
 
-    public static void logVTMException(LoggingInfo logInfo) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(applicationCode).append("||"); /** Ma ung dung */
-        sb.append(functionCode).append("||"); /** service code */
-        sb.append(logInfo.getSessionID()).append("||"); /** session_id */
-        sb.append(logInfo.getIpPortParentNode()).append("||");
-        sb.append(ipPortCurrentNode).append("||");
-        sb.append(logInfo.getRequestContent()).append("||");
-        sb.append(logInfo.getResponseContent()).append("||");
 
-        sb.append(DateUtility.format(logInfo.getStartTime(), DATETIME_FORMAT)).append("||");  /** start_time */
-        sb.append(DateUtility.format(logInfo.getEndTime(), DATETIME_FORMAT)).append("||"); /** end_time */
-        sb.append(logInfo.getDuration()).append("||"); // Duration
-        sb.append(logInfo.getErrorCode()).append("||");
-        sb.append(logInfo.getErrorDescription()).append("||"); /** content  */
-        sb.append(logInfo.getTransactionStatus()).append("||");
-        sb.append(logInfo.getActionName()).append("||");
-        sb.append(logInfo.getUserName()).append("||");
-        sb.append(logInfo.getAccount());
-
-        logger.error(sb.toString());
-    }
-
-    public static void logVTMExceptionDebug(Exception exception) {
-        StringBuilder messageBuilder = new StringBuilder();
-        messageBuilder.append("[EXCEPTION]\n");
-        messageBuilder.append("Message: ").append(exception.getMessage()).append("\n");
-        messageBuilder.append("StackTrace: ").append(ExceptionUtils.getStackTrace(exception));
-        logger.debug(messageBuilder.toString());
-    }
 }

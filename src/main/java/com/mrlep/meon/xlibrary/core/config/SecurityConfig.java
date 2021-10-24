@@ -3,8 +3,6 @@
 
 /*     */
 
-import org.keycloak.adapters.KeycloakConfigResolver;
-import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
@@ -75,10 +73,6 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 /* 121 */     return (SessionAuthenticationStrategy)new NullAuthenticatedSessionStrategy();
 /*     */   }
 /*     */
-/*     */   //@Bean
-/*     */   public KeycloakConfigResolver KeycloakConfigResolver() {
-/* 126 */     return (KeycloakConfigResolver)new KeycloakSpringBootConfigResolver();
-/*     */   }
 /*     */ }
 
 

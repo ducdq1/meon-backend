@@ -31,6 +31,9 @@ public class BillTablesEntity implements Serializable {
     @Column(name = "TABLE_ID")
     Integer tableId;
 
+    @Column(name = "TABLE_NAME")
+    String tableName;
+
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
     Integer isActive;
@@ -50,7 +53,6 @@ public class BillTablesEntity implements Serializable {
     @JsonIgnore
     @Column(name = "UPDATE_USER_ID")
     Integer updateUserId;
-
 
     public Integer getIsActive() {
         return isActive;
@@ -115,4 +117,14 @@ public class BillTablesEntity implements Serializable {
     public void setTableId(Integer tableId) {
         this.tableId = tableId;
     }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+
 }

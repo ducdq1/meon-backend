@@ -18,8 +18,8 @@ public class OrderItemRepositoryImpl extends CommonDataBaseRepository implements
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT o.id, o.bill_id billId, o.cancel_message cancelMessage,o.status, o.amount , o.money,o.price, o.reconfirms, o.priority,");
-        sql.append(" m.id menuId ,m.name menuName,m.unit, o.menu_option_ids menuOptionIds, o.description ");
-        sql.append("  FROM ORDER_ITEM o JOIN MENU m on m.id = o.menu_id");
+        sql.append(" o.id menuId ,o.menu_name menuName,o.unit, o.menu_option_ids menuOptionIds, o.description ");
+        sql.append("  FROM ORDER_ITEM o ");
         sql.append("  WHERE o.bill_id=:billId AND o.is_active = 1 ORDER BY o.create_date ");
         params.put("billId", billId);
 
