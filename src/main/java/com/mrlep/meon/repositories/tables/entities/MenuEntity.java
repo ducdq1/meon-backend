@@ -61,6 +61,10 @@ public class MenuEntity implements Serializable {
     @Column(name = "order_number")
     Integer orderNumber;
 
+
+    @Column(name = "is_odd_number")
+    Integer isOddNumber;
+
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
     Integer isActive;
@@ -223,5 +227,13 @@ public class MenuEntity implements Serializable {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public Integer getIsOddNumber() {
+        return isOddNumber;
+    }
+
+    public void setIsOddNumber(Integer isOddNumber) {
+        this.isOddNumber = isOddNumber;
     }
 }

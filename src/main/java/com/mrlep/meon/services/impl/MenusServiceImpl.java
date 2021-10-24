@@ -207,6 +207,8 @@ public class MenusServiceImpl implements MenusService {
         entity.setOrderPriority(request.getOrderPriority());
         entity.setPrice(request.getPrice());
         entity.setUnit(request.getUnit());
+        entity.setIsOddNumber(request.getIsOddNumber());
+
         if(entity.getOrderNumber()==null){
             entity.setOrderNumber(0);
         }

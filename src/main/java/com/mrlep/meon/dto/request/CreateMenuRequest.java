@@ -17,6 +17,7 @@ public class CreateMenuRequest {
     private Integer price;
     private Integer orderPriority;
     private String unit;
+    private Integer isOddNumber;
 
     private List<MenuOptionEntity> options;
     private List<Integer> deletedOptions;
@@ -142,5 +143,13 @@ public class CreateMenuRequest {
 
     public void setDeletedOptions(List<Integer> deletedOptions) {
         this.deletedOptions = deletedOptions;
+    }
+
+    public Integer getIsOddNumber() {
+        return isOddNumber;
+    }
+
+    public void setIsOddNumber(Integer isOddNumber) {
+        this.isOddNumber = isOddNumber;
     }
 }

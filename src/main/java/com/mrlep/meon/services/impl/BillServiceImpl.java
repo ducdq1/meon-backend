@@ -5,14 +5,8 @@ import com.mrlep.meon.dto.request.CreateBillRequest;
 import com.mrlep.meon.dto.response.DetailBillResponse;
 import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.ShopRepository;
-import com.mrlep.meon.repositories.tables.BillMembersRepositoryJPA;
-import com.mrlep.meon.repositories.tables.BillRepositoryJPA;
-import com.mrlep.meon.repositories.tables.BillTablesRepositoryJPA;
-import com.mrlep.meon.repositories.tables.ShopRepositoryJPA;
-import com.mrlep.meon.repositories.tables.entities.BillEntity;
-import com.mrlep.meon.repositories.tables.entities.BillMembersEntity;
-import com.mrlep.meon.repositories.tables.entities.BillTablesEntity;
-import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
+import com.mrlep.meon.repositories.tables.*;
+import com.mrlep.meon.repositories.tables.entities.*;
 import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.services.ShopTableService;
@@ -21,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -44,7 +39,8 @@ public class BillServiceImpl implements BillService {
 
     @Autowired
     private OrderItemService orderItemlService;
-
+    @Autowired
+    private MenusOptionRepositoryJPA menusOptionRepositoryJPA;
     @Autowired
     private BillTablesRepositoryJPA billTablesRepositoryJPA;
 
@@ -76,12 +72,34 @@ public class BillServiceImpl implements BillService {
         }
 
         List<OrderItem> orderItemEntitiesList = (List<OrderItem>) orderItemlService.getOrderItemsByBill(detailBillResponse.getBillId());
+        if (orderItemEntitiesList != null) {
+            getMenuOptions(orderItemEntitiesList);
+        }
+
         detailBillResponse.setOrderItems(orderItemEntitiesList);
         detailBillResponse.setMembers(billRepository.getBillMembers(detailBillResponse.getBillId()));
         detailBillResponse.setTables(billRepository.getBillTables(detailBillResponse.getBillId()));
 
         return detailBillResponse;
 
+    }
+
+    private void getMenuOptions(List<OrderItem> orderItemEntitiesList) {
+        for (OrderItem orderItem : orderItemEntitiesList) {
+
+            List<MenuOptionEntity> menuOptionEntities = new ArrayList<>();
+            String menuOptionIds = orderItem.getMenuOptionIds();
+            if (!StringUtils.isNullOrEmpty(menuOptionIds)) {
+                String[] ids = menuOptionIds.split(";");
+                for (String id : ids) {
+                    MenuOptionEntity menuOptionEntity = menusOptionRepositoryJPA.getByIdAndIsActive(Integer.valueOf(id), Constants.IS_ACTIVE);
+                    if (menuOptionEntity != null) {
+                        menuOptionEntities.add(menuOptionEntity);
+                    }
+                }
+                orderItem.setMenuOptions(menuOptionEntities);
+            }
+        }
     }
 
     @Override
@@ -92,6 +110,9 @@ public class BillServiceImpl implements BillService {
         }
 
         List<OrderItem> orderItemEntitiesList = (List<OrderItem>) orderItemlService.getOrderItemsByBill(billId);
+        if (orderItemEntitiesList != null) {
+            getMenuOptions(orderItemEntitiesList);
+        }
         detailBillResponse.setOrderItems(orderItemEntitiesList);
         detailBillResponse.setMembers(billRepository.getBillMembers(billId));
         detailBillResponse.setTables(billRepository.getBillTables(billId));

@@ -1,9 +1,11 @@
 package com.mrlep.meon.dto.object;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mrlep.meon.repositories.tables.entities.MenuOptionEntity;
 
 import javax.persistence.Column;
 import java.util.Date;
+import java.util.List;
 
 public class OrderItem {
     Integer id;
@@ -20,6 +22,7 @@ public class OrderItem {
     String reconfirms;
     Integer priority;
     String menuOptionIds;
+    List<MenuOptionEntity> menuOptions;
 
     public Integer getId() {
         return id;
@@ -131,5 +134,13 @@ public class OrderItem {
 
     public void setMenuOptionIds(String menuOptionIds) {
         this.menuOptionIds = menuOptionIds;
+    }
+
+    public List<MenuOptionEntity> getMenuOptions() {
+        return menuOptions;
+    }
+
+    public void setMenuOptions(List<MenuOptionEntity> menuOptions) {
+        this.menuOptions = menuOptions;
     }
 }
