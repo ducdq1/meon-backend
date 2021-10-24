@@ -286,7 +286,7 @@ public class BillServiceImpl implements BillService {
                 }
             }
 
-
+            firestoreBillManagement.updateBill(entity.getId(), entity);
             return true;
         }
         return null;
