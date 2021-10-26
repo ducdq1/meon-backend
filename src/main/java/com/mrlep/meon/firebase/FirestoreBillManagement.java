@@ -31,7 +31,7 @@ public class FirestoreBillManagement {
             @Override
             public void run() {
                 try {
-                    Firestore db = new FirebaseFirestore().getDb();
+                    Firestore db = FirebaseFirestore.getDb();
                     DocumentReference docRef = db.collection("BILLS").document(billId.toString());
                     Map<String, Object> data = new HashMap<>();
                     data.put("billId", billId);
@@ -55,7 +55,7 @@ public class FirestoreBillManagement {
                         }
                     }
 
-                    db.close();
+                    //db.close();
 
                     NotificationBO notificationBO = new NotificationBO();
                     notificationBO.setTo(NotificationBO.TOPIC + "" + billId.toString());
