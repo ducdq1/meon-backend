@@ -19,9 +19,12 @@ import java.util.List;
 public interface BillRepositoryJPA extends JpaRepository<BillEntity, Integer> {
     List<BillEntity> getAllByShopIdAndIsActiveOrderByCreateDateDesc(Integer shopId, Integer isActive);
 
-    @Query(value = "SELECT count(*) FROM BILL b JOIN BILL_TABLES bt ON b.id = bt.bill_id WHERE b.is_active =1 AND bt.table_id =:tableId AND (b.status != 2 AND b.status !=3) ",nativeQuery = true)
+    @Query(value = "SELECT count(*) FROM BILL b JOIN BILL_TABLES bt ON b.id = bt.bill_id WHERE bt.is_active =1 AND b.is_active =1 AND bt.table_id =:tableId AND (b.status != 2 AND b.status !=3) ",nativeQuery = true)
     Integer checkExistBillAndTable(Integer tableId);
     BillEntity findByIdAndIsActive(Integer id,Integer isActive);
+
+    @Query(value = "SELECT count(b.id) FROM BILL b JOIN BILL_MEMBERS bt ON b.id = bt.bill_id WHERE bt.is_active =1 AND  b.is_active =1 AND bt.user_id =:userId AND (b.status != 2 AND b.status !=3) ",nativeQuery = true)
+    Integer checkExistBillOfUser(Integer userId);
 
     @Query(value = "SELECT b FROM BILL b JOIN BILL_TABLES bt  ON bt.bill_id = b.id JOIN SHOP_TABLE t ON t.id = bt.table_id " +
             " WHERE t.id =:tableId AND b.status <> 3 AND b.status <> 4 AND t.is_active = 1",nativeQuery = true)

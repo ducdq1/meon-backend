@@ -8,6 +8,7 @@ public class OrderItem {
     Integer id;
     Integer menuId;
     String menuName;
+    String menuImageUrl;
     String unit;
     String description;
     Integer billId;
@@ -166,5 +167,13 @@ public class OrderItem {
 
     public void setUserPhone(String userPhone) {
         this.userPhone = userPhone;
+    }
+
+    public String getMenuImageUrl() {
+        return menuImageUrl;
+    }
+
+    public void setMenuImageUrl(String menuImageUrl) {
+        this.menuImageUrl = menuImageUrl;
     }
 }

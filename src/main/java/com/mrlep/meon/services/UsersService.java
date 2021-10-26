@@ -16,4 +16,5 @@ public interface UsersService {
     Object register(RegisterRequest request) throws TeleCareException;
     Object getOTP(LoginRequest request) throws TeleCareException;
     Object verifyOTP(VerifyOTPRequest request) throws TeleCareException;
+    Object getUserByPhone(String phone) throws TeleCareException;
 }

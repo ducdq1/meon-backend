@@ -13,6 +13,7 @@ import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.services.ShopTableService;
 import com.mrlep.meon.utils.*;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +51,9 @@ public class BillServiceImpl implements BillService {
 
     @Autowired
     private BillTablesRepositoryJPA billTablesRepositoryJPA;
+
+    @Autowired
+    private UsersRepositoryJPA usersRepositoryJPA;
 
 
     @Autowired
@@ -321,13 +325,18 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public Object joinBill(Integer billId, Integer userId) throws TeleCareException {
+        Integer countExist = billRepositoryJPA.checkExistBillOfUser(userId);
+        if (countExist > 0) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.user.bill.member.exists.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
         BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
         if (entity != null && FnCommon.validateBillStatus(entity.getStatus())) {
             addBillMembers(billId, userId);
             return true;
+        } else {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
-
-        return null;
     }
 
     @Override

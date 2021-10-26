@@ -129,6 +129,15 @@ public class UsersServiceImpl implements UsersService {
         return entity;
     }
 
+    @Override
+    public Object getUserByPhone(String phone) throws TeleCareException {
+        UsersEntity usersEntity = usersRepositoryJPA.getByPhoneAndIsActive(phone,Constants.IS_ACTIVE);
+        if(usersEntity == null){
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.account.notexist"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+        return  usersEntity;
+    }
+
     private void validateLogin(LoginRequest request) throws TeleCareException {
         if (StringUtils.isNullOrEmpty(request.getPhone())) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.phone.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());

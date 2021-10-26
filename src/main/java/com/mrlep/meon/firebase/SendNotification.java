@@ -15,7 +15,7 @@ public class SendNotification {
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
-        String serverKey= "AAAApVRBERQ:APA91bF4DlX9h1-ZQk0zrPtSQ9VZFXllV5ak9HdW6BqHJvGHLZUTeTZXeFheRulO2s5u9tYYvbF2NWUg5Z7MrFcr9PmSuV93rNcZ92-MPTuZbpCSO_M6UUN1dldeOpxb7HmYxatacfGI";
+        String serverKey= "key=AAAApVRBERQ:APA91bF4DlX9h1-ZQk0zrPtSQ9VZFXllV5ak9HdW6BqHJvGHLZUTeTZXeFheRulO2s5u9tYYvbF2NWUg5Z7MrFcr9PmSuV93rNcZ92-MPTuZbpCSO_M6UUN1dldeOpxb7HmYxatacfGI";
 
         try {
             String url = "https://fcm.googleapis.com/fcm/send";

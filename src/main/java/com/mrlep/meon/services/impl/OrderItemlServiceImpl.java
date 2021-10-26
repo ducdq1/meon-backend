@@ -80,8 +80,6 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
         menusRepositoryJPA.updateOrderNumber(request.getMenuId());
 
-        firestoreBillManagement.updateBillOrderItem(entity.getBillId(), entity.getId(), entity);
-
         return entity.getId();
     }
 
@@ -109,9 +107,8 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
     @Override
     public Object updateOrderItem(AddOrderItemRequest request) throws TeleCareException {
-        Optional<OrderItemEntity> entityOptional = orderItemRepositoryJPA.findById(request.getOrderItemId());
-        if (entityOptional.isPresent()) {
-            OrderItemEntity entity = entityOptional.get();
+        OrderItemEntity entity = orderItemRepositoryJPA.findByIdIsAndIsActive(request.getOrderItemId(), Constants.IS_ACTIVE);
+        if (entity != null) {
             if (entity.getStatus() != Constants.ORDER_ITEM_STATUS_DELIVERED) {
                 validateAddOrderItem(request);
 
@@ -123,17 +120,19 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 orderItemRepositoryJPA.save(entity);
                 billService.updateBillStatus(request.getCreateUserId(), entity.getBillId(), null);
                 return true;
+            }else {
+                throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
             }
+        } else {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
-        return null;
     }
 
     @Override
     public Object updateOrderItemStatus(Integer userId, Integer orderItemId, Integer status) throws TeleCareException {
-        Optional<OrderItemEntity> entityOptional = orderItemRepositoryJPA.findById(orderItemId);
-        if (entityOptional.isPresent()) {
-            OrderItemEntity entity = entityOptional.get();
+        OrderItemEntity entity = orderItemRepositoryJPA.findByIdIsAndIsActive(orderItemId, Constants.IS_ACTIVE);
+        if (entity != null) {
             if (entity.getStatus() != Constants.ORDER_ITEM_STATUS_DELIVERED) {
                 entity.setStatus(status);
                 entity.setUpdateDate(new Date());
@@ -141,26 +140,31 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 orderItemRepositoryJPA.save(entity);
                 billService.updateBillStatus(userId, entity.getBillId(), null);
                 return true;
+            } else {
+                throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
             }
+        } else {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
-        return null;
     }
 
     @Override
     public Object deleteOrderItem(Integer orderItemId, Integer userId) throws TeleCareException {
-        Optional<OrderItemEntity> entityOptional = orderItemRepositoryJPA.findById(orderItemId);
-        if (entityOptional.isPresent()) {
-            OrderItemEntity entity = entityOptional.get();
-            if (entity.getStatus() != Constants.ORDER_ITEM_STATUS_DELIVERED) {
+        OrderItemEntity entity = orderItemRepositoryJPA.findByIdIsAndIsActive(orderItemId, Constants.IS_ACTIVE);
+        if (entity != null) {
+            if (entity.getStatus() == Constants.ORDER_ITEM_STATUS_PROGRESS) {
                 entity.setIsActive(Constants.IS_NOT_ACTIVE);
                 entity.setUpdateDate(new Date());
                 entity.setUpdateUserId(userId);
                 orderItemRepositoryJPA.save(entity);
+                firestoreBillManagement.deleteBillOrderItem(entity.getBillId(),orderItemId);
                 billService.updateBillStatus(userId, entity.getBillId(), null);
                 return true;
+            } else {
+                throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
             }
-
+        } else {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
-        return null;
     }
 }

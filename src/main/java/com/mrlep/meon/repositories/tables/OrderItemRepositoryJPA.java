@@ -17,4 +17,5 @@ import java.util.List;
 @Repository
 public interface OrderItemRepositoryJPA extends JpaRepository<OrderItemEntity, Integer> {
     List<OrderItemEntity> getAllByBillIdAndIsActive(Integer billId, Integer isActive);
+    OrderItemEntity findByIdIsAndIsActive(Integer id,Integer isActive);
 }

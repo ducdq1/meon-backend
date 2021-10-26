@@ -20,8 +20,10 @@ import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.*;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.Resources;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -41,11 +43,9 @@ public class FirebaseFirestore {
 
   public FirebaseFirestore() throws Exception {
 //    FirebaseAuth.getInstance().
-
     ClassPathResource resource = new  ClassPathResource("serviceAccountKey.json");
-//    InputStream serviceAccount = new FileInputStream("D:\\DATA\\DU_AN\\MeOn\\f0_management\\src\\main\\resources\\serviceAccountKey.json");
-    InputStream serviceAccount = new FileInputStream(resource.getFile());
-    GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+//    InputStream serviceAccount = new FileInputStream(new File());
+    GoogleCredentials credentials = GoogleCredentials.fromStream(resource.getInputStream());
     FirestoreOptions firestoreOptions =
         FirestoreOptions.getDefaultInstance().toBuilder()
 //            .setProjectId("meon-7a487")
