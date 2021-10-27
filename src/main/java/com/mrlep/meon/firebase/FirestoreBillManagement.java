@@ -2,12 +2,15 @@ package com.mrlep.meon.firebase;
 
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
+import com.mrlep.meon.dto.object.BillMembersItem;
 import com.mrlep.meon.dto.object.BillTablesItem;
 import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.firebase.model.Notification;
 import com.mrlep.meon.firebase.model.NotificationBO;
 import com.mrlep.meon.repositories.BillRepository;
+import com.mrlep.meon.repositories.tables.BillMembersRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.BillEntity;
+import com.mrlep.meon.repositories.tables.entities.BillMembersEntity;
 import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
 import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.services.impl.OrderItemlServiceImpl;
@@ -23,8 +26,13 @@ import java.util.Map;
 public class FirestoreBillManagement {
     @Autowired
     private OrderItemService orderItemlService;
+
     @Autowired
     private BillRepository billRepository;
+
+
+    @Autowired
+    private BillMembersRepositoryJPA billMembersRepositoryJPA;
 
     public void updateBill(Integer billId, BillEntity entity) {
         KThreadPoolExecutor.executeAccessLog((new Runnable() {
@@ -52,6 +60,15 @@ public class FirestoreBillManagement {
                         for (BillTablesItem tablesItem : billTablesItems) {
                             DocumentReference orderItemRef = docRef.collection("tables").document(tablesItem.getTableId().toString());
                             orderItemRef.set(tablesItem);
+                        }
+                    }
+
+                    List<BillMembersItem> billMembersItems =  billRepository.getBillMembers(billId);
+
+                    if(billMembersItems !=null){
+                        for (BillMembersItem billMembersItem : billMembersItems) {
+                            DocumentReference orderItemRef = docRef.collection("members").document(billMembersItem.getId().toString());
+                            orderItemRef.set(billMembersItem);
                         }
                     }
 

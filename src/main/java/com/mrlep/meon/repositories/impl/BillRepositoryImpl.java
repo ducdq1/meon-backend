@@ -36,10 +36,10 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append(" SELECT u.id userId, u.full_name userName, u.phone ,u.avatar ");
+        sql.append(" SELECT bm.id id, CASE WHEN bm.is_blacklist is not null THEN bm.is_blacklist ELSE 0 END isBlackList, u.id userId, u.full_name userName, u.phone ,u.avatar, DATE_FORMAT(bm.create_date, '%H:%i') joinTime ");
         sql.append("  FROM BILL b JOIN BILL_MEMBERS bm on b.id = bm.bill_id AND bm.is_active = 1  ");
         sql.append("  JOIN USERS u on u.id = bm.user_id AND u.is_active = 1  ");
-        sql.append("  WHERE b.id=:billId AND b.is_active = 1 ");
+        sql.append("  WHERE b.id=:billId AND b.is_active = 1 AND bm.is_active = 1 ");
         params.put("billId", billId);
 
         return (List<BillMembersItem>) getListData(sql, params, 0, null, BillMembersItem.class);

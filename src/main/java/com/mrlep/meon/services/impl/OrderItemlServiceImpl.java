@@ -12,6 +12,7 @@ import com.mrlep.meon.repositories.tables.entities.MenuEntity;
 import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
 import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.services.OrderItemService;
+import com.mrlep.meon.services.ValidateService;
 import com.mrlep.meon.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,9 @@ public class OrderItemlServiceImpl implements OrderItemService {
     @Autowired
     private ShopRepository shopRepository;
 
+    @Autowired
+    private ValidateService validateService;
+
     private void validateAddOrderItem(AddOrderItemRequest request) throws TeleCareException {
         BillEntity billEntity = billRepositoryJPA.findByIdAndIsActive(request.getBillId(), Constants.IS_ACTIVE);
         if (billEntity == null || !FnCommon.validateBillStatus(billEntity.getStatus())) {
@@ -64,6 +68,8 @@ public class OrderItemlServiceImpl implements OrderItemService {
     @Override
     public Object addOrderItem(AddOrderItemRequest request) throws TeleCareException {
         validateAddOrderItem(request);
+        validateService.validateBillMember(request.getBillId(), request.getCreateUserId());
+
         OrderItemEntity entity = new OrderItemEntity();
         entity.setCreateDate(new Date());
         entity.setCreateUserId(request.getCreateUserId());
@@ -107,6 +113,8 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
     @Override
     public Object updateOrderItem(AddOrderItemRequest request) throws TeleCareException {
+        validateService.validateBillMember(request.getBillId(), request.getCreateUserId());
+
         OrderItemEntity entity = orderItemRepositoryJPA.findByIdIsAndIsActive(request.getOrderItemId(), Constants.IS_ACTIVE);
         if (entity != null) {
             if (entity.getStatus() != Constants.ORDER_ITEM_STATUS_DELIVERED) {
@@ -120,7 +128,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 orderItemRepositoryJPA.save(entity);
                 billService.updateBillStatus(request.getCreateUserId(), entity.getBillId(), null);
                 return true;
-            }else {
+            } else {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
             }
         } else {
@@ -132,7 +140,9 @@ public class OrderItemlServiceImpl implements OrderItemService {
     @Override
     public Object updateOrderItemStatus(Integer userId, Integer orderItemId, Integer status) throws TeleCareException {
         OrderItemEntity entity = orderItemRepositoryJPA.findByIdIsAndIsActive(orderItemId, Constants.IS_ACTIVE);
+
         if (entity != null) {
+            validateService.validateBillMember(entity.getBillId(), userId);
             if (entity.getStatus() != Constants.ORDER_ITEM_STATUS_DELIVERED) {
                 entity.setStatus(status);
                 entity.setUpdateDate(new Date());
@@ -151,13 +161,15 @@ public class OrderItemlServiceImpl implements OrderItemService {
     @Override
     public Object deleteOrderItem(Integer orderItemId, Integer userId) throws TeleCareException {
         OrderItemEntity entity = orderItemRepositoryJPA.findByIdIsAndIsActive(orderItemId, Constants.IS_ACTIVE);
+
         if (entity != null) {
+            validateService.validateBillMember(entity.getBillId(), userId);
             if (entity.getStatus() == Constants.ORDER_ITEM_STATUS_PROGRESS) {
                 entity.setIsActive(Constants.IS_NOT_ACTIVE);
                 entity.setUpdateDate(new Date());
                 entity.setUpdateUserId(userId);
                 orderItemRepositoryJPA.save(entity);
-                firestoreBillManagement.deleteBillOrderItem(entity.getBillId(),orderItemId);
+                firestoreBillManagement.deleteBillOrderItem(entity.getBillId(), orderItemId);
                 billService.updateBillStatus(userId, entity.getBillId(), null);
                 return true;
             } else {

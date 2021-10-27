@@ -31,6 +31,9 @@ public class BillMembersEntity implements Serializable {
     @Column(name = "USER_ID")
     Integer userId;
 
+    @Column(name = "IS_BLACKLIST")
+    Integer isBlackList;
+
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
     Integer isActive;
@@ -114,5 +117,13 @@ public class BillMembersEntity implements Serializable {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getIsBlackList() {
+        return isBlackList;
+    }
+
+    public void setIsBlackList(Integer isBlackList) {
+        this.isBlackList = isBlackList;
     }
 }

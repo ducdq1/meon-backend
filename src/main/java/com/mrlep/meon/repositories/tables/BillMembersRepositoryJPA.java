@@ -17,6 +17,7 @@ import java.util.List;
  */
 @Repository
 public interface BillMembersRepositoryJPA extends JpaRepository<BillMembersEntity, Integer> {
+    BillMembersEntity findByUserIdAndBillIdAndIsActive(Integer userId,Integer billId, Integer isActive);
     BillMembersEntity findByIdAndIsActive(Integer id, Integer isActive);
     List<BillMembersEntity> findAllByBillIdAndIsActive(Integer billId, Integer isActive);
     List<BillMembersEntity> findAllByBillIdAndUserIdAndIsActive(Integer billId, Integer userId, Integer isActive);

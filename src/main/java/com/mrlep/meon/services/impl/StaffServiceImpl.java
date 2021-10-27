@@ -1,6 +1,7 @@
 package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.dto.request.CreateStaffRequest;
+import com.mrlep.meon.repositories.StaffRepository;
 import com.mrlep.meon.repositories.tables.StaffRepositoryJPA;
 import com.mrlep.meon.repositories.tables.UsersRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.StaffEntity;
@@ -19,18 +20,20 @@ public class StaffServiceImpl implements StaffService {
 
     @Autowired
     private StaffRepositoryJPA staffRepositoryJPA;
+
     @Autowired
     private UsersRepositoryJPA usersRepositoryJPA;
 
+    @Autowired
+    private StaffRepository staffRepository;
     @Override
     public Object getStaffDetail(Integer staffId) throws TeleCareException {
-        StaffEntity staffEntity = staffRepositoryJPA.getByIdAndIsActive(staffId, Constants.IS_ACTIVE);
-        return staffEntity;
+        return  staffRepository.getDetailStaff(staffId);
     }
 
     @Override
     public Object getStaffsByShop(Integer shopId) throws TeleCareException {
-        return staffRepositoryJPA.getAllByShopIdAndIsActiveOrderByCreateDateDesc(shopId, Constants.IS_ACTIVE);
+        return staffRepository.getStaffsByShop(shopId);
     }
 
 
