@@ -97,7 +97,6 @@ public class FirestoreBillManagement {
                 try {
                     Firestore db = new FirebaseFirestore().getDb();
                     db.collection("BILLS").document(billId.toString()).collection("orderItems").document(orderItemId.toString()).delete();
-                    db.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

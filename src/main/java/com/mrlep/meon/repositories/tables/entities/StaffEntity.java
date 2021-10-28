@@ -68,6 +68,9 @@ public class StaffEntity implements Serializable {
     @Column(name = "UPDATE_USER_ID")
     Integer updateUserId;
 
+    @Column(name = "is_receive_notification")
+    Integer isReceiveNotification;
+
     public Integer getId() {
         return id;
     }
@@ -170,5 +173,13 @@ public class StaffEntity implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getIsReceiveNotification() {
+        return isReceiveNotification;
+    }
+
+    public void setIsReceiveNotification(Integer isReceiveNotification) {
+        this.isReceiveNotification = isReceiveNotification;
     }
 }

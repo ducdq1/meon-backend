@@ -1,6 +1,7 @@
 package com.mrlep.meon.controllers;
 
 import com.mrlep.meon.dto.request.CreateBillRequest;
+import com.mrlep.meon.dto.request.SearchBillRequest;
 import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.services.ShopTableService;
 import com.mrlep.meon.utils.FnCommon;
@@ -184,6 +185,25 @@ public class BillController {
         try {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             result = billService.deleteBill(billId, userId);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+
+    @PostMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> searchBillsOfUser(@RequestBody SearchBillRequest request, @AuthenticationPrincipal Authentication authentication) {
+        Object result;
+        try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            request.setUserId(userId);
+            result = billService.searchBillUser(request);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);

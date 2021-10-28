@@ -138,6 +138,38 @@ public class UsersServiceImpl implements UsersService {
         return  usersEntity;
     }
 
+    @Override
+    public Object updateUserInfo(UsersEntity entity) throws TeleCareException {
+
+        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(entity.getId(),Constants.IS_ACTIVE);
+        if (usersEntity == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.phone.exists"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        if (StringUtils.isNullOrEmpty(entity.getFullName())) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.fullname.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        usersEntity.setIsActive(Constants.IS_ACTIVE);
+        usersEntity.setFullName(entity.getFullName());
+        usersEntity.setAvatar(entity.getAvatar());
+        usersEntity.setIsReceiveNotification(entity.getIsReceiveNotification());
+        usersRepositoryJPA.save(usersEntity);
+        return usersEntity;
+    }
+
+    @Override
+    public Object updateUserDeviceToken(Integer userId, String deviceToken) throws TeleCareException {
+        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(userId,Constants.IS_ACTIVE);
+        if (usersEntity == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.phone.exists"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        usersEntity.setDeviceToken(deviceToken);
+        usersRepositoryJPA.save(usersEntity);
+        return true;
+    }
+
     private void validateLogin(LoginRequest request) throws TeleCareException {
         if (StringUtils.isNullOrEmpty(request.getPhone())) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.phone.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());

@@ -2,8 +2,10 @@ package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.dto.request.CreateBillRequest;
+import com.mrlep.meon.dto.request.SearchBillRequest;
 import com.mrlep.meon.dto.response.DetailBillResponse;
 import com.mrlep.meon.dto.response.DetailTableResponse;
+import com.mrlep.meon.dto.response.SearchBillResponse;
 import com.mrlep.meon.firebase.FirestoreBillManagement;
 import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.ShopRepository;
@@ -348,5 +350,10 @@ public class BillServiceImpl implements BillService {
             return true;
         }
         return null;
+    }
+
+    @Override
+    public SearchBillResponse searchBillUser(SearchBillRequest request) throws TeleCareException {
+        return billRepository.getBillOfUser(request);
     }
 }

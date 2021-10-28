@@ -18,7 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "USERS")
-public class UsersEntity  implements Serializable {
+public class UsersEntity implements Serializable {
 
     @Id
     @Column(name = "ID")
@@ -40,23 +40,29 @@ public class UsersEntity  implements Serializable {
 
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
-     Integer isActive;
+    Integer isActive;
 
     @JsonIgnore
     @Column(name = "CREATE_USER_ID")
-     Integer createUserId;
+    Integer createUserId;
 
     @JsonIgnore
     @Column(name = "CREATE_DATE")
-     Date createDate;
+    Date createDate;
 
     @JsonIgnore
     @Column(name = "UPDATE_DATE")
-      Date updateDate;
+    Date updateDate;
 
     @JsonIgnore
     @Column(name = "UPDATE_USER_ID")
-      Integer updateUserId;
+    Integer updateUserId;
+
+    @Column(name = "is_receive_notification")
+    Integer isReceiveNotification;
+
+    @Column(name = "device_token")
+    String deviceToken;
 
     public Integer getIsActive() {
         return isActive;
@@ -97,7 +103,7 @@ public class UsersEntity  implements Serializable {
     public void setUpdateUserId(Integer updateUserId) {
         this.updateUserId = updateUserId;
     }
-    
+
     public Integer getId() {
         return id;
     }
@@ -136,5 +142,21 @@ public class UsersEntity  implements Serializable {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public Integer getIsReceiveNotification() {
+        return isReceiveNotification;
+    }
+
+    public void setIsReceiveNotification(Integer isReceiveNotification) {
+        this.isReceiveNotification = isReceiveNotification;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

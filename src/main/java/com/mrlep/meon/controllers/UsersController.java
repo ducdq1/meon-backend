@@ -3,6 +3,7 @@ package com.mrlep.meon.controllers;
 import com.mrlep.meon.dto.request.LoginRequest;
 import com.mrlep.meon.dto.request.RegisterRequest;
 import com.mrlep.meon.dto.request.VerifyOTPRequest;
+import com.mrlep.meon.repositories.tables.entities.UsersEntity;
 import com.mrlep.meon.services.UsersService;
 import com.mrlep.meon.utils.FnCommon;
 import com.mrlep.meon.utils.TeleCareException;
@@ -105,6 +106,41 @@ public class UsersController {
         try {
             FnCommon.getUserIdFromToken(authentication);
             result = usersService.getUserByPhone(phoneNumber);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/info",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> updateUserInfo(@RequestBody UsersEntity entity, @AuthenticationPrincipal Authentication authentication) {
+        Object result;
+        try {
+            Integer userID = FnCommon.getUserIdFromToken(authentication);
+            entity.setId(userID);
+            result = usersService.updateUserInfo(entity);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/device-token/{deviceToken}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> updateUserDeviceToken(@PathVariable String deviceToken, @AuthenticationPrincipal Authentication authentication) {
+        Object result;
+        try {
+            Integer userID = FnCommon.getUserIdFromToken(authentication);
+            result = usersService.updateUserDeviceToken(userID,deviceToken);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);

@@ -14,6 +14,11 @@ public class BillItem {
     String userName;
     String phone;
     String avatar;
+    String createDate;
+    String shopName;
+    String shopAvatar;
+    String shopAddress;
+    Integer shopId;
 
     public Integer getBillId() {
         return billId;
@@ -79,4 +84,43 @@ public class BillItem {
         this.avatar = avatar;
     }
 
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public String getShopAvatar() {
+        return shopAvatar;
+    }
+
+    public void setShopAvatar(String shopAvatar) {
+        this.shopAvatar = shopAvatar;
+    }
+
+    public Integer getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Integer shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getShopAddress() {
+        return shopAddress;
+    }
+
+    public void setShopAddress(String shopAddress) {
+        this.shopAddress = shopAddress;
+    }
 }

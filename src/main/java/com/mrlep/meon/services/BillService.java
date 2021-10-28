@@ -2,6 +2,8 @@ package com.mrlep.meon.services;
 
 import com.mrlep.meon.dto.request.CreateBillRequest;
 import com.mrlep.meon.dto.request.CreateShopTableRequest;
+import com.mrlep.meon.dto.request.SearchBillRequest;
+import com.mrlep.meon.dto.response.SearchBillResponse;
 import com.mrlep.meon.utils.TeleCareException;
 
 public interface BillService {
@@ -15,4 +17,6 @@ public interface BillService {
     Object deleteBill(Integer billId, Integer userId) throws TeleCareException;
     Object joinBill(Integer billId, Integer userId) throws TeleCareException;
     Object addTableBill(Integer billId, Integer userId,Integer tableId) throws TeleCareException;
+
+    SearchBillResponse searchBillUser(SearchBillRequest request) throws TeleCareException;
 }
