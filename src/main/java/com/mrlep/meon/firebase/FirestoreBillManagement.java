@@ -9,13 +9,17 @@ import com.mrlep.meon.firebase.model.Notification;
 import com.mrlep.meon.firebase.model.NotificationBO;
 import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.tables.BillMembersRepositoryJPA;
+import com.mrlep.meon.repositories.tables.MenusOptionRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.BillEntity;
 import com.mrlep.meon.repositories.tables.entities.BillMembersEntity;
 import com.mrlep.meon.repositories.tables.entities.MenuOptionEntity;
 import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
 import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.services.impl.OrderItemlServiceImpl;
+import com.mrlep.meon.utils.Constants;
+import com.mrlep.meon.utils.FnCommon;
 import com.mrlep.meon.utils.KThreadPoolExecutor;
+import com.mrlep.meon.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +34,8 @@ public class FirestoreBillManagement {
 
     @Autowired
     private BillRepository billRepository;
-
+    @Autowired
+    private MenusOptionRepositoryJPA menusOptionRepositoryJPA;
 
     @Autowired
     private BillMembersRepositoryJPA billMembersRepositoryJPA;
@@ -48,15 +53,29 @@ public class FirestoreBillManagement {
                     docRef.set(data);
 
                     List<OrderItem> orderItemEntitiesList = (List<OrderItem>) orderItemlService.getOrderItemsByBill(billId);
+
                     if (orderItemEntitiesList != null) {
                         for (OrderItem orderItem : orderItemEntitiesList) {
                             DocumentReference orderItemRef = docRef.collection("orderItems").document(orderItem.getId().toString());
+                            orderItem.setMenuOptions(null);
                             orderItemRef.set(orderItem);
-                            List<MenuOptionEntity> menuOptionEntities = orderItem.getMenuOptions();
-                            for (MenuOptionEntity menuOptionEntity : menuOptionEntities  ) {
-                                DocumentReference menuOptionsRef = orderItemRef.collection("menuOptions").document(menuOptionEntity.getId().toString());
-                                menuOptionsRef.set(menuOptionEntity);
+
+                            String menuOptionIds = orderItem.getMenuOptionIds();
+                            if (!StringUtils.isNullOrEmpty(menuOptionIds)) {
+                                String[] ids = menuOptionIds.split(";");
+                                for (String id : ids) {
+                                    if (FnCommon.getIntegerFromString(id) != null) {
+                                        MenuOptionEntity menuOptionEntity = menusOptionRepositoryJPA.getByIdAndIsActive(FnCommon.getIntegerFromString(id), Constants.IS_ACTIVE);
+                                        if (menuOptionEntity != null) {
+                                            DocumentReference menuOptionsRef = orderItemRef.collection("menuOptions").document(menuOptionEntity.getId().toString());
+                                            menuOptionsRef.set(menuOptionEntity);
+                                        }
+                                    }
+                                }
                             }
+
+
+
                         }
                     }
 
