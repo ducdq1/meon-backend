@@ -11,6 +11,7 @@ import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.tables.BillMembersRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.BillEntity;
 import com.mrlep.meon.repositories.tables.entities.BillMembersEntity;
+import com.mrlep.meon.repositories.tables.entities.MenuOptionEntity;
 import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
 import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.services.impl.OrderItemlServiceImpl;
@@ -51,6 +52,11 @@ public class FirestoreBillManagement {
                         for (OrderItem orderItem : orderItemEntitiesList) {
                             DocumentReference orderItemRef = docRef.collection("orderItems").document(orderItem.getId().toString());
                             orderItemRef.set(orderItem);
+                            List<MenuOptionEntity> menuOptionEntities = orderItem.getMenuOptions();
+                            for (MenuOptionEntity menuOptionEntity : menuOptionEntities  ) {
+                                DocumentReference menuOptionsRef = orderItemRef.collection("menuOptions").document(menuOptionEntity.getId().toString());
+                                menuOptionsRef.set(menuOptionEntity);
+                            }
                         }
                     }
 
@@ -63,9 +69,9 @@ public class FirestoreBillManagement {
                         }
                     }
 
-                    List<BillMembersItem> billMembersItems =  billRepository.getBillMembers(billId);
+                    List<BillMembersItem> billMembersItems = billRepository.getBillMembers(billId);
 
-                    if(billMembersItems !=null){
+                    if (billMembersItems != null) {
                         for (BillMembersItem billMembersItem : billMembersItems) {
                             DocumentReference orderItemRef = docRef.collection("members").document(billMembersItem.getId().toString());
                             orderItemRef.set(billMembersItem);
