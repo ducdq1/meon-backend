@@ -7,6 +7,7 @@ import com.mrlep.meon.dto.request.SearchBillRequest;
 import com.mrlep.meon.dto.response.DetailBillResponse;
 import com.mrlep.meon.dto.response.SearchBillResponse;
 import com.mrlep.meon.repositories.BillRepository;
+import com.mrlep.meon.utils.Constants;
 import com.mrlep.meon.utils.FnCommon;
 import com.mrlep.meon.utils.StringUtils;
 import com.mrlep.meon.xlibrary.core.entities.ResultSelectEntity;
@@ -26,7 +27,9 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT b.id billId, b.name billName, b.status billStatus,b.description,b.total_Money totalMoney,u.full_name userName, ");
-        sql.append(" u.phone, u.avatar,b.shop_id shopId,s.name shopName, s.image_url shopAvatar ");
+        sql.append(" u.phone, u.avatar,b.shop_id shopId,s.name shopName, s.image_url shopAvatar, ");
+        sql.append(" b.create_user_id createUserId , DATE_FORMAT(b.create_date, '%d-%m-%Y %H:%i') createDate ,b.reconfirm_message reconfirmMessage" +
+                " ,b.cancel_message cancelMessage ");
         sql.append("  FROM BILL b JOIN USERS u on u.id = b.create_user_id  ");
         sql.append(" JOIN SHOP s ON s.id = b.shop_id ");
         sql.append("  WHERE b.id=:billId AND b.is_active = 1 ");
@@ -40,7 +43,7 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append(" SELECT bm.id id, CASE WHEN bm.is_blacklist is not null THEN bm.is_blacklist ELSE 0 END isBlackList, u.id userId, u.full_name userName, u.phone ,u.avatar, DATE_FORMAT(bm.create_date, '%H:%i') joinTime ");
+        sql.append(" SELECT b.id billId, bm.id id, CASE WHEN bm.is_blacklist is not null THEN bm.is_blacklist ELSE 0 END isBlackList, u.id userId, u.full_name userName, u.phone ,u.avatar, DATE_FORMAT(bm.create_date, '%H:%i') joinTime ");
         sql.append("  FROM BILL b JOIN BILL_MEMBERS bm on b.id = bm.bill_id AND bm.is_active = 1  ");
         sql.append("  JOIN USERS u on u.id = bm.user_id AND u.is_active = 1  ");
         sql.append("  WHERE b.id=:billId AND b.is_active = 1 AND bm.is_active = 1 ");
@@ -54,8 +57,9 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append(" SELECT bt.table_id tableId, bt.table_name tableName ");
+        sql.append(" SELECT b.id billId,bt.table_id tableId, bt.table_name tableName ");
         sql.append("  FROM BILL b JOIN BILL_TABLES bt on b.id = bt.bill_id AND bt.is_active = 1  ");
+
         sql.append("  WHERE b.id=:billId AND b.is_active = 1 ");
         params.put("billId", billId);
 
@@ -148,5 +152,27 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         response.setTotalMoney(totalMoney.getTotalMoney());
 
         return response;
+    }
+
+    @Override
+    public DetailBillResponse getBillByTable(Integer shopId, Integer tableId) {
+        HashMap<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder();
+
+        sql.append(" SELECT b.id billId, b.name billName, b.status billStatus,b.description,b.total_Money totalMoney,u.full_name userName, ");
+        sql.append(" u.phone, u.avatar,b.shop_id shopId,s.name shopName, s.image_url shopAvatar, ");
+        sql.append(" b.create_user_id createUserId , DATE_FORMAT(b.create_date, '%d-%m-%Y %H:%i') createDate ,b.reconfirm_message reconfirmMessage" +
+                " ,b.cancel_message cancelMessage ");
+        sql.append("  FROM BILL b JOIN USERS u on u.id = b.create_user_id  ");
+        sql.append(" JOIN SHOP s ON s.id = b.shop_id ");
+        sql.append("  WHERE b.status <> :statusDone AND b.status <> :statusCancel AND b.is_active = 1 AND b.shop_id =:shopId ");
+        sql.append("  AND b.id IN (SELECT b.id FROM BILL b JOIN BILL_TABLES bt ON b.id = bt.bill_id WHERE bt.table_id =:tableId ) ");
+
+        params.put("tableId", tableId);
+        params.put("shopId",shopId);
+        params.put("statusCancel", Constants.BILL_STATUS_CANCEL);
+        params.put("statusDone", Constants.BILL_STATUS_DONE);
+
+        return (DetailBillResponse) getFirstData(sql, params, DetailBillResponse.class);
     }
 }

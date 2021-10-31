@@ -3,6 +3,7 @@ package com.mrlep.meon.dto.object;
 import java.util.Date;
 
 public class BillMembersItem {
+    Integer billId;
     Integer id;
     String userName;
     Integer userId;
@@ -65,5 +66,13 @@ public class BillMembersItem {
 
     public void setJoinTime(String joinTime) {
         this.joinTime = joinTime;
+    }
+
+    public Integer getBillId() {
+        return billId;
+    }
+
+    public void setBillId(Integer billId) {
+        this.billId = billId;
     }
 }

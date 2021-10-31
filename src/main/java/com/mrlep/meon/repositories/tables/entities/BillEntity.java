@@ -34,6 +34,9 @@ public class BillEntity implements Serializable {
     @Column(name = "reconfirm_message")
     private String reconfirmMessage;
 
+    @Column(name = "cancel_message")
+    private String cancelMessage;
+
     @Column(name = "STATUS")
     Integer status;
 
@@ -169,5 +172,13 @@ public class BillEntity implements Serializable {
 
     public void setIsCreateByStaff(Integer isCreateByStaff) {
         this.isCreateByStaff = isCreateByStaff;
+    }
+
+    public String getCancelMessage() {
+        return cancelMessage;
+    }
+
+    public void setCancelMessage(String cancelMessage) {
+        this.cancelMessage = cancelMessage;
     }
 }

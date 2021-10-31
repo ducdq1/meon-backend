@@ -1,10 +1,12 @@
 package com.mrlep.meon;
 
 import com.mrlep.meon.firebase.FirebaseFirestore;
+import com.mrlep.meon.firebase.FirestoreBillManagement;
 import com.mrlep.meon.utils.CustomLocaleResolver;
 import com.mrlep.meon.utils.LoggingUtils;
 import org.apache.log4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;

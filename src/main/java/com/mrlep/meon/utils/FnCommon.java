@@ -702,4 +702,24 @@ public class FnCommon extends FunctionCommon {
         return false;
     }
 
+    public static String getBillStatusString(Integer status){
+        switch (status)
+        {
+            case Constants.BILL_STATUS_PROGRESS:
+                return MessagesUtils.getMessage("bill.status.progress");
+
+            case Constants.BILL_STATUS_ACCEPTED:
+                return  MessagesUtils.getMessage("bill.status.accept");
+
+            case Constants.BILL_STATUS_CANCEL:
+                return MessagesUtils.getMessage("bill.status.cancel");
+
+            case Constants.BILL_STATUS_DONE:
+                return MessagesUtils.getMessage("bill.status.done");
+            default:
+                return "";
+
+        }
+    }
+
 }

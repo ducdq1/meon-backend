@@ -144,6 +144,8 @@ public class Constants {
     public static final String ORDER_BY_NEAREST = "nearest";
     public static final String ORDER_BY_TRENDING = "trending";
 
+    public static final int STAFF_STATUS_ACTIVE = 1;
+    public static final int STAFF_STATUS_INACTIVE = 0;
 
     public static final int TABLE_STATUS_READY = 0;
     public static final int TABLE_STATUS_IN_USE = 1;
@@ -160,5 +162,12 @@ public class Constants {
     public static final int ORDER_ITEM_STATUS_DELIVERED =3;
     public static final int ORDER_ITEM_STATUS_RECONFIRM =4;
     public static final int ORDER_ITEM_STATUS_CANCEL = 5;
+
+    public static final String PERMISSION_STAFF="STAFF";
+    public static final String PERMISSION_MANAGER="MANAGER";
+    public static final String PERMISSION_ACCOUNTANT="ACCOUNTANT";
+    public static final String PERMISSION_CHEF="CHEF";
+
+
 
 }

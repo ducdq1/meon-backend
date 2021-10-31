@@ -82,7 +82,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
         orderItemRepositoryJPA.save(entity);
 
-        billService.updateBillStatus(request.getCreateUserId(), entity.getBillId(), null);
+        firestoreBillManagement.updateOrderItem(entity.getId());
 
         menusRepositoryJPA.updateOrderNumber(request.getMenuId());
 
@@ -126,7 +126,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 entity.setUpdateUserId(request.getCreateUserId());
                 entity = setOrderInfo(request, entity);
                 orderItemRepositoryJPA.save(entity);
-                billService.updateBillStatus(request.getCreateUserId(), entity.getBillId(), null);
+                firestoreBillManagement.updateOrderItem(entity.getId());
                 return true;
             } else {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
@@ -148,7 +148,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 entity.setUpdateDate(new Date());
                 entity.setUpdateUserId(userId);
                 orderItemRepositoryJPA.save(entity);
-                billService.updateBillStatus(userId, entity.getBillId(), null);
+                firestoreBillManagement.updateOrderItem(entity.getId());
                 return true;
             } else {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
@@ -170,7 +170,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 entity.setUpdateUserId(userId);
                 orderItemRepositoryJPA.save(entity);
                 firestoreBillManagement.deleteBillOrderItem(entity.getBillId(), orderItemId);
-                billService.updateBillStatus(userId, entity.getBillId(), null);
+                billService.updateBillInfo(userId, entity.getBillId());
                 return true;
             } else {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());

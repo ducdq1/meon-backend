@@ -1,13 +1,18 @@
 package com.mrlep.meon.firebase;
 
+import com.google.cloud.firestore.CollectionReference;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.mrlep.meon.dto.object.BillMembersItem;
 import com.mrlep.meon.dto.object.BillTablesItem;
 import com.mrlep.meon.dto.object.OrderItem;
+import com.mrlep.meon.dto.response.DetailBillResponse;
 import com.mrlep.meon.repositories.BillRepository;
+import com.mrlep.meon.repositories.ShopTableRepository;
+import com.mrlep.meon.repositories.impl.OrderItemRepositoryImpl;
 import com.mrlep.meon.repositories.tables.BillMembersRepositoryJPA;
 import com.mrlep.meon.repositories.tables.MenusOptionRepositoryJPA;
+import com.mrlep.meon.repositories.tables.OrderItemRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.BillEntity;
 import com.mrlep.meon.repositories.tables.entities.MenuOptionEntity;
 import com.mrlep.meon.services.OrderItemService;
@@ -18,6 +23,7 @@ import com.mrlep.meon.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +32,8 @@ import java.util.Map;
 public class FirestoreBillManagement {
     @Autowired
     private OrderItemService orderItemlService;
+    @Autowired
+    private OrderItemRepositoryImpl orderItemRepository;
 
     @Autowired
     private BillRepository billRepository;
@@ -34,9 +42,14 @@ public class FirestoreBillManagement {
 
     @Autowired
     private BillMembersRepositoryJPA billMembersRepositoryJPA;
-
+    @Autowired
+    private OrderItemRepositoryJPA orderItemRepositoryJPA;
+    @Autowired
+    private  ShopTableRepository shopTableRepository;
     @Autowired
     private NotificationService notification;
+
+    public static String ORDERS = "ORDERS";
 
     public void updateBill(Integer billId, BillEntity entity) {
         KThreadPoolExecutor.executeAccessLog((new Runnable() {
@@ -45,16 +58,22 @@ public class FirestoreBillManagement {
                 try {
                     Firestore db = FirebaseFirestore.getDb();
                     DocumentReference docRef = db.collection("BILLS").document(billId.toString());
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("billId", billId);
-                    data.put("status", entity.getStatus());
-                    docRef.set(data);
+                    DetailBillResponse response = billRepository.getDetailBill(billId);
+                    List<BillTablesItem> billTablesItems = shopTableRepository.getTableOfBill(billId);
+                    List<String> tablesName = new ArrayList<>();
+                    for (BillTablesItem billTablesItem : billTablesItems) {
+                        tablesName.add(billTablesItem.getTableName());
+                    }
+                    response.setTablesName(tablesName);
+                    response.setNumberOrders(orderItemRepositoryJPA.countOrderItemOfBill(billId));
+                    response.setNumberMembers(billMembersRepositoryJPA.countMembersOfBill(billId));
+                    docRef.set(response);
 
-                    List<OrderItem> orderItemEntitiesList = (List<OrderItem>) orderItemlService.getOrderItemsByBill(billId);
+                    /*List<OrderItem> orderItemEntitiesList = (List<OrderItem>) orderItemlService.getOrderItemsByBill(billId);
 
                     if (orderItemEntitiesList != null) {
                         for (OrderItem orderItem : orderItemEntitiesList) {
-                            DocumentReference orderItemRef = docRef.collection("orderItems").document(orderItem.getId().toString());
+                            DocumentReference orderItemRef = db.collection(ORDERS).document(orderItem.getId().toString());
                             orderItem.setMenuOptions(null);
                             orderItemRef.set(orderItem);
 
@@ -72,9 +91,9 @@ public class FirestoreBillManagement {
                                 }
                             }
                         }
-                    }
+                    }*/
 
-                    List<BillTablesItem> billTablesItems = billRepository.getBillTables(billId);
+                   /* List<BillTablesItem> billTablesItems = billRepository.getBillTables(billId);
 
                     if (billTablesItems != null) {
                         for (BillTablesItem tablesItem : billTablesItems) {
@@ -90,9 +109,7 @@ public class FirestoreBillManagement {
                             DocumentReference orderItemRef = docRef.collection("members").document(billMembersItem.getId().toString());
                             orderItemRef.set(billMembersItem);
                         }
-                    }
-
-                    notification.sendNotificationToCustomer(entity);
+                    }*/
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -108,11 +125,86 @@ public class FirestoreBillManagement {
             public void run() {
                 try {
                     Firestore db = new FirebaseFirestore().getDb();
-                    db.collection("BILLS").document(billId.toString()).collection("orderItems").document(orderItemId.toString()).delete();
+                    db.collection(ORDERS).document(orderItemId.toString()).delete();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }));
     }
+
+    public void deleteBill(Integer billId) {
+        KThreadPoolExecutor.executeAccessLog((new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Firestore db = new FirebaseFirestore().getDb();
+                    db.collection("BILLS").document(billId.toString()).delete();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }));
+    }
+
+    public void deleteBillTable(Integer billId, Integer tableId) {
+        KThreadPoolExecutor.executeAccessLog((new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Firestore db = new FirebaseFirestore().getDb();
+                    db.collection("BILLS").document(billId.toString()).collection("tables").document(tableId.toString()).delete();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }));
+    }
+
+    public void updateOrderItem(Integer orderItemId) {
+        KThreadPoolExecutor.executeAccessLog((new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Firestore db = new FirebaseFirestore().getDb();
+                    OrderItem orderItem = orderItemRepository.getOrderItem(orderItemId);
+                    CollectionReference collectionReference = db.collection("ORDERS");
+                    DocumentReference documentReference = collectionReference.document(orderItemId.toString());
+                    if (orderItem != null) {
+                        documentReference.set(orderItem);
+                    } else {
+                        documentReference.delete();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }));
+    }
+
+
+    public void updateAllOrderItem() {
+        KThreadPoolExecutor.executeAccessLog((new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Firestore db = new FirebaseFirestore().getDb();
+
+                    List<OrderItem> orderItems = orderItemRepository.getAllOrderItem();
+                    CollectionReference collectionReference = db.collection("ORDERS");
+                    for (OrderItem orderItem : orderItems) {
+                        DocumentReference documentReference = collectionReference.document(orderItem.getId().toString());
+                        documentReference.set(orderItem);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }));
+    }
+
+    public void sendBillStatusNotification(BillEntity entity){
+        notification.sendBillStatusChangeNotificationToCustomer(entity);
+    }
+
 }

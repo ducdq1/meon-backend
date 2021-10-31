@@ -3,8 +3,8 @@ package com.mrlep.meon.services.impl;
 import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.dto.request.CreateBillRequest;
 import com.mrlep.meon.dto.request.SearchBillRequest;
+import com.mrlep.meon.dto.request.UpdateBillStatusRequest;
 import com.mrlep.meon.dto.response.DetailBillResponse;
-import com.mrlep.meon.dto.response.DetailTableResponse;
 import com.mrlep.meon.dto.response.SearchBillResponse;
 import com.mrlep.meon.firebase.FirestoreBillManagement;
 import com.mrlep.meon.repositories.BillRepository;
@@ -14,8 +14,8 @@ import com.mrlep.meon.repositories.tables.entities.*;
 import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.services.ShopTableService;
+import com.mrlep.meon.services.ValidateService;
 import com.mrlep.meon.utils.*;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,8 +61,13 @@ public class BillServiceImpl implements BillService {
 
     @Autowired
     private BillMembersRepositoryJPA billMembersRepositoryJPA;
+
     @Autowired
     private FirestoreBillManagement firestoreBillManagement;
+
+
+    @Autowired
+    private ValidateService validateService;
 
     @Autowired
     private ShopRepository shopRepository;
@@ -77,6 +82,11 @@ public class BillServiceImpl implements BillService {
             }
         }
 
+    }
+
+    @Override
+    public Object getBillByTable(Integer shopId, Integer tableId) throws TeleCareException {
+        return billRepository.getBillByTable(shopId,tableId);
     }
 
     @Override
@@ -164,6 +174,10 @@ public class BillServiceImpl implements BillService {
         entity.setReconfirmMessage(request.getReconfirmMessage());
         entity.setIsCreateByStaff(request.getIsCreateByStaff());
 
+        if (request.getIsCreateByStaff() != null && request.getIsCreateByStaff() == 1) {
+            entity.setStatus(Constants.BILL_STATUS_ACCEPTED);
+        }
+
         billRepositoryJPA.save(entity);
 
         if (request.getTableIds() != null) {
@@ -233,6 +247,7 @@ public class BillServiceImpl implements BillService {
             entity.setUpdateUserId(request.getCreateUserId());
             entity.setReconfirmMessage(request.getReconfirmMessage());
             entity.setTotalMoney(request.getTotalMoney());
+            entity.setCancelMessage(request.getCancelMessage());
             entity.setIsCreateByStaff(request.getIsCreateByStaff());
             billRepositoryJPA.save(entity);
 
@@ -266,7 +281,7 @@ public class BillServiceImpl implements BillService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Object updateBillStatus(Integer userId, Integer billId, Integer status) throws TeleCareException {
+    public Object updateBillStatus(Integer userId, Integer billId, List<String> permissions, UpdateBillStatusRequest request) throws TeleCareException {
         BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
         if (entity != null) {
 
@@ -274,10 +289,22 @@ public class BillServiceImpl implements BillService {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.status"), ErrorApp.ERROR_INPUTPARAMS.getCode());
             }
 
-            if (status != null) {
-                entity.setStatus(status);
+
+            Integer status = request.getStatus();
+            String cancelMessage = request.getCancelMessage();
+            String reconfirmMessage = request.getReconfirmMessage();
+
+            validateService.validateBillStatusPermission(permissions,status);
+
+            if(cancelMessage !=null){
+                entity.setCancelMessage(cancelMessage);
             }
 
+            if(reconfirmMessage !=null){
+                entity.setReconfirmMessage(reconfirmMessage);
+            }
+
+            entity.setStatus(status);
             entity.setUpdateDate(new Date());
             entity.setUpdateUserId(userId);
 
@@ -294,9 +321,24 @@ public class BillServiceImpl implements BillService {
             }
 
             firestoreBillManagement.updateBill(entity.getId(), entity);
+            firestoreBillManagement.sendBillStatusNotification(entity);
             return true;
         }
         return null;
+    }
+
+    public void updateBillInfo(Integer userId, Integer billId) throws TeleCareException {
+        BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
+        if (entity != null) {
+
+            if (entity.getStatus() == Constants.BILL_STATUS_DONE) {
+                throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.status"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+            }
+
+            entity.setTotalMoney(getTotalMoney(entity.getId()));
+            billRepositoryJPA.save(entity);
+            firestoreBillManagement.updateBill(entity.getId(), entity);
+        }
     }
 
 
@@ -315,12 +357,12 @@ public class BillServiceImpl implements BillService {
     @Transactional(rollbackFor = Exception.class)
     public Object deleteBill(Integer billId, Integer userId) throws TeleCareException {
         BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
-        if (entity != null) {
+        if (entity != null && entity.getStatus() == Constants.BILL_STATUS_PROGRESS) {
             entity.setIsActive(Constants.IS_NOT_ACTIVE);
             entity.setUpdateDate(new Date());
             entity.setUpdateUserId(userId);
             billRepositoryJPA.save(entity);
-
+            firestoreBillManagement.deleteBill(entity.getId());
             return true;
         }
         return null;

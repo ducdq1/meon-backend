@@ -16,6 +16,7 @@ public class DetailBillResponse {
     Integer shopId;
     String shopAvatar;
     String shopName;
+    String shopAddress;
     String billName;
     Integer billStatus;
     String description;
@@ -23,9 +24,65 @@ public class DetailBillResponse {
     String userName;
     String phone;
     String avatar;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    Integer numberMembers;
+    Integer createUserId;
+    Integer numberOrders;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    String reconfirmMessage;
+
+    String cancelMessage;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    List<String> tablesName;
+
+    String createDate;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     List<OrderItem> orderItems;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     List<BillTablesItem> tables;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     List<BillMembersItem> members;
+
+    public String getShopAddress() {
+        return shopAddress;
+    }
+
+    public void setShopAddress(String shopAddress) {
+        this.shopAddress = shopAddress;
+    }
+
+    public Integer getNumberMembers() {
+        return numberMembers;
+    }
+
+    public void setNumberMembers(Integer numberMembers) {
+        this.numberMembers = numberMembers;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public String getReconfirmMessage() {
+        return reconfirmMessage;
+    }
+
+    public void setReconfirmMessage(String reconfirmMessage) {
+        this.reconfirmMessage = reconfirmMessage;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
 
     public String getShopAvatar() {
         return shopAvatar;
@@ -137,5 +194,29 @@ public class DetailBillResponse {
 
     public void setShopId(Integer shopId) {
         this.shopId = shopId;
+    }
+
+    public String getCancelMessage() {
+        return cancelMessage;
+    }
+
+    public void setCancelMessage(String cancelMessage) {
+        this.cancelMessage = cancelMessage;
+    }
+
+    public List<String> getTablesName() {
+        return tablesName;
+    }
+
+    public void setTablesName(List<String> tablesName) {
+        this.tablesName = tablesName;
+    }
+
+    public Integer getNumberOrders() {
+        return numberOrders;
+    }
+
+    public void setNumberOrders(Integer numberOrders) {
+        this.numberOrders = numberOrders;
     }
 }

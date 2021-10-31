@@ -34,4 +34,20 @@ public class ValidateServiceImpl implements ValidateService {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.member.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
     }
+
+    @Override
+    public void validateBillStatusPermission(List<String> permissions, Integer billStatus) throws TeleCareException {
+        if (permissions == null || permissions.isEmpty()) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.member.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        for (String permission : permissions) {
+            if (!permission.equals(Constants.PERMISSION_STAFF) &&
+                    !permission.equals(Constants.PERMISSION_MANAGER) &&
+                    !permission.equals(Constants.PERMISSION_ACCOUNTANT)) {
+                throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.member.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+            }
+        }
+
+    }
 }

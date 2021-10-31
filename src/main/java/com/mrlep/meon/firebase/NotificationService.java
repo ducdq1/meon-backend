@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.mrlep.meon.firebase.model.Notification;
 import com.mrlep.meon.firebase.model.NotificationBO;
 import com.mrlep.meon.repositories.tables.entities.BillEntity;
+import com.mrlep.meon.utils.FnCommon;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -16,7 +17,7 @@ import java.io.IOException;
 @Service
 public class NotificationService {
 
-    public void sendNotificationToCustomer(BillEntity entity) {
+    public void sendBillStatusChangeNotificationToCustomer(BillEntity entity) {
         //db.close();
 
         NotificationBO notificationBO = new NotificationBO();
@@ -24,7 +25,7 @@ public class NotificationService {
 
         Notification notification = new Notification();
         notification.setTitle("Thông báo");
-        notification.setBody(String.format("Hóa đơn %s của bạn vừa được cập nhật", entity.getName()));
+        notification.setBody(String.format("Hóa đơn %s của bạn vừa được %s", entity.getName(), FnCommon.getBillStatusString(entity.getStatus())));
         notificationBO.setNotification(notification);
         pushNotification(notificationBO);
     }

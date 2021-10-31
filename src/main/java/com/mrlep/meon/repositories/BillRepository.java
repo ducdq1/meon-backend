@@ -15,8 +15,7 @@ public interface BillRepository {
     List<BillTablesItem> getBillTables(Integer billId);
     ResultSelectEntity getBillOfShop(Integer shopId, Integer offset, Integer pageSize);
     DetailBillResponse getBillActiveByUser(Integer userId);
-
-
     SearchBillResponse getBillOfUser(SearchBillRequest request);
 
+    DetailBillResponse getBillByTable(Integer shopId,Integer tableId);
 }

@@ -2,6 +2,7 @@ package com.mrlep.meon.controllers;
 
 import com.mrlep.meon.dto.request.CreateBillRequest;
 import com.mrlep.meon.dto.request.SearchBillRequest;
+import com.mrlep.meon.dto.request.UpdateBillStatusRequest;
 import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.services.ShopTableService;
 import com.mrlep.meon.utils.FnCommon;
@@ -63,12 +64,14 @@ public class BillController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{billId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateTableStatus(@PathVariable Integer billId, @PathVariable Integer status, @AuthenticationPrincipal Authentication authentication) {
+    @PutMapping(value = "/status/{billId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> updateTableStatus(@PathVariable Integer billId, @RequestBody UpdateBillStatusRequest request,
+                                                    @AuthenticationPrincipal Authentication authentication,
+                                                    @RequestHeader(value = "permissions") List<String> permissions) {
         Object result;
         try {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
-            result = billService.updateBillStatus(userId, billId, status);
+            result = billService.updateBillStatus(userId, billId, permissions,request);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
@@ -179,6 +182,24 @@ public class BillController {
 
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/check-bill/{shopId}/{tableId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getBillByTable(@AuthenticationPrincipal Authentication authentication, @PathVariable Integer shopId, @PathVariable Integer tableId) {
+        Object result;
+        try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            result = billService.getBillByTable(shopId, tableId);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
 
     @DeleteMapping(value = "/{billId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteBill(@PathVariable Integer billId, @AuthenticationPrincipal Authentication authentication) {

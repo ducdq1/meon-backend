@@ -5,12 +5,14 @@ import com.mrlep.meon.repositories.tables.entities.MenuOptionEntity;
 import java.util.List;
 
 public class OrderItem {
+    Integer shopId;
     Integer id;
     Integer menuId;
     String menuName;
     String menuImageUrl;
     String unit;
     String description;
+    String billName;
     Integer billId;
     String cancelMessage;
     Integer status;
@@ -24,6 +26,7 @@ public class OrderItem {
     String userName;
     String userAvatar;
     String userPhone;
+    String createDate;
 
     public Integer getId() {
         return id;
@@ -175,5 +178,29 @@ public class OrderItem {
 
     public void setMenuImageUrl(String menuImageUrl) {
         this.menuImageUrl = menuImageUrl;
+    }
+
+    public Integer getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Integer shopId) {
+        this.shopId = shopId;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getBillName() {
+        return billName;
+    }
+
+    public void setBillName(String billName) {
+        this.billName = billName;
     }
 }

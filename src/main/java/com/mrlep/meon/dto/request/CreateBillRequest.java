@@ -9,6 +9,7 @@ public class CreateBillRequest {
     private List<Integer> tableIds;
     private List<Integer> deletedTableIds;
     private String reconfirmMessage;
+    private String cancelMessage;
     private Integer status = 0;
     private Integer createUserId;
     private Integer members;
@@ -110,5 +111,13 @@ public class CreateBillRequest {
 
     public void setDeletedTableIds(List<Integer> deletedTableIds) {
         this.deletedTableIds = deletedTableIds;
+    }
+
+    public String getCancelMessage() {
+        return cancelMessage;
+    }
+
+    public void setCancelMessage(String cancelMessage) {
+        this.cancelMessage = cancelMessage;
     }
 }
