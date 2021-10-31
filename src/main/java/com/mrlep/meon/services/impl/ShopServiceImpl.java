@@ -1,10 +1,14 @@
 package com.mrlep.meon.services.impl;
 
+import com.mrlep.meon.dto.object.ShopItem;
 import com.mrlep.meon.dto.request.CreateShopRequest;
 import com.mrlep.meon.dto.request.SearchShopsRequest;
+import com.mrlep.meon.dto.response.ShopsOfStaffResponse;
 import com.mrlep.meon.repositories.ShopRepository;
 import com.mrlep.meon.repositories.tables.ShopRepositoryJPA;
+import com.mrlep.meon.repositories.tables.UsersRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.ShopEntity;
+import com.mrlep.meon.repositories.tables.entities.UsersEntity;
 import com.mrlep.meon.services.ShopService;
 import com.mrlep.meon.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Autogen class: Lop danh muc chi so sp02
@@ -27,6 +32,9 @@ public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private ShopRepository shopRepository;
+
+    @Autowired
+    private UsersRepositoryJPA usersRepositoryJPA;
 
     private void validateCreateShop(CreateShopRequest request) throws TeleCareException {
 
@@ -111,5 +119,10 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public Object getAllShops() throws TeleCareException {
         return shopRepositoryJPA.getAllByIsActive(Constants.IS_ACTIVE);
+    }
+
+    @Override
+    public Object getShopsByStaff(Integer userId) throws TeleCareException {
+        return shopRepository.getShopOfsStaff(userId);
     }
 }

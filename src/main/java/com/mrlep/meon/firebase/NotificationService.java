@@ -1,26 +1,44 @@
 package com.mrlep.meon.firebase;
 
 import com.google.gson.Gson;
+import com.mrlep.meon.firebase.model.Notification;
 import com.mrlep.meon.firebase.model.NotificationBO;
+import com.mrlep.meon.repositories.tables.entities.BillEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-public class SendNotification {
-    public static void pushNotification(NotificationBO body) {
+@Service
+public class NotificationService {
+
+    public void sendNotificationToCustomer(BillEntity entity) {
+        //db.close();
+
+        NotificationBO notificationBO = new NotificationBO();
+        notificationBO.setTo(NotificationBO.TOPIC + "" + entity.getId().toString());
+
+        Notification notification = new Notification();
+        notification.setTitle("Thông báo");
+        notification.setBody(String.format("Hóa đơn %s của bạn vừa được cập nhật", entity.getName()));
+        notificationBO.setNotification(notification);
+        pushNotification(notificationBO);
+    }
+
+    public void pushNotification(NotificationBO body) {
 
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response = null;
-        String serverKey= "key=AAAApVRBERQ:APA91bF4DlX9h1-ZQk0zrPtSQ9VZFXllV5ak9HdW6BqHJvGHLZUTeTZXeFheRulO2s5u9tYYvbF2NWUg5Z7MrFcr9PmSuV93rNcZ92-MPTuZbpCSO_M6UUN1dldeOpxb7HmYxatacfGI";
+        String serverKey = "key=AAAApVRBERQ:APA91bF4DlX9h1-ZQk0zrPtSQ9VZFXllV5ak9HdW6BqHJvGHLZUTeTZXeFheRulO2s5u9tYYvbF2NWUg5Z7MrFcr9PmSuV93rNcZ92-MPTuZbpCSO_M6UUN1dldeOpxb7HmYxatacfGI";
 
         try {
             String url = "https://fcm.googleapis.com/fcm/send";
             HttpPost request = new HttpPost(url);
-            request.setHeader("Authorization",serverKey );
+            request.setHeader("Authorization", serverKey);
             request.setHeader("Content-type", "application/json");
             request.setHeader("Accept-Encoding", "UTF-8");
 

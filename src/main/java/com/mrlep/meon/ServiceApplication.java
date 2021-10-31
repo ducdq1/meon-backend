@@ -1,5 +1,6 @@
 package com.mrlep.meon;
 
+import com.mrlep.meon.firebase.FirebaseFirestore;
 import com.mrlep.meon.utils.CustomLocaleResolver;
 import com.mrlep.meon.utils.LoggingUtils;
 import org.apache.log4j.Logger;
@@ -33,11 +34,12 @@ public class ServiceApplication {
         return new CustomLocaleResolver("vi");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         LoggingUtils.setLogger(LoggerFactory.getLogger("MeOnService"));
         LoggingUtils.setFunctionCode("MeOnService");
         SpringApplication.run(ServiceApplication.class, args);
+        FirebaseFirestore.getDb();
     }
 
 }

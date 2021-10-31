@@ -17,6 +17,9 @@ public class StaffItem {
     String phone;
     String avatar;
     String fullName;
+    String shopAvatar;
+    String shopAddress;
+    String shopName;
 
     public Integer getId() {
         return id;
@@ -104,5 +107,29 @@ public class StaffItem {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getShopAvatar() {
+        return shopAvatar;
+    }
+
+    public void setShopAvatar(String shopAvatar) {
+        this.shopAvatar = shopAvatar;
+    }
+
+    public String getShopAddress() {
+        return shopAddress;
+    }
+
+    public void setShopAddress(String shopAddress) {
+        this.shopAddress = shopAddress;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 }

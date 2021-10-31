@@ -1,10 +1,12 @@
 package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.config.JwtTokenUtil;
+import com.mrlep.meon.dto.object.StaffItem;
 import com.mrlep.meon.dto.request.LoginRequest;
 import com.mrlep.meon.dto.request.RegisterRequest;
 import com.mrlep.meon.dto.request.VerifyOTPRequest;
 import com.mrlep.meon.dto.response.LoginResponse;
+import com.mrlep.meon.repositories.ShopRepository;
 import com.mrlep.meon.repositories.tables.OTPRepositoryJPA;
 import com.mrlep.meon.repositories.tables.StaffRepositoryJPA;
 import com.mrlep.meon.repositories.tables.UsersRepositoryJPA;
@@ -44,6 +46,8 @@ public class UsersServiceImpl implements UsersService {
 
     @Autowired
     private StaffRepositoryJPA staffRepositoryJPA;
+    @Autowired
+    private ShopRepository shopRepository;
 
     @Override
     public Object login(LoginRequest request) throws TeleCareException {
@@ -62,7 +66,7 @@ public class UsersServiceImpl implements UsersService {
         response.setToken(token);
         response.setUser(usersEntity);
         if (request.isShopMode()) {
-            List<StaffEntity> staffEntityList = staffRepositoryJPA.getAllByUserIdAndIsActive(usersEntity.getId(), Constants.IS_ACTIVE);
+            List<StaffItem> staffEntityList = shopRepository.getShopOfsStaff(usersEntity.getId());
             response.setStaffs(staffEntityList);
         }
 

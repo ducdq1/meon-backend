@@ -17,4 +17,6 @@ public interface ShopService {
     Object getShopsById(Integer shopId) throws TeleCareException;
     Object getRecommendShops(SearchShopsRequest request) throws TeleCareException;
     Object getAllShops() throws TeleCareException;
+
+    Object getShopsByStaff(Integer userId) throws TeleCareException;
 }

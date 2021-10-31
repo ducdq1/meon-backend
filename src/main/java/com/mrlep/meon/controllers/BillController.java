@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("bill")
 @CrossOrigin(origins = "*")
@@ -112,12 +114,12 @@ public class BillController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/{billId}/table/{tableId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> addTable(@PathVariable Integer billId, @PathVariable Integer tableId, @AuthenticationPrincipal Authentication authentication) {
+    @PutMapping(value = "/{billId}/table/{tableIds}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> addTable(@PathVariable Integer billId, @PathVariable List<Integer> tableIds, @AuthenticationPrincipal Authentication authentication) {
         Object result;
         try {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
-            result = billService.addTableBill(billId, userId, tableId);
+            result = billService.addTableBill(billId, userId, tableIds);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
@@ -128,7 +130,6 @@ public class BillController {
 
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
-
 
     @GetMapping(value = "/shop/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getBillByShopId(@PathVariable Integer shopId, @RequestParam(value = "0", required = false) Integer offset, @RequestParam(value = "10", required = false) Integer pageSize) {

@@ -1,6 +1,7 @@
 package com.mrlep.meon.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.mrlep.meon.dto.object.StaffItem;
 import com.mrlep.meon.repositories.tables.entities.StaffEntity;
 import lombok.Data;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public class LoginResponse {
     String token;
     Object user;
-    List<StaffEntity> staffs;
+    List<StaffItem> staffs;
 
     public String getToken() {
         return token;
@@ -29,11 +30,11 @@ public class LoginResponse {
         this.user = user;
     }
 
-    public List<StaffEntity> getStaffs() {
+    public List<StaffItem> getStaffs() {
         return staffs;
     }
 
-    public void setStaffs(List<StaffEntity> staffs) {
+    public void setStaffs(List<StaffItem> staffs) {
         this.staffs = staffs;
     }
 }

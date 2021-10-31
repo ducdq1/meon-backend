@@ -5,17 +5,12 @@ import com.google.cloud.firestore.Firestore;
 import com.mrlep.meon.dto.object.BillMembersItem;
 import com.mrlep.meon.dto.object.BillTablesItem;
 import com.mrlep.meon.dto.object.OrderItem;
-import com.mrlep.meon.firebase.model.Notification;
-import com.mrlep.meon.firebase.model.NotificationBO;
 import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.tables.BillMembersRepositoryJPA;
 import com.mrlep.meon.repositories.tables.MenusOptionRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.BillEntity;
-import com.mrlep.meon.repositories.tables.entities.BillMembersEntity;
 import com.mrlep.meon.repositories.tables.entities.MenuOptionEntity;
-import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
 import com.mrlep.meon.services.OrderItemService;
-import com.mrlep.meon.services.impl.OrderItemlServiceImpl;
 import com.mrlep.meon.utils.Constants;
 import com.mrlep.meon.utils.FnCommon;
 import com.mrlep.meon.utils.KThreadPoolExecutor;
@@ -39,6 +34,9 @@ public class FirestoreBillManagement {
 
     @Autowired
     private BillMembersRepositoryJPA billMembersRepositoryJPA;
+
+    @Autowired
+    private NotificationService notification;
 
     public void updateBill(Integer billId, BillEntity entity) {
         KThreadPoolExecutor.executeAccessLog((new Runnable() {
@@ -73,9 +71,6 @@ public class FirestoreBillManagement {
                                     }
                                 }
                             }
-
-
-
                         }
                     }
 
@@ -97,16 +92,8 @@ public class FirestoreBillManagement {
                         }
                     }
 
-                    //db.close();
+                    notification.sendNotificationToCustomer(entity);
 
-                    NotificationBO notificationBO = new NotificationBO();
-                    notificationBO.setTo(NotificationBO.TOPIC + "" + billId.toString());
-
-                    Notification notification = new Notification();
-                    notification.setTitle("Thông báo");
-                    notification.setBody(String.format("Hóa đơn %s của bạn vừa được cập nhật", entity.getName()));
-                    notificationBO.setNotification(notification);
-                    SendNotification.pushNotification(notificationBO);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

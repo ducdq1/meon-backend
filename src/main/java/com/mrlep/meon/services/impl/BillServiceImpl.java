@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -167,7 +168,7 @@ public class BillServiceImpl implements BillService {
 
         if (request.getTableIds() != null) {
             for (Integer tableId : request.getTableIds()) {
-                addTableBill(entity.getId(), request.getCreateUserId(), tableId);
+                addTableBill(entity.getId(), request.getCreateUserId(), Arrays.asList(new Integer[]{tableId}));
                 shopTableService.updateShopTableStatus(request.getCreateUserId(), tableId, Constants.TABLE_STATUS_IN_USE);
             }
         }
@@ -239,7 +240,7 @@ public class BillServiceImpl implements BillService {
                 for (Integer tableId : request.getTableIds()) {
                     BillTablesEntity billTablesEntity = billTablesRepositoryJPA.findByTableIdAndBillIdAndIsActive(tableId, entity.getId(), Constants.IS_ACTIVE);
                     if (billTablesEntity == null) {
-                        addTableBill(entity.getId(), request.getCreateUserId(), tableId);
+                        addTableBill(entity.getId(), request.getCreateUserId(), Arrays.asList(new Integer[]{tableId}));
                     }
                 }
             }
@@ -342,11 +343,15 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Object addTableBill(Integer billId, Integer userId, Integer tableId) throws TeleCareException {
+    @Transactional
+    public Object addTableBill(Integer billId, Integer userId, List<Integer> tableIds) throws TeleCareException {
         BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
         if (entity != null && FnCommon.validateBillStatus(entity.getStatus())) {
-            addBillTables(billId, userId, tableId);
-            shopTableService.updateShopTableStatus(userId, tableId, Constants.TABLE_STATUS_IN_USE);
+            for (Integer tableId : tableIds) {
+                addBillTables(billId, userId, tableId);
+                shopTableService.updateShopTableStatus(userId, tableId, Constants.TABLE_STATUS_IN_USE);
+            }
+
             return true;
         }
         return null;

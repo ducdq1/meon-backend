@@ -134,4 +134,21 @@ public class ShopController {
     }
 
 
+    @GetMapping(value = "/staff",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getShopByStaff(@AuthenticationPrincipal Authentication authentication) {
+        Object result;
+        try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            result = shopService.getShopsByStaff(userId);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
 }
