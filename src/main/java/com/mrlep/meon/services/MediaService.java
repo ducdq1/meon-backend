@@ -1,7 +1,9 @@
 package com.mrlep.meon.services;
 
 import com.mrlep.meon.dto.object.MediaItem;
+import com.mrlep.meon.dto.request.CreateMediaRequest;
 import com.mrlep.meon.utils.TeleCareException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,4 +15,6 @@ import java.util.List;
  */
 public interface MediaService {
     Object saveMedias(List<MediaItem> medias, List<MediaItem> deletedMedias, Integer objectId, String objectType, Integer createUser) throws TeleCareException;
+    Object uploadFile(MultipartFile [] files, Integer createUserId, CreateMediaRequest request) throws TeleCareException;
+    Object getMediasByShop(Integer shopId,String objectType,Integer startRecord,Integer pageSize);
 }

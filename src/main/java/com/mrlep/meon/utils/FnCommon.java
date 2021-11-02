@@ -558,12 +558,14 @@ public class FnCommon extends FunctionCommon {
             }
 
             byte[] bytes = file.getBytes();
-            String relativePath = containerFolder + UUID.randomUUID() + "_" + new Date().getTime() + "." + fileType;
+            String fileName= UUID.randomUUID() + "_" + new Date().getTime() + "." + fileType;
+            String relativePath = containerFolder + fileName ;
             Path path = Paths.get(relativePath);
             Files.write(path, bytes);
 
-            return ServletUriComponentsBuilder.fromPath(relativePath)
-                    .toUriString();
+//            return ServletUriComponentsBuilder.fromPath(relativePath)
+//                    .toUriString();
+            return fileName;
         } catch (Exception e) {
             LoggingUtils.logVTMException(e);
         }

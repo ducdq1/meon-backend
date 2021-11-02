@@ -1,6 +1,7 @@
 package com.mrlep.meon.repositories.tables.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mrlep.meon.utils.Constants;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -36,6 +37,9 @@ public class MediaEntity implements Serializable {
 
     @Column(name = "MEDIA_TYPE")
     String mediaType;
+
+    @Column(name = "IS_CATEGORY")
+    Integer isCategory;
 
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
@@ -122,11 +126,11 @@ public class MediaEntity implements Serializable {
     }
 
     public String getUrl() {
-        return url;
+        return Constants.DOMAIN + url;
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        this.url =  url;
     }
 
     public String getMediaType() {
@@ -137,5 +141,11 @@ public class MediaEntity implements Serializable {
         this.mediaType = mediaType;
     }
 
+    public Integer getIsCategory() {
+        return isCategory;
+    }
 
+    public void setIsCategory(Integer isCategory) {
+        this.isCategory = isCategory;
+    }
 }
