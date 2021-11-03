@@ -1,9 +1,8 @@
 package com.mrlep.meon.services;
 
 import com.mrlep.meon.dto.request.CreateBillRequest;
-import com.mrlep.meon.dto.request.CreateShopTableRequest;
 import com.mrlep.meon.dto.request.SearchBillRequest;
-import com.mrlep.meon.dto.request.UpdateBillStatusRequest;
+import com.mrlep.meon.dto.request.UpdateStatusRequest;
 import com.mrlep.meon.dto.response.SearchBillResponse;
 import com.mrlep.meon.utils.TeleCareException;
 
@@ -22,7 +21,7 @@ public interface BillService {
 
     Object updateBill(CreateBillRequest request) throws TeleCareException;
 
-    Object updateBillStatus(Integer userId, Integer billId,  List<String> permission, UpdateBillStatusRequest request) throws TeleCareException;
+    Object updateBillStatus(Integer userId, Integer billId,  List<String> permission, UpdateStatusRequest request) throws TeleCareException;
 
     Object deleteBill(Integer billId, Integer userId) throws TeleCareException;
 

@@ -2,6 +2,7 @@ package com.mrlep.meon.controllers;
 
 import com.mrlep.meon.dto.request.AddOrderItemRequest;
 import com.mrlep.meon.dto.request.CreateBillRequest;
+import com.mrlep.meon.dto.request.UpdateStatusRequest;
 import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.utils.FnCommon;
@@ -62,11 +63,11 @@ public class OrderItemsController {
     }
 
     @PutMapping(value = "/{orderItemId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateOrderItemStatus(@PathVariable Integer orderItemId, @PathVariable Integer status, @AuthenticationPrincipal Authentication authentication) {
+    public ResponseEntity<Object> updateOrderItemStatus(@PathVariable Integer orderItemId, @PathVariable Integer status, @RequestBody UpdateStatusRequest request, @AuthenticationPrincipal Authentication authentication) {
         Object result;
         try {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
-            result = orderItemService.updateOrderItemStatus(userId, orderItemId, status);
+            result = orderItemService.updateOrderItemStatus(userId, orderItemId, request);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);

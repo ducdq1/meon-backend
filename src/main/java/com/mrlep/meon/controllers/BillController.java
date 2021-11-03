@@ -2,9 +2,8 @@ package com.mrlep.meon.controllers;
 
 import com.mrlep.meon.dto.request.CreateBillRequest;
 import com.mrlep.meon.dto.request.SearchBillRequest;
-import com.mrlep.meon.dto.request.UpdateBillStatusRequest;
+import com.mrlep.meon.dto.request.UpdateStatusRequest;
 import com.mrlep.meon.services.BillService;
-import com.mrlep.meon.services.ShopTableService;
 import com.mrlep.meon.utils.FnCommon;
 import com.mrlep.meon.utils.TeleCareException;
 import com.mrlep.meon.xlibrary.core.constants.FunctionCommon;
@@ -65,7 +64,7 @@ public class BillController {
     }
 
     @PutMapping(value = "/status/{billId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateTableStatus(@PathVariable Integer billId, @RequestBody UpdateBillStatusRequest request,
+    public ResponseEntity<Object> updateTableStatus(@PathVariable Integer billId, @RequestBody UpdateStatusRequest request,
                                                     @AuthenticationPrincipal Authentication authentication,
                                                     @RequestHeader(value = "permissions") List<String> permissions) {
         Object result;

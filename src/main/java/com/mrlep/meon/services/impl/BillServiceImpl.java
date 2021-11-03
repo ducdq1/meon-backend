@@ -3,7 +3,7 @@ package com.mrlep.meon.services.impl;
 import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.dto.request.CreateBillRequest;
 import com.mrlep.meon.dto.request.SearchBillRequest;
-import com.mrlep.meon.dto.request.UpdateBillStatusRequest;
+import com.mrlep.meon.dto.request.UpdateStatusRequest;
 import com.mrlep.meon.dto.response.DetailBillResponse;
 import com.mrlep.meon.dto.response.SearchBillResponse;
 import com.mrlep.meon.firebase.FirestoreBillManagement;
@@ -281,7 +281,7 @@ public class BillServiceImpl implements BillService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Object updateBillStatus(Integer userId, Integer billId, List<String> permissions, UpdateBillStatusRequest request) throws TeleCareException {
+    public Object updateBillStatus(Integer userId, Integer billId, List<String> permissions, UpdateStatusRequest request) throws TeleCareException {
         BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
         if (entity != null) {
 

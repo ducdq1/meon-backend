@@ -1,6 +1,7 @@
 package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.dto.request.AddOrderItemRequest;
+import com.mrlep.meon.dto.request.UpdateStatusRequest;
 import com.mrlep.meon.firebase.FirestoreBillManagement;
 import com.mrlep.meon.repositories.OrderItemRepository;
 import com.mrlep.meon.repositories.ShopRepository;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,7 +70,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
     @Override
     public Object addOrderItem(AddOrderItemRequest request) throws TeleCareException {
         validateAddOrderItem(request);
-        validateService.validateBillMember(request.getBillId(), request.getCreateUserId());
+        validateService.validateBillMember(request.getBillId(), request.getCreateUserId(),request.getStaffId());
 
         OrderItemEntity entity = new OrderItemEntity();
         entity.setCreateDate(new Date());
@@ -81,7 +83,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
         entity = setOrderInfo(request, entity);
 
         orderItemRepositoryJPA.save(entity);
-
+        billService.updateBillInfo(request.getCreateUserId(), entity.getBillId());
         firestoreBillManagement.updateOrderItem(entity.getId());
 
         menusRepositoryJPA.updateOrderNumber(request.getMenuId());
@@ -113,7 +115,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
     @Override
     public Object updateOrderItem(AddOrderItemRequest request) throws TeleCareException {
-        validateService.validateBillMember(request.getBillId(), request.getCreateUserId());
+        validateService.validateBillMember(request.getBillId(), request.getCreateUserId(), request.getStaffId());
 
         OrderItemEntity entity = orderItemRepositoryJPA.findByIdIsAndIsActive(request.getOrderItemId(), Constants.IS_ACTIVE);
         if (entity != null) {
@@ -126,6 +128,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 entity.setUpdateUserId(request.getCreateUserId());
                 entity = setOrderInfo(request, entity);
                 orderItemRepositoryJPA.save(entity);
+                billService.updateBillInfo(request.getCreateUserId(), entity.getBillId());
                 firestoreBillManagement.updateOrderItem(entity.getId());
                 return true;
             } else {
@@ -138,16 +141,22 @@ public class OrderItemlServiceImpl implements OrderItemService {
     }
 
     @Override
-    public Object updateOrderItemStatus(Integer userId, Integer orderItemId, Integer status) throws TeleCareException {
+    public Object updateOrderItemStatus(Integer userId, Integer orderItemId, UpdateStatusRequest request) throws TeleCareException {
         OrderItemEntity entity = orderItemRepositoryJPA.findByIdIsAndIsActive(orderItemId, Constants.IS_ACTIVE);
 
         if (entity != null) {
-            validateService.validateBillMember(entity.getBillId(), userId);
+            validateService.validateBillMember(entity.getBillId(), userId, request.getStaffId());
+
+            if (request.getStatus() == Constants.ORDER_ITEM_STATUS_CANCEL && entity.getStatus() != Constants.ORDER_ITEM_STATUS_PROGRESS) {
+                throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+            }
+
             if (entity.getStatus() != Constants.ORDER_ITEM_STATUS_DELIVERED) {
-                entity.setStatus(status);
+                entity.setStatus(request.getStatus());
                 entity.setUpdateDate(new Date());
                 entity.setUpdateUserId(userId);
                 orderItemRepositoryJPA.save(entity);
+                billService.updateBillInfo(userId, entity.getBillId());
                 firestoreBillManagement.updateOrderItem(entity.getId());
                 return true;
             } else {
@@ -163,7 +172,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
         OrderItemEntity entity = orderItemRepositoryJPA.findByIdIsAndIsActive(orderItemId, Constants.IS_ACTIVE);
 
         if (entity != null) {
-            validateService.validateBillMember(entity.getBillId(), userId);
+            validateService.validateBillMember(entity.getBillId(), userId, null);
             if (entity.getStatus() == Constants.ORDER_ITEM_STATUS_PROGRESS) {
                 entity.setIsActive(Constants.IS_NOT_ACTIVE);
                 entity.setUpdateDate(new Date());

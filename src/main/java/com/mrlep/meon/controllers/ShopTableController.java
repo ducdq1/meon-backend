@@ -99,6 +99,25 @@ public class ShopTableController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{shopId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getTableByShopIdAndStatus(@PathVariable Integer shopId,@PathVariable Integer status,
+                                                            @RequestParam(value = "startRecord",required = false,defaultValue = "0") Integer startRecord ,
+                                                            @RequestParam(value = "pageSize",required = false,defaultValue = "10") Integer pageSize) {
+        Object result;
+        try {
+
+            result = shopTableService.getShopTablesByStatus(shopId,status,startRecord,pageSize);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "/{tableId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deleteTable(@PathVariable Integer tableId, @AuthenticationPrincipal Authentication authentication) {
         Object result;

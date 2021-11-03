@@ -5,10 +5,11 @@ import com.mrlep.meon.repositories.tables.entities.MenuOptionEntity;
 
 import java.util.List;
 
-public class UpdateBillStatusRequest {
+public class UpdateStatusRequest {
     private String cancelMessage;
     private String reconfirmMessage;
     private Integer status;
+    private Integer staffId;
 
     public Integer getStatus() {
         return status;
@@ -32,5 +33,13 @@ public class UpdateBillStatusRequest {
 
     public void setReconfirmMessage(String reconfirmMessage) {
         this.reconfirmMessage = reconfirmMessage;
+    }
+
+    public Integer getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(Integer staffId) {
+        this.staffId = staffId;
     }
 }
