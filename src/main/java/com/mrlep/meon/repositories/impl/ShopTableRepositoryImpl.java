@@ -36,7 +36,7 @@ public class ShopTableRepositoryImpl extends CommonDataBaseRepository implements
 
         sql.append(" SELECT st.id, st.name name,st.UNIQUE_NUMBER uniqueNumber,st.CAPABILITY capability,st.status,st.shop_id shopId,st.image_url imageUrl  ");
         sql.append("  FROM SHOP_TABLE st ");
-        sql.append("  JOIN SHOP s ON s.id = st.id AND s.is_active = 1  ");
+        sql.append("  JOIN SHOP s ON s.id = st.shop_id AND s.is_active = 1  ");
         sql.append("  WHERE st.shop_id=:shopId  AND st.is_active = 1 ");
         if (status >= 0) {
             sql.append("    AND st.status = :status  ");
