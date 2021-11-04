@@ -45,7 +45,7 @@ public class FirestoreBillManagement {
     @Autowired
     private OrderItemRepositoryJPA orderItemRepositoryJPA;
     @Autowired
-    private  ShopTableRepository shopTableRepository;
+    private ShopTableRepository shopTableRepository;
     @Autowired
     private NotificationService notification;
 
@@ -182,6 +182,34 @@ public class FirestoreBillManagement {
         }));
     }
 
+    public void updateOrderItemsStatus(Integer billId) {
+        KThreadPoolExecutor.executeAccessLog((new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Firestore db = new FirebaseFirestore().getDb();
+                    List<OrderItem> orderItems = orderItemRepository.getOrderItemOfBill(billId);
+
+                    if (orderItems == null) {
+                        return;
+                    }
+
+                    for (OrderItem orderItem : orderItems) {
+                        CollectionReference collectionReference = db.collection("ORDERS");
+                        DocumentReference documentReference = collectionReference.document(orderItem.getId().toString());
+                        if (orderItem != null) {
+                            documentReference.set(orderItem);
+                        } else {
+                            documentReference.delete();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }));
+    }
+
 
     public void updateAllOrderItem() {
         KThreadPoolExecutor.executeAccessLog((new Runnable() {
@@ -203,7 +231,7 @@ public class FirestoreBillManagement {
         }));
     }
 
-    public void sendBillStatusNotification(BillEntity entity){
+    public void sendBillStatusNotification(BillEntity entity) {
         notification.sendBillStatusChangeNotificationToCustomer(entity);
     }
 
