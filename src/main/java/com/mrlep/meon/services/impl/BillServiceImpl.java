@@ -65,6 +65,8 @@ public class BillServiceImpl implements BillService {
     @Autowired
     private FirestoreBillManagement firestoreBillManagement;
 
+    @Autowired
+    private OrderItemRepositoryJPA orderItemRepositoryJPA;
 
     @Autowired
     private ValidateService validateService;
@@ -86,7 +88,7 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public Object getBillByTable(Integer shopId, Integer tableId) throws TeleCareException {
-        return billRepository.getBillByTable(shopId,tableId);
+        return billRepository.getBillByTable(shopId, tableId);
     }
 
     @Override
@@ -294,13 +296,13 @@ public class BillServiceImpl implements BillService {
             String cancelMessage = request.getCancelMessage();
             String reconfirmMessage = request.getReconfirmMessage();
 
-            validateService.validateBillStatusPermission(permissions,status);
+            validateService.validateBillStatusPermission(permissions, status);
 
-            if(cancelMessage !=null){
+            if (cancelMessage != null) {
                 entity.setCancelMessage(cancelMessage);
             }
 
-            if(reconfirmMessage !=null){
+            if (reconfirmMessage != null) {
                 entity.setReconfirmMessage(reconfirmMessage);
             }
 
@@ -318,6 +320,11 @@ public class BillServiceImpl implements BillService {
                 for (BillTablesEntity billTable : tablesEntities) {
                     shopTableService.updateShopTableStatus(userId, billTable.getTableId(), Constants.TABLE_STATUS_READY);
                 }
+
+                Integer orderStatus = status.intValue() == Constants.BILL_STATUS_DONE ? Constants.ORDER_ITEM_STATUS_DONE
+                        : Constants.ORDER_ITEM_STATUS_CANCEL;
+                orderItemRepositoryJPA.updateOrderItemStatus(entity.getId(), orderStatus);
+
             }
 
             firestoreBillManagement.updateBill(entity.getId(), entity);
