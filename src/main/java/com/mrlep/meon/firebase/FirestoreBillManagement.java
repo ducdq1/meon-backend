@@ -52,22 +52,31 @@ public class FirestoreBillManagement {
     public static String ORDERS = "ORDERS";
 
     public void updateBill(Integer billId, BillEntity entity) {
+        DetailBillResponse response = billRepository.getDetailBill(billId);
+        if (response == null) {
+            return;
+        }
+        List<BillTablesItem> billTablesItems = shopTableRepository.getTableOfBill(billId);
+        List<String> tablesName = new ArrayList<>();
+        for (BillTablesItem billTablesItem : billTablesItems) {
+            tablesName.add(billTablesItem.getTableName());
+        }
+        response.setTablesName(tablesName);
+        response.setNumberOrders(orderItemRepositoryJPA.countOrderItemOfBill(billId));
+        response.setNumberMembers(billMembersRepositoryJPA.countMembersOfBill(billId));
+        System.out.println("Update bill " + billId + " status " + response.getBillStatus());
         KThreadPoolExecutor.executeAccessLog((new Runnable() {
             @Override
             public void run() {
                 try {
                     Firestore db = FirebaseFirestore.getDb();
                     DocumentReference docRef = db.collection("BILLS").document(billId.toString());
-                    DetailBillResponse response = billRepository.getDetailBill(billId);
-                    List<BillTablesItem> billTablesItems = shopTableRepository.getTableOfBill(billId);
-                    List<String> tablesName = new ArrayList<>();
-                    for (BillTablesItem billTablesItem : billTablesItems) {
-                        tablesName.add(billTablesItem.getTableName());
+                    if (response.getBillStatus() == Constants.BILL_STATUS_DONE) {
+                        docRef.delete();
+                        deleteAllBillOrderItem(entity.getId());
+                    } else {
+                        docRef.set(response);
                     }
-                    response.setTablesName(tablesName);
-                    response.setNumberOrders(orderItemRepositoryJPA.countOrderItemOfBill(billId));
-                    response.setNumberMembers(billMembersRepositoryJPA.countMembersOfBill(billId));
-                    docRef.set(response);
 
                     /*List<OrderItem> orderItemEntitiesList = (List<OrderItem>) orderItemlService.getOrderItemsByBill(billId);
 
@@ -161,13 +170,37 @@ public class FirestoreBillManagement {
         }));
     }
 
-    public void updateOrderItem(Integer orderItemId) {
+    public void deleteAllBillOrderItem(Integer billId) {
+        List<OrderItem> orderItems = orderItemRepository.getOrderItemOfBill(billId);
+
         KThreadPoolExecutor.executeAccessLog((new Runnable() {
             @Override
             public void run() {
                 try {
                     Firestore db = new FirebaseFirestore().getDb();
-                    OrderItem orderItem = orderItemRepository.getOrderItem(orderItemId);
+
+                    CollectionReference collectionReference = db.collection("ORDERS");
+                    for (OrderItem item : orderItems) {
+                        DocumentReference documentReference = collectionReference.document(item.getId().toString());
+                        documentReference.delete();
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }));
+    }
+
+    public void updateOrderItem(Integer orderItemId) {
+        OrderItem orderItem = orderItemRepository.getOrderItem(orderItemId);
+
+        KThreadPoolExecutor.executeAccessLog((new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Firestore db = new FirebaseFirestore().getDb();
+
                     CollectionReference collectionReference = db.collection("ORDERS");
                     DocumentReference documentReference = collectionReference.document(orderItemId.toString());
                     if (orderItem != null) {
@@ -183,16 +216,17 @@ public class FirestoreBillManagement {
     }
 
     public void updateOrderItemsStatus(Integer billId) {
+        List<OrderItem> orderItems = orderItemRepository.getOrderItemOfBill(billId);
+        if (orderItems == null) {
+            return;
+        }
+
         KThreadPoolExecutor.executeAccessLog((new Runnable() {
             @Override
             public void run() {
                 try {
                     Firestore db = new FirebaseFirestore().getDb();
-                    List<OrderItem> orderItems = orderItemRepository.getOrderItemOfBill(billId);
 
-                    if (orderItems == null) {
-                        return;
-                    }
 
                     for (OrderItem orderItem : orderItems) {
                         CollectionReference collectionReference = db.collection("ORDERS");
