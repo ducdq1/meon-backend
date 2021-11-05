@@ -71,7 +71,8 @@ public class FirestoreBillManagement {
                 try {
                     Firestore db = FirebaseFirestore.getDb();
                     DocumentReference docRef = db.collection("BILLS").document(billId.toString());
-                    if (response.getBillStatus() == Constants.BILL_STATUS_DONE) {
+                    if (response.getBillStatus() == Constants.BILL_STATUS_DONE
+                    || response.getBillStatus() == Constants.BILL_STATUS_CANCEL) {
                         docRef.delete();
                         deleteAllBillOrderItem(entity.getId());
                     } else {

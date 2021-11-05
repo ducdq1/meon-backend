@@ -57,7 +57,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
     private void validateAddOrderItem(AddOrderItemRequest request) throws TeleCareException {
         BillEntity billEntity = billRepositoryJPA.findByIdAndIsActive(request.getBillId(), Constants.IS_ACTIVE);
-        if (billEntity == null || billEntity.getStatus() != Constants.BILL_STATUS_ACCEPTED || !FnCommon.validateBillStatus(billEntity.getStatus())) {
+        if (billEntity == null || !FnCommon.validateBillStatus(billEntity.getStatus())) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
