@@ -170,6 +170,7 @@ public class Constants {
     public static final String PERMISSION_ACCOUNTANT="ACCOUNTANT";
     public static final String PERMISSION_CHEF="CHEF";
 
-
+    public static final Integer DISCOUNT_TYPE_MONEY= 0;
+    public static final Integer DISCOUNT_TYPE_PERCENT= 1;
 
 }

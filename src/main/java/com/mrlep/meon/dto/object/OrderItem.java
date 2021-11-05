@@ -28,6 +28,10 @@ public class OrderItem {
     String userPhone;
     String createDate;
 
+    private String discountDescription;
+    private Double discountValue;
+    private Integer discountType;
+
     public Integer getId() {
         return id;
     }
@@ -202,5 +206,29 @@ public class OrderItem {
 
     public void setBillName(String billName) {
         this.billName = billName;
+    }
+
+    public String getDiscountDescription() {
+        return discountDescription;
+    }
+
+    public void setDiscountDescription(String discountDescription) {
+        this.discountDescription = discountDescription;
+    }
+
+    public Double getDiscountValue() {
+        return discountValue;
+    }
+
+    public void setDiscountValue(Double discountValue) {
+        this.discountValue = discountValue;
+    }
+
+    public Integer getDiscountType() {
+        return discountType;
+    }
+
+    public void setDiscountType(Integer discountType) {
+        this.discountType = discountType;
     }
 }

@@ -203,7 +203,9 @@ public class MenusServiceImpl implements MenusService {
         entity.setImageUrl(request.getImageUrl());
         entity.setMenuGroupId(request.getMenuGroupId());
         entity.setDescription(request.getDescription());
-        entity.setDiscount(request.getDiscount());
+        entity.setDiscountDescription(request.getDiscountDescription());
+        entity.setDiscountType(request.getDiscountType());
+        entity.setDiscountValue(request.getDiscountValue());
         entity.setOrderPriority(request.getOrderPriority());
         entity.setPrice(request.getPrice());
         entity.setUnit(request.getUnit());

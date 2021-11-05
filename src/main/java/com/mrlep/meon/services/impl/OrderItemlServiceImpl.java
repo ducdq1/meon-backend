@@ -51,7 +51,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
     private void validateAddOrderItem(AddOrderItemRequest request) throws TeleCareException {
         BillEntity billEntity = billRepositoryJPA.findByIdAndIsActive(request.getBillId(), Constants.IS_ACTIVE);
-        if (billEntity == null || billEntity.getStatus() != Constants.BILL_STATUS_ACCEPTED ||  !FnCommon.validateBillStatus(billEntity.getStatus())) {
+        if (billEntity == null || billEntity.getStatus() != Constants.BILL_STATUS_ACCEPTED || !FnCommon.validateBillStatus(billEntity.getStatus())) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
@@ -71,7 +71,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
     @Override
     public Object addOrderItem(AddOrderItemRequest request) throws TeleCareException {
         validateAddOrderItem(request);
-        validateService.validateBillMember(request.getBillId(), request.getCreateUserId(),request.getStaffId());
+        validateService.validateBillMember(request.getBillId(), request.getCreateUserId(), request.getStaffId());
 
         OrderItemEntity entity = new OrderItemEntity();
         entity.setCreateDate(new Date());
@@ -80,7 +80,6 @@ public class OrderItemlServiceImpl implements OrderItemService {
         entity.setStatus(Constants.ORDER_ITEM_STATUS_PROGRESS);
         entity.setPrice(request.getPrice());
         entity.setAmount(request.getAmount());
-        entity.setMoney((int) (request.getPrice() * request.getAmount()));
         entity = setOrderInfo(request, entity);
 
         orderItemRepositoryJPA.save(entity);
@@ -103,7 +102,6 @@ public class OrderItemlServiceImpl implements OrderItemService {
         entity.setAmount(request.getAmount());
         entity.setReconfirms(request.getReconfirm());
         entity.setIsActive(Constants.IS_ACTIVE);
-        entity.setAmount(request.getAmount());
         entity.setBillId(request.getBillId());
         entity.setReconfirms(request.getReconfirm());
         entity.setPriority(request.getPriority());
@@ -111,6 +109,22 @@ public class OrderItemlServiceImpl implements OrderItemService {
         entity.setCancelMessage(request.getCancelMessage());
         entity.setDescription(request.getDescription());
         entity.setMenuOptionIds(request.getMenuOptionIds());
+        entity.setDiscountType(menuEntity.getDiscountType());
+        entity.setDiscountDescription(menuEntity.getDiscountDescription());
+        entity.setDiscountValue(menuEntity.getDiscountValue());
+
+        int totalMoney = (int) (menuEntity.getPrice() * request.getAmount());
+        if (menuEntity.getDiscountValue() != null) {
+            if (entity.getDiscountType() == Constants.DISCOUNT_TYPE_MONEY) {
+                totalMoney = (int)(totalMoney - menuEntity.getDiscountValue());
+            } else {
+                int discountMoney = (int) (menuEntity.getPrice() * (menuEntity.getDiscountValue() / 100) * request.getAmount());
+                totalMoney = totalMoney - discountMoney;
+            }
+        }
+
+        entity.setMoney(totalMoney);
+
         return entity;
     }
 
@@ -128,6 +142,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 entity.setUpdateDate(new Date());
                 entity.setUpdateUserId(request.getCreateUserId());
                 entity = setOrderInfo(request, entity);
+
                 orderItemRepositoryJPA.save(entity);
                 billService.updateBillInfo(request.getCreateUserId(), entity.getBillId());
                 firestoreBillManagement.updateOrderItem(entity.getId());

@@ -28,8 +28,10 @@ public class SearchMenusResponse {
     Boolean isVerifyShop;
     Integer numberOrder;
     Integer price;
-    String discount;
-    String  description;
+    String discountDescription;
+    Double discountValue;
+    Integer discountType;
+    String description;
     String distance;
 
     public String getName() {
@@ -154,12 +156,28 @@ public class SearchMenusResponse {
         this.price = price;
     }
 
-    public String getDiscount() {
-        return discount;
+    public String getDiscountDescription() {
+        return discountDescription;
     }
 
-    public void setDiscount(String discount) {
-        this.discount = discount;
+    public void setDiscountDescription(String discountDescription) {
+        this.discountDescription = discountDescription;
+    }
+
+    public Double getDiscountValue() {
+        return discountValue;
+    }
+
+    public void setDiscountValue(Double discountValue) {
+        this.discountValue = discountValue;
+    }
+
+    public Integer getDiscountType() {
+        return discountType;
+    }
+
+    public void setDiscountType(Integer discountType) {
+        this.discountType = discountType;
     }
 
     public String getDescription() {
@@ -209,4 +227,6 @@ public class SearchMenusResponse {
     public void setShopAvatar(String shopAvatar) {
         this.shopAvatar = shopAvatar;
     }
+
+
 }

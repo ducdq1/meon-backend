@@ -12,7 +12,9 @@ public class CreateMenuRequest {
     private Integer shopId;
     private String imageUrl;
     private String description;
-    private String discount;
+    private String discountDescription;
+    private Double discountValue;
+    private Integer discountType;
     private String tags;
     private Integer price;
     private Integer orderPriority;
@@ -73,12 +75,28 @@ public class CreateMenuRequest {
         this.description = description;
     }
 
-    public String getDiscount() {
-        return discount;
+    public String getDiscountDescription() {
+        return discountDescription;
     }
 
-    public void setDiscount(String discount) {
-        this.discount = discount;
+    public void setDiscountDescription(String discountDescription) {
+        this.discountDescription = discountDescription;
+    }
+
+    public Double getDiscountValue() {
+        return discountValue;
+    }
+
+    public void setDiscountValue(Double discountValue) {
+        this.discountValue = discountValue;
+    }
+
+    public Integer getDiscountType() {
+        return discountType;
+    }
+
+    public void setDiscountType(Integer discountType) {
+        this.discountType = discountType;
     }
 
     public String getTags() {

@@ -43,8 +43,14 @@ public class MenuEntity implements Serializable {
     @Column(name = "UNIT")
     private String unit;
 
-    @Column(name = "DISCOUNT")
-    private String discount;
+    @Column(name = "DISCOUNT_DESCRIPTION")
+    private String discountDescription;
+
+    @Column(name = "DISCOUNT_TYPE")
+    private Integer discountType;
+
+    @Column(name = "DISCOUNT_VALUE")
+    private Double discountValue;
 
     @Column(name = "TAGS")
     private String tags;
@@ -60,7 +66,6 @@ public class MenuEntity implements Serializable {
 
     @Column(name = "order_number")
     Integer orderNumber;
-
 
     @Column(name = "is_odd_number")
     Integer isOddNumber;
@@ -173,14 +178,6 @@ public class MenuEntity implements Serializable {
         this.description = description;
     }
 
-    public String getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(String discount) {
-        this.discount = discount;
-    }
-
     public String getTags() {
         return tags;
     }
@@ -235,5 +232,29 @@ public class MenuEntity implements Serializable {
 
     public void setIsOddNumber(Integer isOddNumber) {
         this.isOddNumber = isOddNumber;
+    }
+
+    public String getDiscountDescription() {
+        return discountDescription;
+    }
+
+    public void setDiscountDescription(String discountDescription) {
+        this.discountDescription = discountDescription;
+    }
+
+    public Integer getDiscountType() {
+        return discountType;
+    }
+
+    public void setDiscountType(Integer discountType) {
+        this.discountType = discountType;
+    }
+
+    public Double getDiscountValue() {
+        return discountValue;
+    }
+
+    public void setDiscountValue(Double discountValue) {
+        this.discountValue = discountValue;
     }
 }

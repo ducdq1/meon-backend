@@ -24,7 +24,7 @@ public class MenusRepositoryImpl extends CommonDataBaseRepository implements Men
 
         sql.append(" SELECT s.id shopId, s.name shopName, s.address shopAddress, s.phone shopPhone,s.image_url shopAvatar,  m.image_url imageUrl, " +
                 " m.tags , cs.name shopTypeName,");
-        sql.append(" s.open_time openTime,s.close_time closeTime, s.is_verify isVerifyShop, m.name, m.price, m.discount, m.description, 100 AS numberOrder, m.like_number likeNumber,m.order_number orderNumber, " );
+        sql.append(" s.open_time openTime,s.close_time closeTime, s.is_verify isVerifyShop, m.name, m.price, m.discount_value discountValue,m.discount_type discountType,m.discount_description discountDescription,  m.description, 100 AS numberOrder, m.like_number likeNumber,m.order_number orderNumber, " );
         sql.append("mg.name menuGroupName, m.id, ");
 
         if (request.getLat() != null && request.getLng() != null) {

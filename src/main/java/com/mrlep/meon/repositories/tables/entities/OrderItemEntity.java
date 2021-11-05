@@ -59,6 +59,15 @@ public class OrderItemEntity implements Serializable {
     @Column(name = "MENU_NAME")
     private String menuName;
 
+    @Column(name = "DISCOUNT_DESCRIPTION")
+    private String discountDescription;
+
+    @Column(name = "DISCOUNT_TYPE")
+    private Integer discountType;
+
+    @Column(name = "DISCOUNT_VALUE")
+    private Double discountValue;
+
     @JsonIgnore
     @Column(name = "CREATE_USER_ID")
     Integer createUserId;
@@ -234,5 +243,29 @@ public class OrderItemEntity implements Serializable {
 
     public void setMenuName(String menuName) {
         this.menuName = menuName;
+    }
+
+    public String getDiscountDescription() {
+        return discountDescription;
+    }
+
+    public void setDiscountDescription(String discountDescription) {
+        this.discountDescription = discountDescription;
+    }
+
+    public Integer getDiscountType() {
+        return discountType;
+    }
+
+    public void setDiscountType(Integer discountType) {
+        this.discountType = discountType;
+    }
+
+    public Double getDiscountValue() {
+        return discountValue;
+    }
+
+    public void setDiscountValue(Double discountValue) {
+        this.discountValue = discountValue;
     }
 }

@@ -19,7 +19,8 @@ public class OrderItemRepositoryImpl extends CommonDataBaseRepository implements
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT o.id, o.bill_id billId,b.name billName,  DATE_FORMAT(o.create_date, '%d-%m-%Y %H:%i') createDate,o.cancel_message cancelMessage,o.status, o.amount , o.money,o.price, o.reconfirms, o.priority,");
-        sql.append(" m.id menuId ,o.menu_name menuName,m.IMAGE_URL menuImageUrl, o.unit, o.menu_option_ids menuOptionIds, o.description,u.id userId, u.full_name userName, u.avatar userAvatar, u.phone userPhone, s.id shopId ");
+        sql.append(" m.id menuId ,o.menu_name menuName,m.IMAGE_URL menuImageUrl, o.unit, o.menu_option_ids menuOptionIds, o.description,u.id userId, u.full_name userName, u.avatar userAvatar, u.phone userPhone, s.id shopId, ");
+        sql.append("  o.discount_value discountValue,o.discount_type discountType,o.discount_description discountDescription ");
         sql.append("  FROM ORDER_ITEM o ");
         sql.append(" JOIN BILL b ON b.id = o.bill_id ");
         sql.append(" JOIN Shop s ON s.id = b.shop_id ");
@@ -37,7 +38,8 @@ public class OrderItemRepositoryImpl extends CommonDataBaseRepository implements
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT o.id, o.bill_id billId,b.name billName, DATE_FORMAT(o.create_date, '%d-%m-%Y %H:%i') createDate ,o.cancel_message cancelMessage,o.status, o.amount , o.money,o.price, o.reconfirms, o.priority,");
-        sql.append(" m.id menuId ,o.menu_name menuName,m.IMAGE_URL menuImageUrl, o.unit, o.menu_option_ids menuOptionIds, o.description,u.id userId, u.full_name userName, u.avatar userAvatar, u.phone userPhone, s.id shopId");
+        sql.append(" m.id menuId ,o.menu_name menuName,m.IMAGE_URL menuImageUrl, o.unit, o.menu_option_ids menuOptionIds, o.description,u.id userId, u.full_name userName, u.avatar userAvatar, u.phone userPhone, s.id shopId,");
+        sql.append("  o.discount_value discountValue,o.discount_type discountType,o.discount_description discountDescription ");
         sql.append("  FROM ORDER_ITEM o ");
         sql.append(" JOIN BILL b ON b.id = o.bill_id ");
         sql.append(" JOIN Shop s ON s.id = b.shop_id ");
@@ -55,7 +57,8 @@ public class OrderItemRepositoryImpl extends CommonDataBaseRepository implements
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT o.id,s.id shopId, o.bill_id billId, o.cancel_message cancelMessage,o.status, o.amount , o.money,o.price, o.reconfirms, o.priority,");
-        sql.append(" m.id menuId ,o.menu_name menuName,m.IMAGE_URL menuImageUrl, o.unit, o.menu_option_ids menuOptionIds, o.description,u.id userId, u.full_name userName, u.avatar userAvatar, u.phone userPhone");
+        sql.append(" m.id menuId ,o.menu_name menuName,m.IMAGE_URL menuImageUrl, o.unit, o.menu_option_ids menuOptionIds, o.description,u.id userId, u.full_name userName, u.avatar userAvatar, u.phone userPhone,");
+        sql.append("  o.discount_value discountValue,o.discount_type discountType,o.discount_description discountDescription ");
         sql.append("  FROM ORDER_ITEM o ");
         sql.append("  JOIN BILL b on b.id = o.bill_id ");
         sql.append("  JOIN SHOP s on s.id = b.shop_id ");
