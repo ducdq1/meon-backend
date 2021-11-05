@@ -6,15 +6,18 @@ import com.mrlep.meon.firebase.FirestoreBillManagement;
 import com.mrlep.meon.repositories.OrderItemRepository;
 import com.mrlep.meon.repositories.ShopRepository;
 import com.mrlep.meon.repositories.tables.BillRepositoryJPA;
+import com.mrlep.meon.repositories.tables.MenusOptionRepositoryJPA;
 import com.mrlep.meon.repositories.tables.MenusRepositoryJPA;
 import com.mrlep.meon.repositories.tables.OrderItemRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.BillEntity;
 import com.mrlep.meon.repositories.tables.entities.MenuEntity;
+import com.mrlep.meon.repositories.tables.entities.MenuOptionEntity;
 import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
 import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.services.ValidateService;
 import com.mrlep.meon.utils.*;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +48,9 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
     @Autowired
     private ShopRepository shopRepository;
+
+    @Autowired
+    private MenusOptionRepositoryJPA menusOptionRepositoryJPA;
 
     @Autowired
     private ValidateService validateService;
@@ -78,7 +84,6 @@ public class OrderItemlServiceImpl implements OrderItemService {
         entity.setCreateUserId(request.getCreateUserId());
         entity.setIsActive(Constants.IS_ACTIVE);
         entity.setStatus(Constants.ORDER_ITEM_STATUS_PROGRESS);
-        entity.setPrice(request.getPrice());
         entity.setAmount(request.getAmount());
         entity = setOrderInfo(request, entity);
 
@@ -113,12 +118,15 @@ public class OrderItemlServiceImpl implements OrderItemService {
         entity.setDiscountDescription(menuEntity.getDiscountDescription());
         entity.setDiscountValue(menuEntity.getDiscountValue());
 
-        int totalMoney = (int) (menuEntity.getPrice() * request.getAmount());
+        Integer priceMenu = getPriceOfMenu(menuEntity, request.getMenuOptionIds());
+        entity.setPrice(priceMenu);
+
+        int totalMoney = (int) (priceMenu * request.getAmount());
         if (menuEntity.getDiscountValue() != null) {
             if (entity.getDiscountType() == Constants.DISCOUNT_TYPE_MONEY) {
-                totalMoney = (int)(totalMoney - menuEntity.getDiscountValue());
+                totalMoney = (int) (totalMoney - menuEntity.getDiscountValue());
             } else {
-                int discountMoney = (int) (menuEntity.getPrice() * (menuEntity.getDiscountValue() / 100) * request.getAmount());
+                int discountMoney = (int) (priceMenu * (menuEntity.getDiscountValue() / 100) * request.getAmount());
                 totalMoney = totalMoney - discountMoney;
             }
         }
@@ -126,6 +134,26 @@ public class OrderItemlServiceImpl implements OrderItemService {
         entity.setMoney(totalMoney);
 
         return entity;
+    }
+
+    private Integer getPriceOfMenu(MenuEntity menuEntity, String menuOptionIds) {
+        Integer price = menuEntity.getPrice();
+        if (!StringUtils.isNullOrEmpty(menuOptionIds)) {
+
+            String[] ids = menuOptionIds.split(";");
+            for (String id : ids) {
+                try {
+                    MenuOptionEntity menuOptionEntity = menusOptionRepositoryJPA.getByIdAndIsActive(Integer.valueOf(id), Constants.IS_ACTIVE);
+                    if (menuOptionEntity != null && menuOptionEntity.getPrice() != null) {
+                        price += menuOptionEntity.getPrice();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return price;
     }
 
     @Override
