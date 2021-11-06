@@ -89,8 +89,10 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         sql.append(" u.phone, u.avatar,b.shop_id shopId,s.name shopName,s.image_url shopAvatar  ");
         sql.append("  FROM BILL b JOIN USERS u on u.id = b.create_user_id  ");
         sql.append(" JOIN SHOP s ON s.id = b.shop_id ");
-        sql.append("  WHERE u.id=:userId AND b.is_active = 1 AND b.status <> 2 AND b.status <> 5 AND u.is_active = 1");
+        sql.append("  WHERE u.id=:userId AND b.is_active = 1 AND b.status <> :statusDone AND b.status <> :statusCancel AND u.is_active = 1");
         params.put("userId", userId);
+        params.put("statusCancel", Constants.BILL_STATUS_CANCEL);
+        params.put("statusDone", Constants.BILL_STATUS_DONE);
 
         return (DetailBillResponse) getFirstData(sql, params, DetailBillResponse.class);
     }
