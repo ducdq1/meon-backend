@@ -13,7 +13,7 @@ public interface BillRepository {
     DetailBillResponse getDetailBill(Integer billId);
     List<BillMembersItem> getBillMembers(Integer billId);
     List<BillTablesItem> getBillTables(Integer billId);
-    ResultSelectEntity getBillOfShop(Integer shopId, Integer offset, Integer pageSize);
+    ResultSelectEntity getBillOfShop(Integer shopId, SearchBillRequest request);
     DetailBillResponse getBillActiveByUser(Integer userId);
     SearchBillResponse getBillOfUser(SearchBillRequest request);
 

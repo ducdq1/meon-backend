@@ -67,17 +67,34 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
     }
 
     @Override
-    public ResultSelectEntity getBillOfShop(Integer shopId, Integer offset, Integer pageSize) {
+    public ResultSelectEntity getBillOfShop(Integer shopId, SearchBillRequest request) {
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT b.id billId, b.name billName, b.status billStatus,b.description,b.total_Money totalMoney,u.full_name userName, ");
         sql.append(" u.phone, u.avatar ");
         sql.append("  FROM BILL b JOIN USERS u on u.id = b.create_user_id  ");
-        sql.append("  WHERE b.shop_id=:shopId AND b.is_active = 1 ORDER BY b.create_date DESC ");
+        sql.append("  WHERE b.shop_id=:shopId AND b.is_active = 1  ");
+        if (request.getStatus() != null) {
+            sql.append("   AND b.status =:status ");
+            params.put("status", request.getStatus());
+        }
+
+        if (!StringUtils.isNullOrEmpty(request.getKeySearch())) {
+            sql.append("   AND b.name LIKE :name escape '#' ");
+            params.put("name", FnCommon.getSearchLikeValue(request.getKeySearch()));
+        }
+
+        if (request.getTableId() != null) {
+            sql.append("   AND b.id IN (SELECT bt.bill_id FROM BILL_TABLES bt WHERE bt.table_id =:tableId AND bt.is_active = 1  ) ");
+            params.put("tableId", request.getTableId());
+        }
+
+        sql.append("  ORDER BY b.create_date DESC ");
+
         params.put("shopId", shopId);
 
-        return getListDataAndCount(sql, params, offset, pageSize, BillItem.class);
+        return getListDataAndCount(sql, params, request.getStartRecord(), request.getPageSize(), BillItem.class);
     }
 
     @Override
@@ -110,12 +127,12 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         sql.append(" LEFT JOIN SHOP s ON s.id = b.shop_id  ");
         sql.append("  WHERE  b.is_active = 1 AND u.is_active = 1 ");
 
-        if(request.getUserId() !=null){
+        if (request.getUserId() != null) {
             sql.append(" AND bm.user_id=:userId ");
             params.put("userId", request.getUserId());
         }
 
-        if(request.getShopId() !=null){
+        if (request.getShopId() != null) {
             sql.append(" AND b.shop_id=:shopId ");
             params.put("shopId", request.getShopId());
         }
@@ -137,8 +154,6 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         }
 
         sql.append("ORDER BY b.create_date DESC ");
-
-
 
 
         ResultSelectEntity selectEntity = getListDataAndCount(sql, params, request.getStartRecord(), request.getPageSize(), BillItem.class);
@@ -171,7 +186,7 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         sql.append("  AND b.id IN (SELECT b.id FROM BILL b JOIN BILL_TABLES bt ON b.id = bt.bill_id WHERE bt.table_id =:tableId ) ");
 
         params.put("tableId", tableId);
-        params.put("shopId",shopId);
+        params.put("shopId", shopId);
         params.put("statusCancel", Constants.BILL_STATUS_CANCEL);
         params.put("statusDone", Constants.BILL_STATUS_DONE);
 

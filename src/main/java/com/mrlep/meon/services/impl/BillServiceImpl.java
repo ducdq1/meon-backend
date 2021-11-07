@@ -11,6 +11,7 @@ import com.mrlep.meon.dto.response.SearchBillResponse;
 import com.mrlep.meon.firebase.FirestoreBillManagement;
 import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.ShopRepository;
+import com.mrlep.meon.repositories.ShopTableRepository;
 import com.mrlep.meon.repositories.tables.*;
 import com.mrlep.meon.repositories.tables.entities.*;
 import com.mrlep.meon.services.BillService;
@@ -77,6 +78,9 @@ public class BillServiceImpl implements BillService {
 
     @Autowired
     private ShopRepository shopRepository;
+
+    @Autowired
+    private ShopTableRepository shopTableRepository;
 
     private void validateCreateBill(CreateBillRequest request) throws TeleCareException {
         if (request.getTableIds() != null) {
@@ -155,13 +159,17 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Object getBillsByShop(Integer shopId, Integer offset, Integer pageSize) throws TeleCareException {
-        ResultSelectEntity selectEntity = billRepository.getBillOfShop(shopId, offset, pageSize);
+    public Object getBillsByShop(Integer shopId,SearchBillRequest request ) throws TeleCareException {
+        ResultSelectEntity selectEntity = billRepository.getBillOfShop(shopId, request);
         List<BillItem> listBillItems = (List<BillItem>) selectEntity.getListData();
         for(BillItem billItem : listBillItems){
-            List<BillTablesItem> billTable = billRepository.getBillTables(billItem.getBillId());
-            billItem.setTables(billTable);
-            billItem.setMembers(billMembersRepositoryJPA.countMembersOfBill(billItem.getBillId()));
+            List<BillTablesItem> billTablesItems = shopTableRepository.getTableOfBill(billItem.getBillId());
+            List<String> tablesName = new ArrayList<>();
+            for (BillTablesItem billTablesItem : billTablesItems) {
+                tablesName.add(billTablesItem.getTableName());
+            }
+            billItem.setTablesName(tablesName);
+            billItem.setNumberMembers(billMembersRepositoryJPA.countMembersOfBill(billItem.getBillId()));
         }
 
         return selectEntity;

@@ -21,23 +21,24 @@ public class BillItem {
     String shopAvatar;
     String shopAddress;
     Integer shopId;
-    List<BillTablesItem> tables;
-    Integer members;
 
-    public Integer getMembers() {
-        return members;
+    List<String> tablesName;
+    Integer numberMembers;
+
+    public List<String> getTablesName() {
+        return tablesName;
     }
 
-    public void setMembers(Integer members) {
-        this.members = members;
+    public void setTablesName(List<String> tablesName) {
+        this.tablesName = tablesName;
     }
 
-    public List<BillTablesItem> getTables() {
-        return tables;
+    public Integer getNumberMembers() {
+        return numberMembers;
     }
 
-    public void setTables(List<BillTablesItem> tables) {
-        this.tables = tables;
+    public void setNumberMembers(Integer numberMembers) {
+        this.numberMembers = numberMembers;
     }
 
     public Integer getBillId() {

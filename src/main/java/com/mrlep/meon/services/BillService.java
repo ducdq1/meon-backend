@@ -15,7 +15,7 @@ public interface BillService {
 
     Object getDetailBills(Integer billId) throws TeleCareException;
 
-    Object getBillsByShop(Integer shopId, Integer offset, Integer pageSize) throws TeleCareException;
+    Object getBillsByShop(Integer shopId,SearchBillRequest request ) throws TeleCareException;
 
     Object createBill(CreateBillRequest request) throws TeleCareException;
 

@@ -70,7 +70,7 @@ public class BillController {
         Object result;
         try {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
-            result = billService.updateBillStatus(userId, billId, permissions,request);
+            result = billService.updateBillStatus(userId, billId, permissions, request);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
@@ -134,10 +134,10 @@ public class BillController {
     }
 
     @GetMapping(value = "/shop/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getBillByShopId(@PathVariable Integer shopId, @RequestParam(value = "0", required = false) Integer offset, @RequestParam(value = "10", required = false) Integer pageSize) {
+    public ResponseEntity<Object> getBillByShopId(@PathVariable Integer shopId, @RequestBody SearchBillRequest request) {
         Object result;
         try {
-            result = billService.getBillsByShop(shopId, offset, pageSize);
+            result = billService.getBillsByShop(shopId, request);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);

@@ -9,6 +9,8 @@ public class SearchBillRequest {
     private Integer billId;
     private Date fromDate;
     private Date toDate;
+    private Integer tableId;
+    private Integer status;
     private Integer startRecord = 0;
     private Integer pageSize = 10;
 
@@ -74,5 +76,21 @@ public class SearchBillRequest {
 
     public void setShopId(Integer shopId) {
         this.shopId = shopId;
+    }
+
+    public Integer getTableId() {
+        return tableId;
+    }
+
+    public void setTableId(Integer tableId) {
+        this.tableId = tableId;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
