@@ -191,7 +191,8 @@ public class OrderItemlServiceImpl implements OrderItemService {
         if (entity != null) {
             validateService.validateBillMember(entity.getBillId(), userId, request.getStaffId());
 
-            if (request.getStatus() == Constants.ORDER_ITEM_STATUS_CANCEL && entity.getStatus() != Constants.ORDER_ITEM_STATUS_PROGRESS) {
+            if (request.getStatus() == Constants.ORDER_ITEM_STATUS_CANCEL && (entity.getStatus() != Constants.ORDER_ITEM_STATUS_PROGRESS
+                    && entity.getStatus() !=  Constants.ORDER_ITEM_STATUS_RECONFIRM)) {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
             }
 
@@ -199,6 +200,15 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 entity.setStatus(request.getStatus());
                 entity.setUpdateDate(new Date());
                 entity.setUpdateUserId(userId);
+                String cancelMessage = request.getCancelMessage();
+                String reconfirmMessage = request.getReconfirmMessage();
+                if (cancelMessage != null) {
+                    entity.setCancelMessage(cancelMessage);
+                }
+                if (reconfirmMessage != null) {
+                    entity.setReconfirms(reconfirmMessage);
+                }
+
                 orderItemRepositoryJPA.save(entity);
                 billService.updateBillInfo(userId, entity.getBillId());
                 firestoreBillManagement.updateOrderItem(entity.getId());
