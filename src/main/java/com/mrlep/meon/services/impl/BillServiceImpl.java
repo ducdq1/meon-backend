@@ -341,7 +341,7 @@ public class BillServiceImpl implements BillService {
                     shopTableService.updateShopTableStatus(userId, billTable.getTableId(), Constants.TABLE_STATUS_READY);
                 }
 
-                Integer orderStatus = status.intValue() == Constants.BILL_STATUS_DONE ? Constants.ORDER_ITEM_STATUS_DONE
+                Integer orderStatus = status.intValue() == Constants.BILL_STATUS_DONE ? Constants.ORDER_ITEM_STATUS_DELIVERED
                         : Constants.ORDER_ITEM_STATUS_CANCEL;
                 orderItemRepositoryJPA.updateOrderItemStatus(entity.getId(), orderStatus);
                 firestoreBillManagement.updateOrderItemsStatus(billId);
