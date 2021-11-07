@@ -311,6 +311,14 @@ public class BillServiceImpl implements BillService {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.status"), ErrorApp.ERROR_INPUTPARAMS.getCode());
             }
 
+            if(request.getStatus() == Constants.BILL_STATUS_DONE){
+                Integer orderActive = orderItemRepositoryJPA.countActiveOrderItemOfBill(billId);
+                if(orderActive > 0){
+                    throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.order"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+                }
+            }
+
+
 
             Integer status = request.getStatus();
             String cancelMessage = request.getCancelMessage();
