@@ -1,5 +1,7 @@
 package com.mrlep.meon.services.impl;
 
+import com.mrlep.meon.dto.object.BillItem;
+import com.mrlep.meon.dto.object.BillTablesItem;
 import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.dto.request.CreateBillRequest;
 import com.mrlep.meon.dto.request.SearchBillRequest;
@@ -16,10 +18,12 @@ import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.services.ShopTableService;
 import com.mrlep.meon.services.ValidateService;
 import com.mrlep.meon.utils.*;
+import com.mrlep.meon.xlibrary.core.entities.ResultSelectEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.crypto.KeySelectorResult;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -152,7 +156,15 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public Object getBillsByShop(Integer shopId, Integer offset, Integer pageSize) throws TeleCareException {
-        return billRepository.getBillOfShop(shopId, offset, pageSize);
+        ResultSelectEntity selectEntity = billRepository.getBillOfShop(shopId, offset, pageSize);
+        List<BillItem> listBillItems = (List<BillItem>) selectEntity.getListData();
+        for(BillItem billItem : listBillItems){
+            List<BillTablesItem> billTable = billRepository.getBillTables(billItem.getBillId());
+            billItem.setTables(billTable);
+            billItem.setMembers(billMembersRepositoryJPA.countMembersOfBill(billItem.getBillId()));
+        }
+
+        return selectEntity;
     }
 
     @Override

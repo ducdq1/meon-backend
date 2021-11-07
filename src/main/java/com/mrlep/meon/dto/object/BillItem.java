@@ -3,6 +3,8 @@ package com.mrlep.meon.dto.object;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
+import java.util.List;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 public class BillItem {
@@ -19,6 +21,24 @@ public class BillItem {
     String shopAvatar;
     String shopAddress;
     Integer shopId;
+    List<BillTablesItem> tables;
+    Integer members;
+
+    public Integer getMembers() {
+        return members;
+    }
+
+    public void setMembers(Integer members) {
+        this.members = members;
+    }
+
+    public List<BillTablesItem> getTables() {
+        return tables;
+    }
+
+    public void setTables(List<BillTablesItem> tables) {
+        this.tables = tables;
+    }
 
     public Integer getBillId() {
         return billId;
