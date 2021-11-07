@@ -133,7 +133,7 @@ public class BillController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/shop/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/shop/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getBillByShopId(@PathVariable Integer shopId, @RequestBody SearchBillRequest request) {
         Object result;
         try {
