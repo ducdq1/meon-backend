@@ -1,5 +1,6 @@
 package com.mrlep.meon.services.impl;
 
+import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.dto.request.AddOrderItemRequest;
 import com.mrlep.meon.dto.request.UpdateStatusRequest;
 import com.mrlep.meon.firebase.FirestoreBillManagement;
@@ -21,6 +22,7 @@ import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -192,7 +194,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
             validateService.validateBillMember(entity.getBillId(), userId, request.getStaffId());
 
             if (request.getStatus() == Constants.ORDER_ITEM_STATUS_CANCEL && (entity.getStatus() != Constants.ORDER_ITEM_STATUS_PROGRESS
-                    && entity.getStatus() !=  Constants.ORDER_ITEM_STATUS_RECONFIRM)) {
+                    && entity.getStatus() != Constants.ORDER_ITEM_STATUS_RECONFIRM)) {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
             }
 
@@ -241,5 +243,28 @@ public class OrderItemlServiceImpl implements OrderItemService {
         } else {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
+    }
+
+    @Override
+    public Object getDetailOrderItems(Integer orderItemId) throws TeleCareException {
+        OrderItem orderItem = orderItemRepository.getOrderItem(orderItemId);
+        if (orderItem != null) {
+            List<MenuOptionEntity> menuOptionEntities = new ArrayList<>();
+            String menuOptionIds = orderItem.getMenuOptionIds();
+            if (!StringUtils.isNullOrEmpty(menuOptionIds)) {
+                String[] ids = menuOptionIds.split(";");
+                for (String id : ids) {
+                    if (FnCommon.getIntegerFromString(id) != null) {
+                        MenuOptionEntity menuOptionEntity = menusOptionRepositoryJPA.getByIdAndIsActive(FnCommon.getIntegerFromString(id), Constants.IS_ACTIVE);
+                        if (menuOptionEntity != null) {
+                            menuOptionEntities.add(menuOptionEntity);
+                        }
+                    }
+                }
+                orderItem.setMenuOptions(menuOptionEntities);
+            }
+            return orderItem;
+        }
+        return null;
     }
 }

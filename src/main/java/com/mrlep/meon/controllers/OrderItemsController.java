@@ -112,4 +112,21 @@ public class OrderItemsController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{orderItemId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getDetailOrderItem(@PathVariable Integer orderItemId, @AuthenticationPrincipal Authentication authentication) {
+        Object result;
+        try {
+            FnCommon.getUserIdFromToken(authentication);
+            result = orderItemService.getDetailOrderItems(orderItemId);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
 }
