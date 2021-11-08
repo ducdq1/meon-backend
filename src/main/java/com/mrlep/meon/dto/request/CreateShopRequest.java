@@ -14,6 +14,15 @@ public class CreateShopRequest {
     private String imageUrl;
     private String openTime;
     private String closeTime;
+    private Double vat;
+
+    public Double getVat() {
+        return vat;
+    }
+
+    public void setVat(Double vat) {
+        this.vat = vat;
+    }
 
     public String getName() {
         return name;

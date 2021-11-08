@@ -21,7 +21,7 @@ public class BillItem {
     String shopAvatar;
     String shopAddress;
     Integer shopId;
-
+    Double vat;
     List<String> tablesName;
     Integer numberMembers;
 
@@ -143,5 +143,13 @@ public class BillItem {
 
     public void setShopAddress(String shopAddress) {
         this.shopAddress = shopAddress;
+    }
+
+    public Double getVat() {
+        return vat;
+    }
+
+    public void setVat(Double vat) {
+        this.vat = vat;
     }
 }

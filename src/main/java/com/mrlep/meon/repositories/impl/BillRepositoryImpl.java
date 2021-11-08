@@ -29,7 +29,7 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         sql.append(" SELECT b.id billId, b.name billName, b.status billStatus,b.description,b.total_Money totalMoney,u.full_name userName, ");
         sql.append(" u.phone, u.avatar,b.shop_id shopId,s.name shopName, s.image_url shopAvatar, ");
         sql.append(" b.create_user_id createUserId , DATE_FORMAT(b.create_date, '%d-%m-%Y %H:%i') createDate ,b.reconfirm_message reconfirmMessage" +
-                " ,b.cancel_message cancelMessage ");
+                " ,b.cancel_message cancelMessage,s.vat ");
         sql.append("  FROM BILL b JOIN USERS u on u.id = b.create_user_id  ");
         sql.append(" JOIN SHOP s ON s.id = b.shop_id ");
         sql.append("  WHERE b.id=:billId AND b.is_active = 1 ");
@@ -72,8 +72,9 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT b.id billId, b.name billName, b.status billStatus,b.description,b.total_Money totalMoney,u.full_name userName, ");
-        sql.append(" u.phone, u.avatar ");
+        sql.append(" u.phone, u.avatar,s.vat ");
         sql.append("  FROM BILL b JOIN USERS u on u.id = b.create_user_id  ");
+        sql.append(" JOIN SHOP s ON s.id = b.shop_id ");
         sql.append("  WHERE b.shop_id=:shopId AND b.is_active = 1  ");
         if (request.getStatus() != null) {
             sql.append("   AND b.status =:status ");
@@ -103,7 +104,7 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT b.id billId, b.name billName, b.status billStatus,b.description,b.total_Money totalMoney,u.full_name userName, ");
-        sql.append(" u.phone, u.avatar,b.shop_id shopId,s.name shopName,s.image_url shopAvatar  ");
+        sql.append(" u.phone, u.avatar,b.shop_id shopId,s.name shopName,s.image_url shopAvatar,s.vat   ");
         sql.append("  FROM BILL b JOIN USERS u on u.id = b.create_user_id  ");
         sql.append(" JOIN SHOP s ON s.id = b.shop_id ");
         sql.append("  WHERE u.id=:userId AND b.is_active = 1 AND b.status <> :statusDone AND b.status <> :statusCancel AND u.is_active = 1");
@@ -121,7 +122,7 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         SearchBillResponse response = new SearchBillResponse();
         sql.append(" SELECT distinct(b.id) billId, b.name billName, b.status billStatus,b.description,b.total_Money totalMoney,u.full_name userName, ");
         sql.append(" u.phone, u.avatar, DATE_FORMAT(b.create_date, '%d-%m-%Y %H:%i') createDate, ");
-        sql.append(" s.id shopId, s.name shopName, s.address shopAddress, s.image_url shopAvatar ");
+        sql.append(" s.id shopId, s.name shopName, s.address shopAddress, s.image_url shopAvatar,s.vat  ");
         sql.append("  FROM BILL b JOIN USERS u ON u.id = b.create_user_id  ");
         sql.append(" JOIN BILL_MEMBERS bm ON u.id = bm.user_id  ");
         sql.append(" LEFT JOIN SHOP s ON s.id = b.shop_id  ");
@@ -179,7 +180,7 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         sql.append(" SELECT b.id billId, b.name billName, b.status billStatus,b.description,b.total_Money totalMoney,u.full_name userName, ");
         sql.append(" u.phone, u.avatar,b.shop_id shopId,s.name shopName, s.image_url shopAvatar, ");
         sql.append(" b.create_user_id createUserId , DATE_FORMAT(b.create_date, '%d-%m-%Y %H:%i') createDate ,b.reconfirm_message reconfirmMessage" +
-                " ,b.cancel_message cancelMessage ");
+                " ,b.cancel_message cancelMessage,s.vat  ");
         sql.append("  FROM BILL b JOIN USERS u on u.id = b.create_user_id  ");
         sql.append(" JOIN SHOP s ON s.id = b.shop_id ");
         sql.append("  WHERE b.status <> :statusDone AND b.status <> :statusCancel AND b.is_active = 1 AND b.shop_id =:shopId ");

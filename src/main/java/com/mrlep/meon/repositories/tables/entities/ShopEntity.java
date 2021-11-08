@@ -62,6 +62,9 @@ public class ShopEntity implements Serializable {
     @Column(name = "CLOSE_TIME")
     String closeTime;
 
+    @Column(name = "VAT")
+    Double vat;
+
     @JsonIgnore
     @Column(name = "CREATE_DATE")
     Date createDate;
@@ -233,5 +236,13 @@ public class ShopEntity implements Serializable {
 
     public void setCloseTime(String closeTime) {
         this.closeTime = closeTime;
+    }
+
+    public Double getVat() {
+        return vat;
+    }
+
+    public void setVat(Double vat) {
+        this.vat = vat;
     }
 }

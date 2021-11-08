@@ -24,6 +24,7 @@ public class DetailBillResponse {
     String userName;
     String phone;
     String avatar;
+    Double vat;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     Integer numberMembers;
     Integer createUserId;
@@ -218,5 +219,13 @@ public class DetailBillResponse {
 
     public void setNumberOrders(Integer numberOrders) {
         this.numberOrders = numberOrders;
+    }
+
+    public Double getVat() {
+        return vat;
+    }
+
+    public void setVat(Double vat) {
+        this.vat = vat;
     }
 }

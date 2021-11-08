@@ -88,6 +88,7 @@ public class ShopServiceImpl implements ShopService {
         entity.setImageUrl(request.getImageUrl());
         entity.setOpenTime(request.getOpenTime());
         entity.setCloseTime(request.getCloseTime());
+        entity.setVat(request.getVat());
         if (entity.getLikeNumber() == null) {
             entity.setLikeNumber(0);
         }

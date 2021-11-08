@@ -23,6 +23,7 @@ public class SearchShopResponse {
     Integer likeNumber;
     String specialTag;
     Boolean isVerify;
+    Double vat;
 
     public String getName() {
         return name;
@@ -135,5 +136,13 @@ public class SearchShopResponse {
 
     public void setSpecialTag(String specialTag) {
         this.specialTag = specialTag;
+    }
+
+    public Double getVat() {
+        return vat;
+    }
+
+    public void setVat(Double vat) {
+        this.vat = vat;
     }
 }

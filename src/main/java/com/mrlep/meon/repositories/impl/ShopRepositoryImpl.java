@@ -27,7 +27,7 @@ public class ShopRepositoryImpl extends CommonDataBaseRepository implements Shop
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT s.id ,s.name, s.address, s.phone, s.image_url imageUrl, s.description,s.tags, cs.name shopTypeName,cs.url_icon shopTypeIcon, ");
-        sql.append(" s.like_number likeNumber, s.open_time openTime,s.close_time closeTime,s.special_tag, s.is_verify isVerify, ");
+        sql.append(" s.like_number likeNumber, s.open_time openTime,s.close_time closeTime,s.special_tag, s.is_verify isVerify,s.vat, ");
         if (request.getLat() != null && request.getLng() != null) {
             sql.append(" concat(ABS(lat - :userLat) + ABS(lng - :userLng),'m')  AS distance ");
             params.put("userLat",request.getLat());
@@ -68,7 +68,7 @@ public class ShopRepositoryImpl extends CommonDataBaseRepository implements Shop
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT b.id,s.id shopId,u.id userId, b.permission permission, b.IDENTITY_NUMBER  identityNumber,b. certification,");
-        sql.append("  b.salary, b.status , u.phone, u.avatar, u.full_name fullName,s.name shopName, s.address shopAddress, s.image_url  shopAvatar");
+        sql.append("  b.salary, b.status , u.phone, u.avatar, u.full_name fullName,s.name shopName, s.address shopAddress, s.image_url  shopAvatar ");
         sql.append("  FROM STAFF b JOIN USERS u on u.id = b.user_id  ");
         sql.append("  JOIN SHOP s ON s.id = b.shop_id ");
         sql.append("  WHERE b.status =1 AND u.id=:userId AND b.is_active = 1 AND u.is_active = 1 ORDER BY b.create_date DESC");
