@@ -1,6 +1,7 @@
 package com.mrlep.meon.repositories.tables;
 
 import com.mrlep.meon.repositories.tables.entities.BillEntity;
+import com.mrlep.meon.repositories.tables.entities.BillMembersEntity;
 import com.mrlep.meon.repositories.tables.entities.MenuEntity;
 import com.mrlep.meon.repositories.tables.entities.ShopTableEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

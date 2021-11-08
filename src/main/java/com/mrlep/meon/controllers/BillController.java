@@ -1,5 +1,6 @@
 package com.mrlep.meon.controllers;
 
+import com.mrlep.meon.dto.request.AddBillMemberRequest;
 import com.mrlep.meon.dto.request.CreateBillRequest;
 import com.mrlep.meon.dto.request.SearchBillRequest;
 import com.mrlep.meon.dto.request.UpdateStatusRequest;
@@ -116,6 +117,26 @@ public class BillController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
+
+    @PostMapping(value = "/add-member/{billId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> addBillMember(@PathVariable Integer billId, @RequestBody AddBillMemberRequest request, @AuthenticationPrincipal Authentication authentication) {
+        Object result;
+        try {
+            Integer createUserId = FnCommon.getUserIdFromToken(authentication);
+            request.setUserId(createUserId);
+            result = billService.addBillMember(billId, request);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+
     @PutMapping(value = "/{billId}/table/{tableIds}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> addTable(@PathVariable Integer billId, @PathVariable List<Integer> tableIds, @AuthenticationPrincipal Authentication authentication) {
         Object result;
@@ -225,6 +246,40 @@ public class BillController {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             request.setUserId(userId);
             result = billService.searchBillUser(request);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/members/{billId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getBillMembers(@PathVariable Integer billId) {
+        Object result;
+        try {
+            result = billService.getBillMembers(billId);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/blacklist/{billId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> addMemberToBlackList(@PathVariable Integer billId, @RequestBody AddBillMemberRequest request, @AuthenticationPrincipal Authentication authentication) {
+        Object result;
+        try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            request.setUserId(userId);
+            result = billService.addMemberToBlackList(billId, request);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);

@@ -1,8 +1,10 @@
 package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.dto.object.BillItem;
+import com.mrlep.meon.dto.object.BillMembersItem;
 import com.mrlep.meon.dto.object.BillTablesItem;
 import com.mrlep.meon.dto.object.OrderItem;
+import com.mrlep.meon.dto.request.AddBillMemberRequest;
 import com.mrlep.meon.dto.request.CreateBillRequest;
 import com.mrlep.meon.dto.request.SearchBillRequest;
 import com.mrlep.meon.dto.request.UpdateStatusRequest;
@@ -20,6 +22,7 @@ import com.mrlep.meon.services.ShopTableService;
 import com.mrlep.meon.services.ValidateService;
 import com.mrlep.meon.utils.*;
 import com.mrlep.meon.xlibrary.core.entities.ResultSelectEntity;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +38,9 @@ public class BillServiceImpl implements BillService {
 
     @Autowired
     private BillRepositoryJPA billRepositoryJPA;
+
+    @Autowired
+    private StaffRepositoryJPA staffRepositoryJPA;
 
     @Autowired
     private OrderItemService orderItemService;
@@ -159,10 +165,17 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Object getBillsByShop(Integer shopId,SearchBillRequest request ) throws TeleCareException {
+    public Object getBillMembers(Integer billId) throws TeleCareException {
+        List<BillMembersItem> members = billRepository.getBillMembers(billId);
+
+        return members;
+    }
+
+    @Override
+    public Object getBillsByShop(Integer shopId, SearchBillRequest request) throws TeleCareException {
         ResultSelectEntity selectEntity = billRepository.getBillOfShop(shopId, request);
         List<BillItem> listBillItems = (List<BillItem>) selectEntity.getListData();
-        for(BillItem billItem : listBillItems){
+        for (BillItem billItem : listBillItems) {
             List<BillTablesItem> billTablesItems = shopTableRepository.getTableOfBill(billItem.getBillId());
             List<String> tablesName = new ArrayList<>();
             for (BillTablesItem billTablesItem : billTablesItems) {
@@ -209,19 +222,19 @@ public class BillServiceImpl implements BillService {
             }
         }
 
-        addBillMembers(entity.getId(), request.getCreateUserId());
+        addBillMembers(entity.getId(), request.getCreateUserId(), request.getCreateUserId());
 
         firestoreBillManagement.updateBill(entity.getId(), entity);
         return entity.getId();
     }
 
-    private void addBillMembers(Integer billId, Integer userId) {
+    private void addBillMembers(Integer billId, Integer userId, Integer createUserId) {
         //Luu bill members
         BillMembersEntity billMembersEntity = new BillMembersEntity();
         billMembersEntity.setBillId(billId);
         billMembersEntity.setUserId(userId);
         billMembersEntity.setCreateDate(new Date());
-        billMembersEntity.setCreateUserId(userId);
+        billMembersEntity.setCreateUserId(createUserId);
         billMembersEntity.setIsActive(Constants.IS_ACTIVE);
         billMembersRepositoryJPA.save(billMembersEntity);
     }
@@ -311,13 +324,12 @@ public class BillServiceImpl implements BillService {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.status"), ErrorApp.ERROR_INPUTPARAMS.getCode());
             }
 
-            if(request.getStatus() == Constants.BILL_STATUS_DONE){
+            if (request.getStatus() == Constants.BILL_STATUS_DONE) {
                 Integer orderActive = orderItemRepositoryJPA.countActiveOrderItemOfBill(billId);
-                if(orderActive > 0){
+                if (orderActive > 0) {
                     throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.order"), ErrorApp.ERROR_INPUTPARAMS.getCode());
                 }
             }
-
 
 
             Integer status = request.getStatus();
@@ -376,6 +388,37 @@ public class BillServiceImpl implements BillService {
         }
     }
 
+    @Override
+    public Object addMemberToBlackList(Integer billId, AddBillMemberRequest request) throws TeleCareException {
+        BillMembersEntity billMembersEntity = billMembersRepositoryJPA.getByBillAndUser(billId, request.getMemberId());
+        if (billMembersEntity == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.member.not.exists"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
+        if (entity == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        if (request.getStaffId() != null) {
+            StaffEntity staffEntity = staffRepositoryJPA.getByIdAndIsActive(request.getStaffId(), Constants.IS_ACTIVE);
+            if (staffEntity == null || !staffEntity.getShopId().equals(entity.getShopId())) {
+                throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.member.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+            }
+        }
+
+        if (request.getStaffId() == null && !entity.getCreateUserId().equals(request.getUserId())) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.member.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        billMembersEntity.setIsBlackList(request.getIsBlackList());
+        billMembersEntity.setUpdateDate(new Date());
+        billMembersEntity.setUpdateUserId(request.getUserId());
+        billMembersRepositoryJPA.save(billMembersEntity);
+
+        return true;
+    }
+
 
     private Integer getTotalMoney(Integer billId) throws TeleCareException {
         List<OrderItem> orderItemEntities = (List<OrderItem>) orderItemService.getOrderItemsByBill(billId);
@@ -412,10 +455,41 @@ public class BillServiceImpl implements BillService {
 
         BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
         if (entity != null && FnCommon.validateBillStatus(entity.getStatus())) {
-            addBillMembers(billId, userId);
+            addBillMembers(billId, userId, userId);
             return true;
         } else {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+    }
+
+    @Override
+    public Object addBillMember(Integer billId, AddBillMemberRequest request) throws TeleCareException {
+        Integer countExist = billRepositoryJPA.checkExistBillOfUser(request.getMemberId());
+        if (countExist > 0) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.user.bill.member.exists.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
+        if (entity == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        if (request.getStaffId() != null) {
+            StaffEntity staffEntity = staffRepositoryJPA.getByIdAndIsActive(request.getStaffId(), Constants.IS_ACTIVE);
+            if (staffEntity == null || !staffEntity.getShopId().equals(entity.getShopId())) {
+                throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.member.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+            }
+        }
+
+        if (request.getStaffId() == null && !entity.getCreateUserId().equals(request.getUserId())) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.member.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        if (FnCommon.validateBillStatus(entity.getStatus())) {
+            addBillMembers(billId, request.getMemberId(), request.getUserId());
+            return true;
+        } else {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.status"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
     }
 

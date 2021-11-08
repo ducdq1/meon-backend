@@ -25,4 +25,6 @@ public interface BillMembersRepositoryJPA extends JpaRepository<BillMembersEntit
     @Query(value = "SELECT count(*) FROM BILL_MEMBERS o WHERE o.is_active =1 AND o.bill_id = :billId ", nativeQuery = true)
     Integer countMembersOfBill(Integer billId);
 
+    @Query(value = "SELECT bt.* FROM  BILL_MEMBERS bt JOIN BILL b  ON b.id = bt.bill_id WHERE bt.is_active =1 AND  b.is_active =1 AND b.id = :billId  AND bt.user_id =:userId AND (b.status != 2 AND b.status !=3) ",nativeQuery = true)
+    BillMembersEntity getByBillAndUser(Integer billId, Integer userId);
 }
