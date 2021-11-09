@@ -51,13 +51,30 @@ public class MediasController {
 
     @RequestMapping(path = "/shop/{shopId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getMediasByShop(@PathVariable Integer shopId,
-                                                  @RequestParam("objectType") String objectType, @RequestParam(value = "startRecord",required = false,defaultValue = "0") Integer startRecord ,
-                                                  @RequestParam(value = "pageSize",required = false,defaultValue = "10") Integer pageSize , @AuthenticationPrincipal Authentication authentication) {
+                                                  @RequestParam("objectType") String objectType, @RequestParam(value = "startRecord", required = false, defaultValue = "0") Integer startRecord,
+                                                  @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize, @AuthenticationPrincipal Authentication authentication) {
 
         Object result = null;
         try {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
-            result = mediaService.getMediasByShop(shopId,objectType,startRecord,pageSize);
+            result = mediaService.getMediasByShop(shopId, objectType, startRecord, pageSize);
+        } catch (TeleCareException e) {
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.getMessage();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "/{mediaId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> uploadAccountAvartar(@PathVariable Integer mediaId, @AuthenticationPrincipal Authentication authentication) {
+
+        Object result = null;
+        try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            result = mediaService.deleteMedia(mediaId, userId);
         } catch (TeleCareException e) {
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

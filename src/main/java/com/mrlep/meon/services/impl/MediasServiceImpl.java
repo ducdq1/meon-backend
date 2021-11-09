@@ -102,7 +102,7 @@ public class MediasServiceImpl implements MediaService {
         String folderFile = configValue.getFolderFiles();
         String folderPathFile = configValue.getFolderPathFiles();
         String path = folderFile + File.separator + (new Date().getYear() + 1900) + File.separator + (new Date().getMonth() + 1) + File.separator;
-        folderPathFile +=  File.separator + path;
+        folderPathFile += File.separator + path;
         List<MediaEntity> medias = new ArrayList<>();
 
         for (MultipartFile file : files) {
@@ -133,6 +133,25 @@ public class MediasServiceImpl implements MediaService {
     @Override
     public Object getMediasByShop(Integer shopId, String objectType, Integer startRecord, Integer pageSize) {
         return mediaRepository.getMediasByShop(shopId, objectType, startRecord, pageSize);
+    }
+
+    @Override
+    public Object deleteMedia(Integer mediaId, Integer userId) throws TeleCareException {
+        MediaEntity mediaEntity = mediaRepositoryJPA.getByIdAndIsActive(mediaId, Constants.IS_ACTIVE);
+        if (mediaEntity != null) {
+            mediaEntity.setIsActive(Constants.IS_NOT_ACTIVE);
+            mediaEntity.setUpdateDate(new Date());
+            mediaEntity.setUpdateUserId(userId);
+            mediaRepositoryJPA.save(mediaEntity);
+            if (mediaEntity.getUrl() != null) {
+                String filePath = configValue.getFolderPathFiles() + mediaEntity.getUrl();
+                FnCommon.deleteFile(filePath);
+            }
+
+            return true;
+        }
+        return null;
+
     }
 
 

@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -558,8 +559,8 @@ public class FnCommon extends FunctionCommon {
             }
 
             byte[] bytes = file.getBytes();
-            String fileName= UUID.randomUUID() + "_" + new Date().getTime() + "." + fileType;
-            String relativePath = containerFolder + fileName ;
+            String fileName = UUID.randomUUID() + "_" + new Date().getTime() + "." + fileType;
+            String relativePath = containerFolder + fileName;
             Path path = Paths.get(relativePath);
             Files.write(path, bytes);
 
@@ -690,7 +691,7 @@ public class FnCommon extends FunctionCommon {
 
 
     public static boolean validateOrderItemStatus(Integer status) {
-        if (status != null &&status != Constants.ORDER_ITEM_STATUS_CANCEL){
+        if (status != null && status != Constants.ORDER_ITEM_STATUS_CANCEL) {
             return true;
         }
         return false;
@@ -704,14 +705,13 @@ public class FnCommon extends FunctionCommon {
         return false;
     }
 
-    public static String getBillStatusString(Integer status){
-        switch (status)
-        {
+    public static String getBillStatusString(Integer status) {
+        switch (status) {
             case Constants.BILL_STATUS_PROGRESS:
                 return MessagesUtils.getMessage("bill.status.progress");
 
             case Constants.BILL_STATUS_ACCEPTED:
-                return  MessagesUtils.getMessage("bill.status.accept");
+                return MessagesUtils.getMessage("bill.status.accept");
 
             case Constants.BILL_STATUS_CANCEL:
                 return MessagesUtils.getMessage("bill.status.cancel");
@@ -724,4 +724,14 @@ public class FnCommon extends FunctionCommon {
         }
     }
 
+    public static void deleteFile(String filePath) {
+        try {
+            File file = new File(filePath);
+            if (file.exists()) {
+                file.delete();
+            }
+        } catch (Exception e) {
+
+        }
+    }
 }

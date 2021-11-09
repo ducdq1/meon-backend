@@ -66,6 +66,18 @@ public class BillEntity implements Serializable {
     @Column(name = "total_money")
     Integer totalMoney;
 
+    @Column(name = "sub_money_description")
+    String subMoneyDescription;
+
+    @Column(name = "sub_money")
+    Integer subMoney;
+
+    @Column(name = "VAT")
+    Double vat;
+
+    @Column(name = "vat_money")
+    Integer vatMoney;
+
     @Column(name = "is_create_by_staff")
     Integer isCreateByStaff;
 
@@ -180,5 +192,37 @@ public class BillEntity implements Serializable {
 
     public void setCancelMessage(String cancelMessage) {
         this.cancelMessage = cancelMessage;
+    }
+
+    public String getSubMoneyDescription() {
+        return subMoneyDescription;
+    }
+
+    public void setSubMoneyDescription(String subMoneyDescription) {
+        this.subMoneyDescription = subMoneyDescription;
+    }
+
+    public Integer getSubMoney() {
+        return subMoney;
+    }
+
+    public void setSubMoney(Integer subMoney) {
+        this.subMoney = subMoney;
+    }
+
+    public Double getVat() {
+        return vat;
+    }
+
+    public void setVat(Double vat) {
+        this.vat = vat;
+    }
+
+    public Integer getVatMoney() {
+        return vatMoney;
+    }
+
+    public void setVatMoney(Integer vatMoney) {
+        this.vatMoney = vatMoney;
     }
 }

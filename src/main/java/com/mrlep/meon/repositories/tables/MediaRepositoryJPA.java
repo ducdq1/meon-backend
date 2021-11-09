@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface MediaRepositoryJPA extends JpaRepository<MediaEntity, Integer> {
     List<MediaEntity> findAllByIsActiveAndObjectTypeAndObjectId(Integer isActive,String objectType,Integer objectId);
+    MediaEntity getByIdAndIsActive(Integer id,Integer isActive);
 }

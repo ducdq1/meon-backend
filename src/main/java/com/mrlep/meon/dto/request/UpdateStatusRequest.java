@@ -10,6 +10,8 @@ public class UpdateStatusRequest {
     private String reconfirmMessage;
     private Integer status;
     private Integer staffId;
+    private String subMoneyDescription;
+    private Integer subMoney;
 
     public Integer getStatus() {
         return status;
@@ -41,5 +43,21 @@ public class UpdateStatusRequest {
 
     public void setStaffId(Integer staffId) {
         this.staffId = staffId;
+    }
+
+    public String getSubMoneyDescription() {
+        return subMoneyDescription;
+    }
+
+    public void setSubMoneyDescription(String subMoneyDescription) {
+        this.subMoneyDescription = subMoneyDescription;
+    }
+
+    public Integer getSubMoney() {
+        return subMoney;
+    }
+
+    public void setSubMoney(Integer subMoney) {
+        this.subMoney = subMoney;
     }
 }

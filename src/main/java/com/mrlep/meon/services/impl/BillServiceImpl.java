@@ -350,7 +350,16 @@ public class BillServiceImpl implements BillService {
             entity.setUpdateDate(new Date());
             entity.setUpdateUserId(userId);
 
-            entity.setTotalMoney(getTotalMoney(entity.getId()));
+            Integer totalMoney = getTotalMoney(entity.getId());
+
+            entity.setTotalMoney(totalMoney);
+            updateBillMoney(entity);
+            if (request.getSubMoney() != null) {
+                entity.setSubMoney(request.getSubMoney());
+                entity.setTotalMoney(entity.getTotalMoney() + request.getSubMoney());
+            }
+            entity.setSubMoneyDescription(request.getSubMoneyDescription());
+
             billRepositoryJPA.save(entity);
 
             if (status != null && (status.intValue() == Constants.BILL_STATUS_DONE
@@ -374,6 +383,21 @@ public class BillServiceImpl implements BillService {
         return null;
     }
 
+    private void updateBillMoney(BillEntity entity) throws TeleCareException {
+        ShopEntity shopEntity = shopRepositoryJPA.getByIdAndIsActive(entity.getShopId(), Constants.IS_ACTIVE);
+        entity.setVat(null);
+        if (shopEntity != null) {
+            Double VAT = shopEntity.getVat();
+            if (VAT != null) {
+                Integer vatMoney = (int) ((double) ((VAT * entity.getTotalMoney()) / 100));
+                entity.setVat(VAT);
+                entity.setVatMoney(vatMoney);
+                entity.setTotalMoney(entity.getTotalMoney() + vatMoney);
+            }
+        }
+    }
+
+
     public void updateBillInfo(Integer userId, Integer billId) throws TeleCareException {
         BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
         if (entity != null) {
@@ -383,10 +407,13 @@ public class BillServiceImpl implements BillService {
             }
 
             entity.setTotalMoney(getTotalMoney(entity.getId()));
+            updateBillMoney(entity);
+
             billRepositoryJPA.save(entity);
             firestoreBillManagement.updateBill(entity.getId(), entity);
         }
     }
+
 
     @Override
     public Object addMemberToBlackList(Integer billId, AddBillMemberRequest request) throws TeleCareException {
