@@ -22,6 +22,9 @@ public class BillItem {
     String shopAddress;
     Integer shopId;
     Double vat;
+    Integer vatMoney;
+    String subMoneyDescription;
+    Integer subMoney;
     List<String> tablesName;
     Integer numberMembers;
 
@@ -151,5 +154,29 @@ public class BillItem {
 
     public void setVat(Double vat) {
         this.vat = vat;
+    }
+
+    public Integer getVatMoney() {
+        return vatMoney;
+    }
+
+    public void setVatMoney(Integer vatMoney) {
+        this.vatMoney = vatMoney;
+    }
+
+    public String getSubMoneyDescription() {
+        return subMoneyDescription;
+    }
+
+    public void setSubMoneyDescription(String subMoneyDescription) {
+        this.subMoneyDescription = subMoneyDescription;
+    }
+
+    public Integer getSubMoney() {
+        return subMoney;
+    }
+
+    public void setSubMoney(Integer subMoney) {
+        this.subMoney = subMoney;
     }
 }

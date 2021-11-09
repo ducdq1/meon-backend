@@ -25,6 +25,10 @@ public class DetailBillResponse {
     String phone;
     String avatar;
     Double vat;
+    Integer vatMoney;
+    String subMoneyDescription;
+    Integer subMoney;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     Integer numberMembers;
     Integer createUserId;
@@ -227,5 +231,29 @@ public class DetailBillResponse {
 
     public void setVat(Double vat) {
         this.vat = vat;
+    }
+
+    public Integer getVatMoney() {
+        return vatMoney;
+    }
+
+    public void setVatMoney(Integer vatMoney) {
+        this.vatMoney = vatMoney;
+    }
+
+    public String getSubMoneyDescription() {
+        return subMoneyDescription;
+    }
+
+    public void setSubMoneyDescription(String subMoneyDescription) {
+        this.subMoneyDescription = subMoneyDescription;
+    }
+
+    public Integer getSubMoney() {
+        return subMoney;
+    }
+
+    public void setSubMoney(Integer subMoney) {
+        this.subMoney = subMoney;
     }
 }
