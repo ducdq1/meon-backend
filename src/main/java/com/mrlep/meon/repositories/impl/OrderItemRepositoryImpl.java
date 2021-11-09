@@ -52,6 +52,25 @@ public class OrderItemRepositoryImpl extends CommonDataBaseRepository implements
     }
 
     @Override
+    public List<OrderItem> getOrderItemDeliveredOfBill(Integer billId) {
+        HashMap<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder();
+
+        sql.append(" SELECT o.id, o.bill_id billId,b.name billName, DATE_FORMAT(o.create_date, '%d-%m-%Y %H:%i') createDate ,o.cancel_message cancelMessage,o.status, o.amount , o.money,o.price, o.reconfirms, o.priority,");
+        sql.append(" m.id menuId ,o.menu_name menuName,m.IMAGE_URL menuImageUrl, o.unit, o.menu_option_ids menuOptionIds, o.description,u.id userId, u.full_name userName, u.avatar userAvatar, u.phone userPhone, s.id shopId,");
+        sql.append("  o.discount_value discountValue,o.discount_type discountType,o.discount_description discountDescription ");
+        sql.append("  FROM ORDER_ITEM o ");
+        sql.append(" JOIN BILL b ON b.id = o.bill_id ");
+        sql.append(" JOIN Shop s ON s.id = b.shop_id ");
+        sql.append("  LEFT JOIN MENU m on m.id = o.MENU_ID ");
+        sql.append("  JOIN USERS u on u.id = o.CREATE_USER_ID ");
+        sql.append("  WHERE o.bill_id=:billId AND o.is_active = 1 AND o.status = 3 ORDER BY o.create_date ");
+        params.put("billId", billId);
+
+        return (List<OrderItem>) getListData(sql, params, 0, null, OrderItem.class);
+    }
+
+    @Override
     public List<OrderItem> getAllOrderItem() {
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();

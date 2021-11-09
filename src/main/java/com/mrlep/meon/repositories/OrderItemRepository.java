@@ -11,6 +11,7 @@ import java.util.List;
 public interface OrderItemRepository {
     OrderItem getOrderItem(Integer id);
     List<OrderItem> getOrderItemOfBill(Integer billId);
+    List<OrderItem> getOrderItemDeliveredOfBill(Integer billId);
     List<OrderItem> getAllOrderItem();
 
 }
