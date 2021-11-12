@@ -64,8 +64,9 @@ public class OrderItemRepositoryImpl extends CommonDataBaseRepository implements
         sql.append(" JOIN Shop s ON s.id = b.shop_id ");
         sql.append("  LEFT JOIN MENU m on m.id = o.MENU_ID ");
         sql.append("  JOIN USERS u on u.id = o.CREATE_USER_ID ");
-        sql.append("  WHERE o.bill_id=:billId AND o.is_active = 1 AND o.status = 3 ORDER BY o.create_date ");
+        sql.append("  WHERE o.bill_id=:billId AND o.is_active = 1 AND o.status = :status ORDER BY o.create_date ");
         params.put("billId", billId);
+        params.put("status", Constants.ORDER_ITEM_STATUS_DELIVERED);
 
         return (List<OrderItem>) getListData(sql, params, 0, null, OrderItem.class);
     }

@@ -164,6 +164,7 @@ public class Constants {
     public static final int ORDER_ITEM_STATUS_DELIVERED =3;
     public static final int ORDER_ITEM_STATUS_RECONFIRM =4;
     public static final int ORDER_ITEM_STATUS_CANCEL = 5;
+    public static final int ORDER_ITEM_STATUS_REJECT = 6;
 
     public static final String PERMISSION_STAFF="STAFF";
     public static final String PERMISSION_MANAGER="MANAGER";

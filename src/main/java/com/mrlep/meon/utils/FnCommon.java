@@ -691,7 +691,8 @@ public class FnCommon extends FunctionCommon {
 
 
     public static boolean validateOrderItemStatus(Integer status) {
-        if (status != null && status != Constants.ORDER_ITEM_STATUS_CANCEL) {
+        if (status != null && status != Constants.ORDER_ITEM_STATUS_CANCEL
+                && status != Constants.ORDER_ITEM_STATUS_REJECT) {
             return true;
         }
         return false;

@@ -335,7 +335,6 @@ public class BillServiceImpl implements BillService {
                 }
             }
 
-
             Integer status = request.getStatus();
             String cancelMessage = request.getCancelMessage();
             String reconfirmMessage = request.getReconfirmMessage();
