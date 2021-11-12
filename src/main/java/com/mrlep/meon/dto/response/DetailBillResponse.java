@@ -17,6 +17,7 @@ public class DetailBillResponse {
     String shopAvatar;
     String shopName;
     String shopAddress;
+    String shopPhone;
     String billName;
     Integer billStatus;
     String description;
@@ -255,5 +256,13 @@ public class DetailBillResponse {
 
     public void setSubMoney(Integer subMoney) {
         this.subMoney = subMoney;
+    }
+
+    public String getShopPhone() {
+        return shopPhone;
+    }
+
+    public void setShopPhone(String shopPhone) {
+        this.shopPhone = shopPhone;
     }
 }

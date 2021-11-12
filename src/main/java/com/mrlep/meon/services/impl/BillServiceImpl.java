@@ -12,6 +12,7 @@ import com.mrlep.meon.dto.response.DetailBillResponse;
 import com.mrlep.meon.dto.response.SearchBillResponse;
 import com.mrlep.meon.firebase.FirestoreBillManagement;
 import com.mrlep.meon.repositories.BillRepository;
+import com.mrlep.meon.repositories.OrderItemRepository;
 import com.mrlep.meon.repositories.ShopRepository;
 import com.mrlep.meon.repositories.ShopTableRepository;
 import com.mrlep.meon.repositories.tables.*;
@@ -50,6 +51,9 @@ public class BillServiceImpl implements BillService {
 
     @Autowired
     private ShopTableService shopTableService;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
     @Autowired
     private ShopTableRepositoryJPA shopTableRepositoryJPA;
@@ -448,7 +452,7 @@ public class BillServiceImpl implements BillService {
 
 
     private Integer getTotalMoney(Integer billId) throws TeleCareException {
-        List<OrderItem> orderItemEntities = (List<OrderItem>) orderItemService.getOrderItemsByBill(billId);
+        List<OrderItem> orderItemEntities = (List<OrderItem>) orderItemRepository.getOrderItemDeliveredOfBill(billId);
         Integer totalMoney = 0;
         for (OrderItem orderItemEntity : orderItemEntities) {
             if (FnCommon.validateOrderItemStatus(orderItemEntity.getStatus())) {
