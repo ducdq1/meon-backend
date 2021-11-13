@@ -7,5 +7,5 @@ import com.mrlep.meon.xlibrary.core.entities.ResultSelectEntity;
 import java.util.List;
 
 public interface MediasRepository {
-    ResultSelectEntity getMediasByShop(Integer shopId,String objectType,Integer startRecord,Integer pageSize);
+    ResultSelectEntity getMediasByShop(Integer shopId,String objectType,String mediaType,Integer startRecord,Integer pageSize);
 }

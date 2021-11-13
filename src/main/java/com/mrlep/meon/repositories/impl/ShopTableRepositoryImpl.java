@@ -35,7 +35,7 @@ public class ShopTableRepositoryImpl extends CommonDataBaseRepository implements
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append(" SELECT st.id, st.name name,st.UNIQUE_NUMBER uniqueNumber,st.CAPABILITY capability,st.status,st.shop_id shopId,st.image_url imageUrl,a.area_name areaName   ");
+        sql.append(" SELECT st.id, st.name name,st.UNIQUE_NUMBER uniqueNumber,st.CAPABILITY capability,st.status,st.shop_id shopId,st.image_url imageUrl,a.area_name areaName,st.area_id areaId  ");
         sql.append("  FROM SHOP_TABLE st ");
         sql.append("  LEFT JOIN TABLE_AREA a ON a.id = st.area_id ");
         sql.append("  JOIN SHOP s ON s.id = st.shop_id AND s.is_active = 1  ");
@@ -47,5 +47,18 @@ public class ShopTableRepositoryImpl extends CommonDataBaseRepository implements
 
         params.put("shopId", shopId);
         return getListDataAndCount(sql, params, startRecord, pageSize, ShopTableEntity.class);
+    }
+
+    @Override
+    public List<ShopTableEntity> getTableOfShop(Integer shopId) {
+        HashMap<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder();
+
+        sql.append(" SELECT st.id, st.name Name,a.area_name areaName ,st.capability,st.status,st.area_id areaId,st.image_url imageUrl,st.shop_id shopId ");
+        sql.append("  FROM SHOP_TABLE st ");
+        sql.append("  LEFT JOIN TABLE_AREA a ON a.id = st.area_id ");
+        sql.append("  WHERE st.shop_id=:shopId AND st.is_active = 1 ");
+        params.put("shopId", shopId);
+        return (List<ShopTableEntity>) getListData(sql, params, null, null, ShopTableEntity.class);
     }
 }

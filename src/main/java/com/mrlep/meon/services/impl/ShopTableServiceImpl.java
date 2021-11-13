@@ -56,7 +56,7 @@ public class ShopTableServiceImpl implements ShopTableService {
 
     @Override
     public Object getShopTables(Integer shopId) throws TeleCareException {
-        return shopTableRepositoryJPA.getAllByShopIdAndIsActiveOrderByUniqueNumberAsc(shopId, Constants.IS_ACTIVE);
+        return shopTableRepository.getTableOfShop(shopId);
     }
 
     @Override

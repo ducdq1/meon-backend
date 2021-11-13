@@ -16,7 +16,7 @@ import java.util.List;
 public interface MediaService {
     Object saveMedias(List<Integer> mediasId, List<Integer> deletedMediasId, Integer objectId, String objectType, Integer createUser) throws TeleCareException;
     Object uploadFile(MultipartFile [] files, Integer createUserId, CreateMediaRequest request) throws TeleCareException;
-    Object getMediasByShop(Integer shopId,String objectType,Integer startRecord,Integer pageSize)throws TeleCareException;
+    Object getMediasByShop(Integer shopId,String objectType,String mediaType,Integer startRecord,Integer pageSize)throws TeleCareException;
     Object deleteMedia( Integer mediaId, Integer userId) throws TeleCareException;
     Object deleteMediaCategory( Integer mediaCategoryId, Integer userId) throws TeleCareException;
 }

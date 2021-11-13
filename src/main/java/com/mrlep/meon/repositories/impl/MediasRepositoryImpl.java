@@ -25,14 +25,20 @@ import java.util.List;
 public class MediasRepositoryImpl extends CommonDataBaseRepository implements MediasRepository {
 
     @Override
-    public ResultSelectEntity getMediasByShop(Integer shopId, String objectType, Integer startRecord, Integer pageSize) {
+    public ResultSelectEntity getMediasByShop(Integer shopId, String objectType, String mediaType, Integer startRecord, Integer pageSize) {
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT b.id,b.url, b.object_id objectId,b.object_type objectType,b.media_type mediaType FROM MEDIA_CATEGORY b ");
-        sql.append("  WHERE b.object_id=:shopId AND  b.object_type = :objectType AND b.is_active = 1  ORDER BY b.create_date DESC ");
+        sql.append("  WHERE b.object_id=:shopId AND  b.object_type = :objectType AND b.is_active = 1 ");
         params.put("shopId", shopId);
         params.put("objectType", objectType);
+        if (!StringUtils.isNullOrEmpty(mediaType)) {
+            sql.append("  AND  b.media_type = :mediaType ");
+            params.put("mediaType", mediaType);
+        }
+
+        sql.append(" ORDER BY b.create_date DESC ");
 
         return getListDataAndCount(sql, params, startRecord, pageSize, MediaCategoryEntity.class);
     }

@@ -122,8 +122,8 @@ public class MediasServiceImpl implements MediaService {
     }
 
     @Override
-    public Object getMediasByShop(Integer shopId, String objectType, Integer startRecord, Integer pageSize) {
-        return mediaRepository.getMediasByShop(shopId, objectType, startRecord, pageSize);
+    public Object getMediasByShop(Integer shopId, String objectType,String mediaType, Integer startRecord, Integer pageSize) {
+        return mediaRepository.getMediasByShop(shopId, objectType,mediaType, startRecord, pageSize);
     }
 
     @Override
