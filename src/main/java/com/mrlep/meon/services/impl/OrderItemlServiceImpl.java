@@ -198,7 +198,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
             }
 
-            if (entity.getStatus() != Constants.ORDER_ITEM_STATUS_DELIVERED) {
+            if (request.getStatus() == Constants.ORDER_ITEM_STATUS_REJECT || entity.getStatus() != Constants.ORDER_ITEM_STATUS_DELIVERED) {
                 entity.setStatus(request.getStatus());
                 entity.setUpdateDate(new Date());
                 entity.setUpdateUserId(userId);
