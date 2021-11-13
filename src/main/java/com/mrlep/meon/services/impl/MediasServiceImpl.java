@@ -60,11 +60,11 @@ public class MediasServiceImpl implements MediaService {
                 entity.setCreateUserId(createUser);
                 entity.setCreateDate(new Date());
 
-                MediaCategoryEntity mediaCategoryEntity = mediaCategoryRepositoryJPA.getByIdAndIsActive(mediaId,Constants.IS_ACTIVE);
+                MediaCategoryEntity mediaCategoryEntity = mediaCategoryRepositoryJPA.getByIdAndIsActive(mediaId, Constants.IS_ACTIVE);
                 if (mediaCategoryEntity != null) {
                     entity.setMediaType(mediaCategoryEntity.getMediaType());
                     entity.setObjectType(objectType);
-                    entity.setUrl(mediaCategoryEntity.getUrl());
+                    entity.setUrl(mediaCategoryEntity.getUrl() != null ? mediaCategoryEntity.getUrl().replace(Constants.DOMAIN, "") : null);
                     entity.setObjectId(objectId);
                     entity.setIsActive(Constants.IS_ACTIVE);
                     mediaRepositoryJPA.save(entity);
@@ -74,15 +74,15 @@ public class MediasServiceImpl implements MediaService {
 
         if (deletedMediasId != null) {
             for (Integer mediaId : deletedMediasId) {
-                    Optional<MediaEntity> entityOptional = mediaRepositoryJPA.findById(mediaId);
-                    if (entityOptional.isPresent()) {
-                        MediaEntity entity = entityOptional.get();
-                        entity.setUpdateDate(new Date());
-                        entity.setUpdateUserId(createUser);
-                        entity.setIsActive(Constants.IS_NOT_ACTIVE);
-                        mediaRepositoryJPA.save(entity);
-                    }
+                Optional<MediaEntity> entityOptional = mediaRepositoryJPA.findById(mediaId);
+                if (entityOptional.isPresent()) {
+                    MediaEntity entity = entityOptional.get();
+                    entity.setUpdateDate(new Date());
+                    entity.setUpdateUserId(createUser);
+                    entity.setIsActive(Constants.IS_NOT_ACTIVE);
+                    mediaRepositoryJPA.save(entity);
                 }
+            }
         }
 
         return true;

@@ -123,6 +123,10 @@ public class MediaCategoryEntity implements Serializable {
     }
 
     public String getUrl() {
+        if(url !=null && url.startsWith(Constants.DOMAIN)){
+            return url;
+        }
+
         return Constants.DOMAIN + url;
     }
 
