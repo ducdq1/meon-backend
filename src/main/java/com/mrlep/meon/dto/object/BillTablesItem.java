@@ -5,6 +5,7 @@ public class BillTablesItem {
     Integer shopId;
     Integer tableId;
     String tableName;
+    String areaName;
     Integer status;
 
     public Integer getTableId() {
@@ -45,5 +46,13 @@ public class BillTablesItem {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
     }
 }

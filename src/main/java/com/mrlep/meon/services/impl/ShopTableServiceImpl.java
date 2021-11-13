@@ -78,6 +78,7 @@ public class ShopTableServiceImpl implements ShopTableService {
         entity.setStatus(Constants.TABLE_STATUS_READY);
         entity.setCreateDate(new Date());
         entity.setImageUrl(request.getImageUrl());
+        entity.setAreaId(request.getAreaId());
         shopTableRepositoryJPA.save(entity);
         return entity;
     }
@@ -95,6 +96,7 @@ public class ShopTableServiceImpl implements ShopTableService {
             entity.setImageUrl(request.getImageUrl());
             entity.setUpdateDate(new Date());
             entity.setUpdateUserId(request.getCreateUserId());
+            entity.setAreaId(request.getAreaId());
             shopTableRepositoryJPA.save(entity);
             return true;
         }

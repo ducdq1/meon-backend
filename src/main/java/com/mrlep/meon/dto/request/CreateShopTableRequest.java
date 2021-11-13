@@ -9,6 +9,7 @@ public class CreateShopTableRequest {
     private Integer status = 0;
     private String imageUrl;
     private Integer createUserId;
+    private Integer areaId;
 
     public String getName() {
         return name;
@@ -73,5 +74,13 @@ public class CreateShopTableRequest {
 
     public void setTableId(Integer tableId) {
         this.tableId = tableId;
+    }
+
+    public Integer getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(Integer areaId) {
+        this.areaId = areaId;
     }
 }

@@ -20,8 +20,9 @@ public class ShopTableRepositoryImpl extends CommonDataBaseRepository implements
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append(" SELECT distinct(st.id), bt.table_name tableName ");
+        sql.append(" SELECT distinct(st.id), bt.table_name tableName,a.area_name areaName ");
         sql.append("  FROM SHOP_TABLE st ");
+        sql.append("  LEFT JOIN TABLE_AREA a ON a.id = st.area_id ");
         sql.append("  JOIN BILL_TABLES bt ON bt.table_id = st.id AND bt.is_active = 1  ");
         sql.append("   JOIN BILL b ON b.id = bt.bill_id AND b.is_active = 1  ");
         sql.append("  WHERE b.id=:billId AND b.is_active = 1 ");
@@ -34,8 +35,9 @@ public class ShopTableRepositoryImpl extends CommonDataBaseRepository implements
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append(" SELECT st.id, st.name name,st.UNIQUE_NUMBER uniqueNumber,st.CAPABILITY capability,st.status,st.shop_id shopId,st.image_url imageUrl  ");
+        sql.append(" SELECT st.id, st.name name,st.UNIQUE_NUMBER uniqueNumber,st.CAPABILITY capability,st.status,st.shop_id shopId,st.image_url imageUrl,a.area_name areaName   ");
         sql.append("  FROM SHOP_TABLE st ");
+        sql.append("  LEFT JOIN TABLE_AREA a ON a.id = st.area_id ");
         sql.append("  JOIN SHOP s ON s.id = st.shop_id AND s.is_active = 1  ");
         sql.append("  WHERE st.shop_id=:shopId  AND st.is_active = 1 ");
         if (status >= 0) {

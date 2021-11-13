@@ -63,6 +63,12 @@ public class ShopTableEntity implements Serializable {
     @Column(name = "IMAGE_URL")
     String imageUrl;
 
+    @Column(name = "AREA_ID")
+    Integer areaId;
+
+    @Transient
+    String areaName;
+
     public Integer getShopId() {
         return shopId;
     }
@@ -157,5 +163,21 @@ public class ShopTableEntity implements Serializable {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Integer getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(Integer areaId) {
+        this.areaId = areaId;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
     }
 }

@@ -72,7 +72,7 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         StringBuilder sql = new StringBuilder();
 
         sql.append(" SELECT b.id billId, b.name billName, b.status billStatus,b.description,b.total_Money totalMoney,u.full_name userName, ");
-        sql.append(" u.phone, u.avatar,s.vat,b.vat_money vatMoney,b.sub_money subMoney,b.sub_money_description subMoneyDescription ");
+        sql.append(" u.phone, u.avatar,s.vat,b.vat_money vatMoney,b.sub_money subMoney,b.sub_money_description subMoneyDescription,DATE_FORMAT(b.create_date, '%d-%m-%Y %H:%i') createDate");
         sql.append("  FROM BILL b JOIN USERS u on u.id = b.create_user_id  ");
         sql.append(" JOIN SHOP s ON s.id = b.shop_id ");
         sql.append("  WHERE b.shop_id=:shopId AND b.is_active = 1  ");
