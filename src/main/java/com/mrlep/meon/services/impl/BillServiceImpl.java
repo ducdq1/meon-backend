@@ -228,7 +228,7 @@ public class BillServiceImpl implements BillService {
 
         addBillMembers(entity.getId(), request.getCreateUserId(), request.getCreateUserId());
 
-        firestoreBillManagement.updateBill(entity.getId(), entity);
+        firestoreBillManagement.updateBill(entity.getId());
         return entity.getId();
     }
 
@@ -311,7 +311,7 @@ public class BillServiceImpl implements BillService {
                 }
             }
 
-            firestoreBillManagement.updateBill(entity.getId(), entity);
+            firestoreBillManagement.updateBill(entity.getId());
             return true;
         }
 
@@ -379,7 +379,7 @@ public class BillServiceImpl implements BillService {
                 firestoreBillManagement.updateOrderItemsStatus(billId);
             }
 
-            firestoreBillManagement.updateBill(entity.getId(), entity);
+            firestoreBillManagement.updateBill(entity.getId());
             firestoreBillManagement.sendBillStatusNotification(entity);
             return true;
         }
@@ -413,7 +413,7 @@ public class BillServiceImpl implements BillService {
             updateBillMoney(entity);
 
             billRepositoryJPA.save(entity);
-            firestoreBillManagement.updateBill(entity.getId(), entity);
+            firestoreBillManagement.updateBill(entity.getId());
         }
     }
 
@@ -529,14 +529,40 @@ public class BillServiceImpl implements BillService {
         BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
         if (entity != null && FnCommon.validateBillStatus(entity.getStatus())) {
             for (Integer tableId : tableIds) {
-                addBillTables(billId, userId, tableId);
-                shopTableService.updateShopTableStatus(userId, tableId, Constants.TABLE_STATUS_IN_USE);
+                BillTablesEntity billTablesEntity = billTablesRepositoryJPA.findByTableIdAndBillIdAndIsActive(tableId, billId, Constants.IS_ACTIVE);
+                if (billTablesEntity == null) {
+                    addBillTables(billId, userId, tableId);
+                    shopTableService.updateShopTableStatus(userId, tableId, Constants.TABLE_STATUS_IN_USE);
+                }
             }
+
+            //xoa ban ko chọn
+            List<BillTablesEntity> billTablesEntities = billTablesRepositoryJPA.findAllByBillIdAndIsActive(billId, Constants.IS_ACTIVE);
+            for (BillTablesEntity billTablesEntity : billTablesEntities) {
+                Integer billTableId = billTablesEntity.getTableId();
+                boolean isExist = false;
+                for (Integer tableId : tableIds) {
+                    if (tableId.equals(billTableId)) {
+                        isExist = true;
+                    }
+                }
+
+                if (!isExist) {
+                    billTablesEntity.setIsActive(Constants.IS_NOT_ACTIVE);
+                    billTablesEntity.setUpdateDate(new Date());
+                    billTablesEntity.setUpdateUserId(userId);
+                    billTablesRepositoryJPA.save(billTablesEntity);
+                    shopTableService.updateShopTableStatus(userId, billTableId, Constants.TABLE_STATUS_READY);
+                }
+            }
+
+            firestoreBillManagement.updateBill(billId);
 
             return true;
         }
         return null;
     }
+
 
     @Override
     public SearchBillResponse searchBillUser(SearchBillRequest request) throws TeleCareException {

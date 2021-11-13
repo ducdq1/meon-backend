@@ -51,7 +51,7 @@ public class FirestoreBillManagement {
 
     public static String ORDERS = "ORDERS";
 
-    public void updateBill(Integer billId, BillEntity entity) {
+    public void updateBill(Integer billId) {
         DetailBillResponse response = billRepository.getDetailBill(billId);
         if (response == null) {
             return;
@@ -74,7 +74,7 @@ public class FirestoreBillManagement {
                     if (response.getBillStatus() == Constants.BILL_STATUS_DONE
                     || response.getBillStatus() == Constants.BILL_STATUS_CANCEL) {
                         docRef.delete();
-                        deleteAllBillOrderItem(entity.getId());
+                        deleteAllBillOrderItem(billId);
                     } else {
                         docRef.set(response);
                     }
