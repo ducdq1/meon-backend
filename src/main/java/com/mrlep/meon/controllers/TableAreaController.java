@@ -42,7 +42,7 @@ public class TableAreaController {
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> addPaymentByShop(@RequestBody TableAreaEntity request
+    public ResponseEntity<Object> addTableArea(@RequestBody TableAreaEntity request
             , @AuthenticationPrincipal Authentication authentication) {
 
         Object result = null;
@@ -56,6 +56,27 @@ public class TableAreaController {
             e.getMessage();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+
+    @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity<Object> updateTableArea(@PathVariable Integer id,@RequestBody TableAreaEntity request
+                , @AuthenticationPrincipal Authentication authentication) {
+
+            Object result = null;
+            try {
+                Integer userId = FnCommon.getUserIdFromToken(authentication);
+                request.setId(id);
+                request.setCreateUserId(userId);
+                result = tableAreaService.addTableArea(request);
+            } catch (TeleCareException e) {
+                return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+            } catch (Exception e) {
+                e.getMessage();
+                return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+            }
 
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
