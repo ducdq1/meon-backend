@@ -451,7 +451,7 @@ public class BillServiceImpl implements BillService {
 
 
     private Integer getTotalMoney(Integer billId) throws TeleCareException {
-        List<OrderItem> orderItemEntities = (List<OrderItem>) orderItemRepository.getOrderItemDeliveredOfBill(billId);
+        List<OrderItem> orderItemEntities = (List<OrderItem>) orderItemRepository.getOrderItemOfBill(billId);
         Integer totalMoney = 0;
         for (OrderItem orderItemEntity : orderItemEntities) {
             if (FnCommon.validateOrderItemStatus(orderItemEntity.getStatus())) {
