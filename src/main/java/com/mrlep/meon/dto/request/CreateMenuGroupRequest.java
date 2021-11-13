@@ -10,8 +10,8 @@ public class CreateMenuGroupRequest {
     private Integer shopId;
     private String imageUrl;
     private String tags;
-    private List<MediaItem> medias;
-    private List<MediaItem> deletedMedias;
+    private List<Integer> medias;
+    private List<Integer> deletedMedias;
 
     public String getName() {
         return name;
@@ -53,19 +53,19 @@ public class CreateMenuGroupRequest {
         this.tags = tags;
     }
 
-    public List<MediaItem> getMedias() {
+    public List<Integer> getMedias() {
         return medias;
     }
 
-    public void setMedias(List<MediaItem> medias) {
+    public void setMedias(List<Integer> medias) {
         this.medias = medias;
     }
 
-    public List<MediaItem> getDeletedMedias() {
+    public List<Integer> getDeletedMedias() {
         return deletedMedias;
     }
 
-    public void setDeletedMedias(List<MediaItem> deletedMedias) {
+    public void setDeletedMedias(List<Integer> deletedMedias) {
         this.deletedMedias = deletedMedias;
     }
 }

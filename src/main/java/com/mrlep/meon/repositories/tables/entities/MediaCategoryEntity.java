@@ -18,8 +18,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "MEDIA")
-public class MediaEntity implements Serializable {
+@Table(name = "MEDIA_CATEGORY")
+public class MediaCategoryEntity implements Serializable {
 
     @Id
     @Column(name = "ID")

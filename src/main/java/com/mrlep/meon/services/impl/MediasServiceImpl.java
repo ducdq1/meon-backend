@@ -4,8 +4,10 @@ import com.mrlep.meon.config.ConfigValue;
 import com.mrlep.meon.dto.object.MediaItem;
 import com.mrlep.meon.dto.request.CreateMediaRequest;
 import com.mrlep.meon.repositories.MediasRepository;
+import com.mrlep.meon.repositories.tables.MediaCategoryRepositoryJPA;
 import com.mrlep.meon.repositories.tables.MediaRepositoryJPA;
 import com.mrlep.meon.repositories.tables.UsersRepositoryJPA;
+import com.mrlep.meon.repositories.tables.entities.MediaCategoryEntity;
 import com.mrlep.meon.repositories.tables.entities.MediaEntity;
 import com.mrlep.meon.services.MediaService;
 import com.mrlep.meon.utils.Constants;
@@ -45,43 +47,34 @@ public class MediasServiceImpl implements MediaService {
     @Autowired
     private MediasRepository mediaRepository;
 
+    @Autowired
+    private MediaCategoryRepositoryJPA mediaCategoryRepositoryJPA;
+
+
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Object saveMedias(List<MediaItem> medias, List<MediaItem> deletedMedias, Integer objectId, String objectType, Integer createUser) throws TeleCareException {
-        if (medias != null) {
-            for (MediaItem media : medias) {
-                MediaEntity entity = null;
-                if (media.getId() == null) {
-                    entity = new MediaEntity();
-                    entity.setCreateUserId(createUser);
-                    entity.setCreateDate(new Date());
+    public Object saveMedias(List<Integer> mediasId, List<Integer> deletedMediasId, Integer objectId, String objectType, Integer createUser) throws TeleCareException {
+        if (mediasId != null) {
+            for (Integer mediaId : mediasId) {
+                MediaEntity entity = new MediaEntity();
+                entity.setCreateUserId(createUser);
+                entity.setCreateDate(new Date());
 
-                } else {
-                    Optional<MediaEntity> entityOptional = mediaRepositoryJPA.findById(media.getId());
-                    if (entityOptional.isPresent()) {
-                        entity = entityOptional.get();
-                        entity.setUpdateDate(new Date());
-                        entity.setUpdateUserId(createUser);
-                    }
-                }
-
-                if (entity != null) {
-                    entity.setMediaType(media.getType());
+                MediaCategoryEntity mediaCategoryEntity = mediaCategoryRepositoryJPA.getByIdAndIsActive(mediaId,Constants.IS_ACTIVE);
+                if (mediaCategoryEntity != null) {
+                    entity.setMediaType(mediaCategoryEntity.getMediaType());
                     entity.setObjectType(objectType);
-                    entity.setUrl(media.getUrl());
+                    entity.setUrl(mediaCategoryEntity.getUrl());
                     entity.setObjectId(objectId);
                     entity.setIsActive(Constants.IS_ACTIVE);
+                    mediaRepositoryJPA.save(entity);
                 }
-
-                mediaRepositoryJPA.save(entity);
-
             }
         }
 
-        if (deletedMedias != null) {
-            for (MediaItem media : deletedMedias) {
-                if (media.getId() != null) {
-                    Optional<MediaEntity> entityOptional = mediaRepositoryJPA.findById(media.getId());
+        if (deletedMediasId != null) {
+            for (Integer mediaId : deletedMediasId) {
+                    Optional<MediaEntity> entityOptional = mediaRepositoryJPA.findById(mediaId);
                     if (entityOptional.isPresent()) {
                         MediaEntity entity = entityOptional.get();
                         entity.setUpdateDate(new Date());
@@ -90,7 +83,6 @@ public class MediasServiceImpl implements MediaService {
                         mediaRepositoryJPA.save(entity);
                     }
                 }
-            }
         }
 
         return true;
@@ -103,18 +95,17 @@ public class MediasServiceImpl implements MediaService {
         String folderPathFile = configValue.getFolderPathFiles();
         String path = folderFile + File.separator + (new Date().getYear() + 1900) + File.separator + (new Date().getMonth() + 1) + File.separator;
         folderPathFile += File.separator + path;
-        List<MediaEntity> medias = new ArrayList<>();
+        List<MediaCategoryEntity> medias = new ArrayList<>();
 
         for (MultipartFile file : files) {
             String fileName = FnCommon.uploadFile(folderPathFile, file, FilenameUtils.getExtension(file.getOriginalFilename()));
 
             if (fileName != null) {
-                MediaEntity mediaItem = new MediaEntity();
+                MediaCategoryEntity mediaItem = new MediaCategoryEntity();
                 mediaItem.setUrl(path + fileName);
                 mediaItem.setObjectId(request.getShopId());
                 mediaItem.setObjectType(request.getObjectType());
                 mediaItem.setMediaType(request.getMediaType());
-                mediaItem.setIsCategory(1);
                 mediaItem.setIsActive(Constants.IS_ACTIVE);
                 mediaItem.setCreateDate(new Date());
                 mediaItem.setCreateUserId(createUserId);
@@ -143,6 +134,21 @@ public class MediasServiceImpl implements MediaService {
             mediaEntity.setUpdateDate(new Date());
             mediaEntity.setUpdateUserId(userId);
             mediaRepositoryJPA.save(mediaEntity);
+
+            return true;
+        }
+        return null;
+
+    }
+
+    @Override
+    public Object deleteMediaCategory(Integer mediaCategoryId, Integer userId) throws TeleCareException {
+        MediaCategoryEntity mediaEntity = mediaCategoryRepositoryJPA.getByIdAndIsActive(mediaCategoryId, Constants.IS_ACTIVE);
+        if (mediaEntity != null) {
+            mediaEntity.setIsActive(Constants.IS_NOT_ACTIVE);
+            mediaEntity.setUpdateDate(new Date());
+            mediaEntity.setUpdateUserId(userId);
+            mediaCategoryRepositoryJPA.save(mediaEntity);
             if (mediaEntity.getUrl() != null) {
                 String filePath = configValue.getFolderPathFiles() + mediaEntity.getUrl();
                 FnCommon.deleteFile(filePath);
@@ -151,12 +157,11 @@ public class MediasServiceImpl implements MediaService {
             return true;
         }
         return null;
-
     }
 
 
-    private void rollBackFiles(List<MediaEntity> medias) {
-        for (MediaEntity mediaEntity : medias) {
+    private void rollBackFiles(List<MediaCategoryEntity> medias) {
+        for (MediaCategoryEntity mediaEntity : medias) {
             File f = new File(mediaEntity.getUrl());
             if (f.exists()) {
                 f.delete();
@@ -164,7 +169,7 @@ public class MediasServiceImpl implements MediaService {
         }
     }
 
-    private void saveMedias(List<MediaEntity> medias) {
-        mediaRepositoryJPA.saveAll(medias);
+    private void saveMedias(List<MediaCategoryEntity> medias) {
+        mediaCategoryRepositoryJPA.saveAll(medias);
     }
 }

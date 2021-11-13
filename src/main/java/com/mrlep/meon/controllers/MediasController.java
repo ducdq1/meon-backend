@@ -68,8 +68,8 @@ public class MediasController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/{mediaId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> uploadAccountAvartar(@PathVariable Integer mediaId, @AuthenticationPrincipal Authentication authentication) {
+    @DeleteMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> deleteMedia(@PathVariable Integer mediaId, @AuthenticationPrincipal Authentication authentication) {
 
         Object result = null;
         try {
@@ -84,4 +84,22 @@ public class MediasController {
 
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
+
+    @DeleteMapping(path = "/media-category/{mediaId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> deleteMediaCategory(@PathVariable Integer mediaId, @AuthenticationPrincipal Authentication authentication) {
+
+        Object result = null;
+        try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            result = mediaService.deleteMediaCategory(mediaId, userId);
+        } catch (TeleCareException e) {
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.getMessage();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
 }

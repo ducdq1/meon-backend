@@ -8,6 +8,7 @@ import com.mrlep.meon.dto.response.DetailBillResponse;
 import com.mrlep.meon.dto.response.SearchBillResponse;
 import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.MediasRepository;
+import com.mrlep.meon.repositories.tables.entities.MediaCategoryEntity;
 import com.mrlep.meon.repositories.tables.entities.MediaEntity;
 import com.mrlep.meon.utils.Constants;
 import com.mrlep.meon.utils.FnCommon;
@@ -28,11 +29,11 @@ public class MediasRepositoryImpl extends CommonDataBaseRepository implements Me
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
-        sql.append(" SELECT b.id,b.url, b.object_id objectId,b.object_type objectType,b.media_type mediaType,b.is_category isCategory FROM MEDIA b ");
-        sql.append("  WHERE b.object_id=:shopId AND  b.object_type = :objectType AND b.is_category = 1 AND b.is_active = 1  ORDER BY b.create_date DESC ");
+        sql.append(" SELECT b.id,b.url, b.object_id objectId,b.object_type objectType,b.media_type mediaType FROM MEDIA_CATEGORY b ");
+        sql.append("  WHERE b.object_id=:shopId AND  b.object_type = :objectType AND b.is_active = 1  ORDER BY b.create_date DESC ");
         params.put("shopId", shopId);
         params.put("objectType", objectType);
 
-        return getListDataAndCount(sql, params, startRecord, pageSize, MediaEntity.class);
+        return getListDataAndCount(sql, params, startRecord, pageSize, MediaCategoryEntity.class);
     }
 }
