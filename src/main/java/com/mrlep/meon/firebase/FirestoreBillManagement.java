@@ -130,6 +130,7 @@ public class FirestoreBillManagement {
 
 
     public void deleteBillOrderItem(Integer billId, Integer orderItemId) {
+        System.out.println("delete orderItem " + orderItemId);
         KThreadPoolExecutor.executeAccessLog((new Runnable() {
             @Override
             public void run() {
@@ -144,6 +145,7 @@ public class FirestoreBillManagement {
     }
 
     public void deleteBill(Integer billId) {
+        System.out.println("delete bill  " + billId);
         KThreadPoolExecutor.executeAccessLog((new Runnable() {
             @Override
             public void run() {
@@ -158,6 +160,7 @@ public class FirestoreBillManagement {
     }
 
     public void deleteBillTable(Integer billId, Integer tableId) {
+
         KThreadPoolExecutor.executeAccessLog((new Runnable() {
             @Override
             public void run() {
@@ -195,7 +198,7 @@ public class FirestoreBillManagement {
 
     public void updateOrderItem(Integer orderItemId) {
         OrderItem orderItem = orderItemRepository.getOrderItem(orderItemId);
-
+        System.out.println("Update orderItem " + orderItem.getMenuName() + " status " + orderItem.getStatus());
         KThreadPoolExecutor.executeAccessLog((new Runnable() {
             @Override
             public void run() {
@@ -227,8 +230,6 @@ public class FirestoreBillManagement {
             public void run() {
                 try {
                     Firestore db = new FirebaseFirestore().getDb();
-
-
                     for (OrderItem orderItem : orderItems) {
                         CollectionReference collectionReference = db.collection("ORDERS");
                         DocumentReference documentReference = collectionReference.document(orderItem.getId().toString());
