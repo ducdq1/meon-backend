@@ -25,8 +25,7 @@ public class TableAreaController {
     private ConfigValue configValue;
 
     @RequestMapping(path = "/shop/{shopId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getByShop(@PathVariable Integer shopId
-            , @AuthenticationPrincipal Authentication authentication) {
+    public ResponseEntity<Object> getByShop(@PathVariable Integer shopId, @AuthenticationPrincipal Authentication authentication) {
 
         Object result = null;
         try {

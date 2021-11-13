@@ -66,6 +66,26 @@ public class PaymenInfoController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
+    @RequestMapping(path = "/{paymentInfoId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> updatePaymentByShop(@PathVariable Integer paymentInfoId, @RequestBody PaymentInfoEntity request
+            , @AuthenticationPrincipal Authentication authentication) {
+
+        Object result = null;
+        try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            request.setId(paymentInfoId);
+            request.setCreateUserId(userId);
+            result = paymentInfoService.addPaymentInfo(request);
+        } catch (TeleCareException e) {
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.getMessage();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
     @DeleteMapping(path = "/{paymentInfoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> deletePayment(@PathVariable Integer paymentInfoId, @AuthenticationPrincipal Authentication authentication) {
 
