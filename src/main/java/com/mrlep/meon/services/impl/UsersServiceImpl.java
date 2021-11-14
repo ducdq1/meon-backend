@@ -74,6 +74,17 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
+    public Object logOut(Integer userId) throws TeleCareException {
+        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(userId,Constants.IS_ACTIVE);
+        if (usersEntity == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.login.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+        usersEntity.setDeviceToken(null);
+        usersRepositoryJPA.save(usersEntity);
+        return true;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Object register(RegisterRequest request) throws TeleCareException {
         validateRegister(request);

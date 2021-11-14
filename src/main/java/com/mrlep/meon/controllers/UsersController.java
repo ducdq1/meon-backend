@@ -84,6 +84,24 @@ public class UsersController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
+    @PutMapping(value = "/logout",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> logout(@AuthenticationPrincipal Authentication authentication) {
+        Object result;
+        try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            result = usersService.logOut(userId);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+
     @PostMapping(value = "/register",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> register(@RequestBody RegisterRequest request, @RequestHeader Optional<String> lang) {
         Object result;

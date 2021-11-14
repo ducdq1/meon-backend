@@ -14,6 +14,7 @@ import com.mrlep.meon.utils.TeleCareException;
  */
 public interface UsersService {
     Object login(LoginRequest request) throws TeleCareException;
+    Object logOut(Integer userId) throws TeleCareException;
     Object register(RegisterRequest request) throws TeleCareException;
     Object getOTP(LoginRequest request) throws TeleCareException;
     Object verifyOTP(VerifyOTPRequest request) throws TeleCareException;
