@@ -3,6 +3,7 @@ package com.mrlep.meon.repositories.tables.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -89,6 +90,7 @@ public class ShopEntity implements Serializable {
 
     @OneToMany
     @JoinColumn(name = "shop_id")
+    @Where(clause = "is_active = 1")
     private List<PaymentInfoEntity> paymentInfos;
 
     public List<PaymentInfoEntity> getPaymentInfos() {
