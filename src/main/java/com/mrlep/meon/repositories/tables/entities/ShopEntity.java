@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Autogen class Entity: Create Entity For Table Name Action_log
@@ -85,6 +86,18 @@ public class ShopEntity implements Serializable {
 
     @Column(name = "IMAGE_URL")
     private String imageUrl;
+
+    @OneToMany
+    @JoinColumn(name = "shop_id")
+    private List<PaymentInfoEntity> paymentInfos;
+
+    public List<PaymentInfoEntity> getPaymentInfos() {
+        return paymentInfos;
+    }
+
+    public void setPaymentInfos(List<PaymentInfoEntity> paymentInfos) {
+        this.paymentInfos = paymentInfos;
+    }
 
     public Integer getIsActive() {
         return isActive;
