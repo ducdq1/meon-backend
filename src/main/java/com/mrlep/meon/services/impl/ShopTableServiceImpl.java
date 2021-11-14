@@ -55,8 +55,8 @@ public class ShopTableServiceImpl implements ShopTableService {
     }
 
     @Override
-    public Object getShopTables(Integer shopId) throws TeleCareException {
-        return shopTableRepository.getTableOfShop(shopId);
+    public Object getShopTables(Integer shopId,Integer areaId) throws TeleCareException {
+        return shopTableRepository.getTableOfShop(shopId,areaId);
     }
 
     @Override

@@ -50,7 +50,7 @@ public class ShopTableRepositoryImpl extends CommonDataBaseRepository implements
     }
 
     @Override
-    public List<ShopTableEntity> getTableOfShop(Integer shopId) {
+    public List<ShopTableEntity> getTableOfShop(Integer shopId, Integer areaId) {
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
@@ -59,6 +59,11 @@ public class ShopTableRepositoryImpl extends CommonDataBaseRepository implements
         sql.append("  LEFT JOIN TABLE_AREA a ON a.id = st.area_id ");
         sql.append("  WHERE st.shop_id=:shopId AND st.is_active = 1 ");
         params.put("shopId", shopId);
+        if (areaId >= 0) {
+            sql.append("  AND st.area_id=:areaId ");
+            params.put("areaId", areaId);
+        }
+
         return (List<ShopTableEntity>) getListData(sql, params, null, null, ShopTableEntity.class);
     }
 }

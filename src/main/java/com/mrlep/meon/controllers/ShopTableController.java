@@ -83,11 +83,11 @@ public class ShopTableController {
     }
 
     @GetMapping(value = "/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getTableByShopId(@PathVariable Integer shopId) {
+    public ResponseEntity<Object> getTableByShopId(@PathVariable Integer shopId, @RequestParam(value = "areaId", required = false, defaultValue = "-1") Integer areaId) {
         Object result;
         try {
 
-            result = shopTableService.getShopTables(shopId);
+            result = shopTableService.getShopTables(shopId, areaId);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
@@ -100,13 +100,13 @@ public class ShopTableController {
     }
 
     @GetMapping(value = "/{shopId}/{status}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getTableByShopIdAndStatus(@PathVariable Integer shopId,@PathVariable Integer status,
-                                                            @RequestParam(value = "startRecord",required = false,defaultValue = "0") Integer startRecord ,
-                                                            @RequestParam(value = "pageSize",required = false,defaultValue = "10") Integer pageSize) {
+    public ResponseEntity<Object> getTableByShopIdAndStatus(@PathVariable Integer shopId, @PathVariable Integer status,
+                                                            @RequestParam(value = "startRecord", required = false, defaultValue = "0") Integer startRecord,
+                                                            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
         Object result;
         try {
 
-            result = shopTableService.getShopTablesByStatus(shopId,status,startRecord,pageSize);
+            result = shopTableService.getShopTablesByStatus(shopId, status, startRecord, pageSize);
         } catch (TeleCareException e) {
             e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);

@@ -11,5 +11,5 @@ import java.util.List;
 public interface ShopTableRepository {
     List<BillTablesItem> getTableOfBill(Integer billId);
     ResultSelectEntity getTableOfShopAndStatus(Integer shopId,Integer status,Integer startRecord,Integer pageSize);
-    List<ShopTableEntity> getTableOfShop(Integer shopId);
+    List<ShopTableEntity> getTableOfShop(Integer shopId,Integer areaId);
 }
