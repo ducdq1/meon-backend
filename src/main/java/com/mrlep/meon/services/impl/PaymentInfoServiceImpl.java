@@ -51,6 +51,8 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
                 paymentInfoEntity.setBankName(request.getBankName());
                 paymentInfoEntity.setCardName(request.getCardName());
                 paymentInfoEntity.setCardNumber(request.getCardNumber());
+                paymentInfoEntity.setUpdateUserId(request.getCreateUserId());
+                paymentInfoEntity.setUpdateDate(new Date());
                 return paymentInfoRepositoryJPA.save(paymentInfoEntity);
             }
             return null;
@@ -63,11 +65,14 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
     }
 
     @Override
-    public Object deletePaymentInfo(Integer paymentInfoId) throws TeleCareException {
+    public Object deletePaymentInfo(Integer paymentInfoId,Integer userId) throws TeleCareException {
         PaymentInfoEntity entity = paymentInfoRepositoryJPA.getByIdAndIsActive(paymentInfoId, Constants.IS_ACTIVE);
         if (entity != null) {
+            entity.setUpdateUserId(userId);
+            entity.setUpdateDate(new Date());
             entity.setIsActive(Constants.IS_NOT_ACTIVE);
             paymentInfoRepositoryJPA.save(entity);
+
             return true;
         }
         return null;

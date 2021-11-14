@@ -18,37 +18,35 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "PAYMENT_INFO")
-public class PaymentInfoEntity implements Serializable {
+@Table(name = "quick_select_message")
+public class QuickSelectMessageEntity implements Serializable {
 
     @Id
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @Column(name = "CARD_NAME")
-    String cardName;
+    @Column(name = "message")
+    String message;
 
-    @Column(name = "CARD_NUMBER")
-    String cardNumber;
+    @Column(name = "TYPE")
+    String type;
 
-    @Column(name = "BANK_NAME")
-    String bankName;
-
-    @Column(name = "SHOP_ID")
+    @Column(name = "shop_id")
     Integer shopId;
+
 
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
-     Integer isActive;
+    Integer isActive;
 
     @JsonIgnore
     @Column(name = "CREATE_USER_ID")
-     Integer createUserId;
+    Integer createUserId;
 
     @JsonIgnore
     @Column(name = "CREATE_DATE")
-     Date createDate;
+    Date createDate;
 
     @JsonIgnore
     @Column(name = "UPDATE_DATE")
@@ -66,28 +64,20 @@ public class PaymentInfoEntity implements Serializable {
         this.id = id;
     }
 
-    public String getCardName() {
-        return cardName;
+    public String getMessage() {
+        return message;
     }
 
-    public void setCardName(String cardName) {
-        this.cardName = cardName;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getCardNumber() {
-        return cardNumber;
+    public String getType() {
+        return type;
     }
 
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public String getBankName() {
-        return bankName;
-    }
-
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Integer getShopId() {

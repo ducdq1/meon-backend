@@ -17,5 +17,5 @@ import java.util.List;
 public interface PaymentInfoService {
     Object getPaymentInfoByShop(Integer shopId)throws TeleCareException;
     Object addPaymentInfo(PaymentInfoEntity entity) throws TeleCareException;
-    Object deletePaymentInfo(Integer paymentInfoId) throws TeleCareException;
+    Object deletePaymentInfo(Integer paymentInfoId,Integer userId) throws TeleCareException;
 }
