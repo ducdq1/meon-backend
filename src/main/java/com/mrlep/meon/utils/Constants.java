@@ -174,4 +174,9 @@ public class Constants {
     public static final Integer DISCOUNT_TYPE_MONEY= 0;
     public static final Integer DISCOUNT_TYPE_PERCENT= 1;
 
+    public static final String STATICTIS_DAILY = "DAILY";
+    public static final String STATICTIS_WEEKLY = "WEEKLY";
+    public static final String STATICTIS_LAST_WEEK = "LAST_WEEK";
+    public static final String STATICTIS_MONTHLY = "MONTHLY";
+
 }

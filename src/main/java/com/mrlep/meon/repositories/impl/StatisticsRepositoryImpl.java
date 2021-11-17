@@ -11,6 +11,7 @@ import com.mrlep.meon.dto.response.SearchBillResponse;
 import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.StatisticsRepository;
 import com.mrlep.meon.utils.Constants;
+import com.mrlep.meon.utils.DateUtility;
 import com.mrlep.meon.utils.FnCommon;
 import com.mrlep.meon.utils.StringUtils;
 import com.mrlep.meon.xlibrary.core.entities.ResultSelectEntity;
@@ -35,14 +36,18 @@ public class StatisticsRepositoryImpl extends CommonDataBaseRepository implement
         sql.append(" cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c ");
         sql.append(" ) a ");
         sql.append(" where a.Date between :fromDate and :toDate order by a.Date ) ");
-        sql.append(" select  sum(if(b.total_money is null,0,b.total_money)) totalMoney, DATE_FORMAT( t.create_date, '%d/%m/%Y') createDate from temp t  left JOIN  ");
+        sql.append(" select  sum(if(b.total_money is null,0,b.total_money)) value, DATE_FORMAT( t.create_date, '%d/%m/%Y') date from temp t  left JOIN  ");
         sql.append("bill b  on date(b.create_date) = date(t.create_date)  and  b.shop_id = :shopId ");
 
         sql.append(" group by DATE_FORMAT( t.create_date, '%d/%m/%Y') ");
 
         params.put("shopId", request.getShopId());
-        params.put(":toDate", request.getToDate());
-        params.put(":fromDate", request.getFromDate());
+        params.put("toDate", request.getToDate());
+        params.put("fromDate", request.getFromDate());
+
+        System.out.println("statisticsBill ");
+        System.out.println("From date: "+DateUtility.format(request.getFromDate()));
+        System.out.println("To date: "+ DateUtility.format(request.getToDate()));
 
         return (List<StatisticsBillItem>) getListData(sql, params, null,null,StatisticsBillItem.class);
     }
