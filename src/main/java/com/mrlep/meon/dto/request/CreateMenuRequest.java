@@ -20,12 +20,20 @@ public class CreateMenuRequest {
     private Integer orderPriority;
     private String unit;
     private Integer isOddNumber;
-
+    private Integer processType;
     private List<MenuOptionEntity> options;
     private List<Integer> deletedOptions;
 
     private List<Integer> medias;
     private List<Integer> deletedMedias;
+
+    public Integer getProcessType() {
+        return processType;
+    }
+
+    public void setProcessType(Integer processType) {
+        this.processType = processType;
+    }
 
     public String getName() {
         return name;

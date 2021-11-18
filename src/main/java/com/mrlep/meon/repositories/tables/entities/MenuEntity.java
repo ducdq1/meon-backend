@@ -90,6 +90,17 @@ public class MenuEntity implements Serializable {
     @Column(name = "UPDATE_USER_ID")
     Integer updateUserId;
 
+    @Column(name = "process_type")
+    Integer  processType;
+
+    public Integer getProcessType() {
+        return processType;
+    }
+
+    public void setProcessType(Integer processType) {
+        this.processType = processType;
+    }
+
     public Integer getMenuGroupId() {
         return menuGroupId;
     }

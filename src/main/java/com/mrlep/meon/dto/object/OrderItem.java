@@ -27,10 +27,18 @@ public class OrderItem {
     String userAvatar;
     String userPhone;
     String createDate;
-
+    Integer menuProcessType;
     private String discountDescription;
     private Double discountValue;
     private Integer discountType;
+
+    public Integer getMenuProcessType() {
+        return menuProcessType;
+    }
+
+    public void setMenuProcessType(Integer menuProcessType) {
+        this.menuProcessType = menuProcessType;
+    }
 
     public Integer getId() {
         return id;
