@@ -4,6 +4,7 @@ import com.mrlep.meon.dto.object.*;
 import com.mrlep.meon.dto.request.*;
 import com.mrlep.meon.dto.response.DetailBillResponse;
 import com.mrlep.meon.dto.response.SearchBillResponse;
+import com.mrlep.meon.dto.response.StatisticsBillResponse;
 import com.mrlep.meon.firebase.FirestoreBillManagement;
 import com.mrlep.meon.repositories.*;
 import com.mrlep.meon.repositories.tables.*;
@@ -23,7 +24,8 @@ public class StatisticsServiceImpl implements StatisticsService {
     private StatisticsRepository statisticsRepository;
 
     @Override
-    public List<StatisticsBillItem> getStatisticsByShop(StatisticsBillRequest request) throws TeleCareException {
+    public StatisticsBillResponse getStatisticsByShop(StatisticsBillRequest request) throws TeleCareException {
+        StatisticsBillResponse response = new StatisticsBillResponse();
         if (request.getType() != null) {
             Calendar cal = Calendar.getInstance();
             cal.setFirstDayOfWeek(Calendar.MONDAY);
@@ -62,9 +64,14 @@ public class StatisticsServiceImpl implements StatisticsService {
                     break;
             }
         } else if (request.getFromDate() == null || request.getToDate() == null) {
-            return null;
+            return response;
         }
 
-        return statisticsRepository.statisticsBill(request);
+        response = statisticsRepository.statisticsTotalBill(request);
+        if (response != null && response.getTotalMoney() != null) {
+            response.setItems(statisticsRepository.statisticsBill(request));
+        }
+
+        return response;
     }
 }
