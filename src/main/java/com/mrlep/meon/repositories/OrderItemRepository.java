@@ -8,7 +8,7 @@ import com.mrlep.meon.xlibrary.core.entities.ResultSelectEntity;
 
 import java.util.List;
 
-public interface OrderItemRepository {
+public interface  OrderItemRepository {
     OrderItem getOrderItem(Integer id);
     List<OrderItem> getOrderItemOfBill(Integer billId);
     List<OrderItem> getOrderItemDeliveredOfBill(Integer billId);

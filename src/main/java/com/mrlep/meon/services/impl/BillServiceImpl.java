@@ -93,13 +93,15 @@ public class BillServiceImpl implements BillService {
     private ShopTableRepository shopTableRepository;
 
     private void validateCreateBill(CreateBillRequest request) throws TeleCareException {
-        if (request.getTableIds() != null) {
+        if (request.getTableIds() != null && !request.getTableIds().isEmpty()) {
             for (Integer tableId : request.getTableIds()) {
                 Integer countTableAndBill = billRepositoryJPA.checkExistBillAndTable(tableId);
                 if (countTableAndBill != null && countTableAndBill > 0) {
                     throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.table.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
                 }
             }
+        }else{
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.no.table"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
     }
