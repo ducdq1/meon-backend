@@ -100,7 +100,7 @@ public class BillServiceImpl implements BillService {
                     throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.table.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
                 }
             }
-        }else{
+        } else {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.no.table"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
@@ -222,8 +222,8 @@ public class BillServiceImpl implements BillService {
         billRepositoryJPA.save(entity);
 
         if (request.getTableIds() != null) {
+            addTableBill(entity.getId(), request.getCreateUserId(), request.getTableIds());
             for (Integer tableId : request.getTableIds()) {
-                addTableBill(entity.getId(), request.getCreateUserId(), Arrays.asList(new Integer[]{tableId}));
                 shopTableService.updateShopTableStatus(request.getCreateUserId(), tableId, Constants.TABLE_STATUS_IN_USE);
             }
         }
