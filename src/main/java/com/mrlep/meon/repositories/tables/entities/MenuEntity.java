@@ -5,8 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.print.attribute.standard.Media;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Autogen class Entity: Create Entity For Table Name Action_log
@@ -92,6 +94,9 @@ public class MenuEntity implements Serializable {
 
     @Column(name = "process_type")
     Integer  processType;
+
+    @Transient
+    List<MediaEntity> medias;
 
     public Integer getProcessType() {
         return processType;
@@ -267,5 +272,13 @@ public class MenuEntity implements Serializable {
 
     public void setDiscountValue(Double discountValue) {
         this.discountValue = discountValue;
+    }
+
+    public List<MediaEntity> getMedias() {
+        return medias;
+    }
+
+    public void setMedias(List<MediaEntity> medias) {
+        this.medias = medias;
     }
 }

@@ -123,7 +123,12 @@ public class MenusServiceImpl implements MenusService {
 
     @Override
     public Object getMenus(Integer shopId) throws TeleCareException {
-        return menuRepositoryJPA.getAllByShopIdAndIsActive(shopId, Constants.IS_ACTIVE);
+        List<MenuEntity> menuEntities = menuRepositoryJPA.getAllByShopIdAndIsActive(shopId, Constants.IS_ACTIVE);
+        for (MenuEntity menuEntity : menuEntities) {
+            menuEntity.setMedias(mediaRepositoryJPA.findAllByIsActiveAndObjectTypeAndObjectId(Constants.IS_ACTIVE,Constants.MENU_MEDIA_TYPE,menuEntity.getId()));
+        }
+
+        return menuEntities;
     }
 
     @Override
@@ -212,7 +217,7 @@ public class MenusServiceImpl implements MenusService {
         entity.setIsOddNumber(request.getIsOddNumber());
         entity.setProcessType(request.getProcessType());
 
-        if(entity.getOrderNumber()==null){
+        if (entity.getOrderNumber() == null) {
             entity.setOrderNumber(0);
         }
 
