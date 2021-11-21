@@ -10,6 +10,7 @@ public class Data {
     Integer id;
     String type;
     String sender;
+    String click_action = "FLUTTER_NOTIFICATION_CLICK";
 
     public Data(Integer id, String type, String sender) {
         this.id = id;
@@ -39,5 +40,13 @@ public class Data {
 
     public void setSender(String sender) {
         this.sender = sender;
+    }
+
+    public String getClick_action() {
+        return click_action;
+    }
+
+    public void setClick_action(String click_action) {
+        this.click_action = click_action;
     }
 }
