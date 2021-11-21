@@ -4,7 +4,8 @@ public class NotificationBO {
 	public static final  String TOPIC ="/topics/";
 	String to ;
 	Notification notification;
-	
+	Data data;
+
 	public String getTo() {
 		return to;
 	}
@@ -21,4 +22,11 @@ public class NotificationBO {
 		this.notification = notification;
 	}
 
+	public Data getData() {
+		return data;
+	}
+
+	public void setData(Data data) {
+		this.data = data;
+	}
 }

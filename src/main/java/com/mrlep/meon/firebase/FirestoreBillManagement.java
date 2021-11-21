@@ -7,14 +7,17 @@ import com.mrlep.meon.dto.object.BillMembersItem;
 import com.mrlep.meon.dto.object.BillTablesItem;
 import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.dto.response.DetailBillResponse;
+import com.mrlep.meon.firebase.model.Data;
 import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.ShopTableRepository;
 import com.mrlep.meon.repositories.impl.OrderItemRepositoryImpl;
 import com.mrlep.meon.repositories.tables.BillMembersRepositoryJPA;
 import com.mrlep.meon.repositories.tables.MenusOptionRepositoryJPA;
 import com.mrlep.meon.repositories.tables.OrderItemRepositoryJPA;
+import com.mrlep.meon.repositories.tables.UsersRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.BillEntity;
 import com.mrlep.meon.repositories.tables.entities.MenuOptionEntity;
+import com.mrlep.meon.repositories.tables.entities.UsersEntity;
 import com.mrlep.meon.services.OrderItemService;
 import com.mrlep.meon.utils.Constants;
 import com.mrlep.meon.utils.FnCommon;
@@ -49,6 +52,9 @@ public class FirestoreBillManagement {
     @Autowired
     private NotificationService notification;
 
+    @Autowired
+    private UsersRepositoryJPA usersRepositoryJPA;
+
     public static String ORDERS = "ORDERS";
 
     public void updateBill(Integer billId) {
@@ -72,7 +78,7 @@ public class FirestoreBillManagement {
                     Firestore db = FirebaseFirestore.getDb();
                     DocumentReference docRef = db.collection("BILLS").document(billId.toString());
                     if (response.getBillStatus() == Constants.BILL_STATUS_DONE
-                    || response.getBillStatus() == Constants.BILL_STATUS_CANCEL) {
+                            || response.getBillStatus() == Constants.BILL_STATUS_CANCEL) {
                         docRef.delete();
                         deleteAllBillOrderItem(billId);
                     } else {
@@ -196,7 +202,7 @@ public class FirestoreBillManagement {
         }));
     }
 
-    public void updateOrderItem(Integer orderItemId) {
+    public void updateOrderItem(Integer orderItemId, Integer updateUserId) {
         OrderItem orderItem = orderItemRepository.getOrderItem(orderItemId);
         System.out.println("Update orderItem " + orderItem.getMenuName() + " status " + orderItem.getStatus());
         KThreadPoolExecutor.executeAccessLog((new Runnable() {
@@ -212,12 +218,15 @@ public class FirestoreBillManagement {
                     } else {
                         documentReference.delete();
                     }
+
+                    sendOrderStatusNotification(orderItem, updateUserId);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }));
     }
+
 
     public void updateOrderItemsStatus(Integer billId) {
         List<OrderItem> orderItems = orderItemRepository.getOrderItemOfBill(billId);
@@ -267,8 +276,57 @@ public class FirestoreBillManagement {
         }));
     }
 
-    public void sendBillStatusNotification(BillEntity entity) {
-        notification.sendBillStatusChangeNotificationToCustomer(entity);
+    public void sendNotificationToShop(Data data, Integer shopId, String messsage) {
+        notification.sendNotificationToShop(data, shopId, messsage);
     }
+
+    public void sendBillStatusNotification(BillEntity billEntity) {
+        String description = null;
+        String message = String.format("Hóa đơn %s vừa được %s", billEntity.getName(), FnCommon.getBillStatusString(billEntity.getStatus()));
+        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(billEntity.getUpdateUserId(), Constants.IS_ACTIVE);
+        if (billEntity.getStatus() == Constants.BILL_STATUS_CANCEL) {
+            description = billEntity.getCancelMessage();
+        } else if (billEntity.getStatus() == Constants.BILL_STATUS_RECONFIRM) {
+            description = billEntity.getReconfirmMessage();
+        }
+
+        if (description != null) {
+            message += ": " + description;
+        }
+
+        sendNotificationToShop(new Data(billEntity.getId(), "BILL", usersEntity == null ? "" : usersEntity.getPhone()), billEntity.getShopId(), message);
+    }
+
+    private void sendOrderStatusNotification(OrderItem orderItem, Integer updateUserId) {
+        String type = null;
+        String description = null;
+        switch (orderItem.getStatus()) {
+            case Constants.ORDER_ITEM_STATUS_CANCEL:
+                type = Data.ORDER_STATUS_CANCEL;
+                description = orderItem.getCancelMessage();
+                break;
+            case Constants.ORDER_ITEM_STATUS_REJECT:
+                type = Data.ORDER_STATUS_REJECT;
+                description = orderItem.getCancelMessage();
+                break;
+            case Constants.ORDER_ITEM_STATUS_RECONFIRM:
+                type = Data.ORDER_STATUS_RECONFIRM;
+                description = orderItem.getReconfirms();
+                break;
+            case Constants.ORDER_ITEM_STATUS_DONE:
+                type = Data.ORDER_STATUS_DONE;
+                break;
+        }
+
+        if (type != null) {
+            String message = String.format("Món %s của hóa đơn %s vừa được %s", orderItem.getMenuName(), orderItem.getBillName(), FnCommon.getOrderStatusString(orderItem.getStatus()));
+            if (description != null) {
+                message += ": " + description;
+            }
+            UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(updateUserId, Constants.IS_ACTIVE);
+            sendNotificationToShop(new Data(orderItem.getId(), "ORDER", usersEntity == null ? "" : usersEntity.getPhone()), orderItem.getShopId(), message);
+        }
+    }
+
 
 }

@@ -11,6 +11,7 @@ import com.mrlep.meon.dto.request.UpdateStatusRequest;
 import com.mrlep.meon.dto.response.DetailBillResponse;
 import com.mrlep.meon.dto.response.SearchBillResponse;
 import com.mrlep.meon.firebase.FirestoreBillManagement;
+import com.mrlep.meon.firebase.model.Data;
 import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.OrderItemRepository;
 import com.mrlep.meon.repositories.ShopRepository;
@@ -382,6 +383,7 @@ public class BillServiceImpl implements BillService {
             }
 
             firestoreBillManagement.updateBill(entity.getId());
+
             firestoreBillManagement.sendBillStatusNotification(entity);
             return true;
         }

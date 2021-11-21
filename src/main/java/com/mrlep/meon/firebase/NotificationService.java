@@ -1,6 +1,7 @@
 package com.mrlep.meon.firebase;
 
 import com.google.gson.Gson;
+import com.mrlep.meon.firebase.model.Data;
 import com.mrlep.meon.firebase.model.Notification;
 import com.mrlep.meon.firebase.model.NotificationBO;
 import com.mrlep.meon.repositories.tables.entities.BillEntity;
@@ -17,15 +18,15 @@ import java.io.IOException;
 @Service
 public class NotificationService {
 
-    public void sendBillStatusChangeNotificationToCustomer(BillEntity entity) {
-        //db.close();
+    public void sendNotificationToShop(Data data, Integer shopId, String message) {
 
         NotificationBO notificationBO = new NotificationBO();
-        notificationBO.setTo(NotificationBO.TOPIC + "" + entity.getId().toString());
+        notificationBO.setTo(NotificationBO.TOPIC + "shopnoti-" + shopId);
 
         Notification notification = new Notification();
         notification.setTitle("Thông báo");
-        notification.setBody(String.format("Hóa đơn %s của bạn vừa được %s", entity.getName(), FnCommon.getBillStatusString(entity.getStatus())));
+        notification.setBody(message);
+        notificationBO.setData(data);
         notificationBO.setNotification(notification);
         pushNotification(notificationBO);
     }

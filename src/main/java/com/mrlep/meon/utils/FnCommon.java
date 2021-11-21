@@ -725,6 +725,28 @@ public class FnCommon extends FunctionCommon {
         }
     }
 
+    public static String getOrderStatusString(Integer status) {
+        switch (status) {
+            case Constants.ORDER_ITEM_STATUS_PROGRESS:
+                return MessagesUtils.getMessage("bill.status.progress");
+
+            case Constants.ORDER_ITEM_STATUS_REJECT:
+                return MessagesUtils.getMessage("bill.status.reject");
+
+            case Constants.ORDER_ITEM_STATUS_CANCEL:
+                return MessagesUtils.getMessage("bill.status.cancel");
+
+            case Constants.ORDER_ITEM_STATUS_DONE:
+                return MessagesUtils.getMessage("bill.status.done");
+
+            case Constants.ORDER_ITEM_STATUS_RECONFIRM:
+                return MessagesUtils.getMessage("bill.status.reconfirm");
+            default:
+                return "";
+
+        }
+    }
+
     public static void deleteFile(String filePath) {
         try {
             File file = new File(filePath);

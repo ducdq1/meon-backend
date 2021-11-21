@@ -5,6 +5,7 @@ public  class Notification {
     String body;
     String sound = "default";
 
+
     public String getTitle() {
         return title;
     }
@@ -28,5 +29,6 @@ public  class Notification {
     public void setSound(String sound) {
         this.sound = sound;
     }
+
 
 }
