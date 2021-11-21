@@ -7,7 +7,6 @@ public class CreateBillRequest {
     private String name;
     private Integer shopId;
     private List<Integer> tableIds;
-    private List<Integer> deletedTableIds;
     private String reconfirmMessage;
     private String cancelMessage;
     private Integer status = 0;
@@ -103,14 +102,6 @@ public class CreateBillRequest {
 
     public void setIsCreateByStaff(Integer isCreateByStaff) {
         this.isCreateByStaff = isCreateByStaff;
-    }
-
-    public List<Integer> getDeletedTableIds() {
-        return deletedTableIds;
-    }
-
-    public void setDeletedTableIds(List<Integer> deletedTableIds) {
-        this.deletedTableIds = deletedTableIds;
     }
 
     public String getCancelMessage() {

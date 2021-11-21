@@ -21,7 +21,12 @@ public interface BillRepositoryJPA extends JpaRepository<BillEntity, Integer> {
     List<BillEntity> getAllByShopIdAndIsActiveOrderByCreateDateDesc(Integer shopId, Integer isActive);
 
     @Query(value = "SELECT count(*) FROM BILL b JOIN BILL_TABLES bt ON b.id = bt.bill_id WHERE bt.is_active =1 AND b.is_active =1 AND bt.table_id =:tableId AND (b.status != 2 AND b.status !=3) ",nativeQuery = true)
-    Integer checkExistBillAndTable(Integer tableId);
+    Integer checkExistTable(Integer tableId);
+
+    @Query(value = "SELECT count(*) FROM BILL b JOIN BILL_TABLES bt ON b.id = bt.bill_id WHERE bt.is_active =1 AND b.is_active =1 AND b.id <>:billId AND bt.table_id =:tableId AND (b.status != 2 AND b.status !=3) ",nativeQuery = true)
+    Integer checkExistBillAndTable(Integer tableId,Integer billId);
+
+
     BillEntity findByIdAndIsActive(Integer id,Integer isActive);
 
     @Query(value = "SELECT count(b.id) FROM BILL b JOIN BILL_MEMBERS bt ON b.id = bt.bill_id WHERE bt.is_active =1 AND  b.is_active =1 AND bt.user_id =:userId AND (b.status != 2 AND b.status !=3) ",nativeQuery = true)

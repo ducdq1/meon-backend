@@ -96,7 +96,14 @@ public class BillServiceImpl implements BillService {
     private void validateCreateBill(CreateBillRequest request) throws TeleCareException {
         if (request.getTableIds() != null && !request.getTableIds().isEmpty()) {
             for (Integer tableId : request.getTableIds()) {
-                Integer countTableAndBill = billRepositoryJPA.checkExistBillAndTable(tableId);
+                Integer countTableAndBill;
+
+                if (request.getBillId() == null) {
+                    countTableAndBill = billRepositoryJPA.checkExistTable(tableId);
+                } else {
+                    countTableAndBill = billRepositoryJPA.checkExistBillAndTable(tableId, request.getBillId());
+                }
+
                 if (countTableAndBill != null && countTableAndBill > 0) {
                     throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.table.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
                 }
@@ -104,7 +111,6 @@ public class BillServiceImpl implements BillService {
         } else {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.no.table"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
-
     }
 
     @Override
@@ -222,11 +228,9 @@ public class BillServiceImpl implements BillService {
 
         billRepositoryJPA.save(entity);
 
-        if (request.getTableIds() != null) {
-            addTableBill(entity.getId(), request.getCreateUserId(), request.getTableIds());
-            for (Integer tableId : request.getTableIds()) {
-                shopTableService.updateShopTableStatus(request.getCreateUserId(), tableId, Constants.TABLE_STATUS_IN_USE);
-            }
+        addTableBill(entity.getId(), request.getCreateUserId(), request.getTableIds());
+        for (Integer tableId : request.getTableIds()) {
+            shopTableService.updateShopTableStatus(request.getCreateUserId(), tableId, Constants.TABLE_STATUS_IN_USE);
         }
 
         addBillMembers(entity.getId(), request.getCreateUserId(), request.getCreateUserId());
@@ -249,7 +253,7 @@ public class BillServiceImpl implements BillService {
     private void addBillTables(Integer billId, Integer userId, Integer tableId) throws TeleCareException {
         //luu ban
 
-        Integer countTableAndBill = billRepositoryJPA.checkExistBillAndTable(tableId);
+        Integer countTableAndBill = billRepositoryJPA.checkExistBillAndTable(tableId,billId);
         if (countTableAndBill != null && countTableAndBill > 0) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.table.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
@@ -273,6 +277,8 @@ public class BillServiceImpl implements BillService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Object updateBill(CreateBillRequest request) throws TeleCareException {
+        validateCreateBill(request);
+
         BillEntity entity = billRepositoryJPA.findByIdAndIsActive(request.getBillId(), Constants.IS_ACTIVE);
         if (entity != null) {
             if (Constants.BILL_STATUS_DONE == entity.getStatus().intValue()) {
@@ -293,26 +299,8 @@ public class BillServiceImpl implements BillService {
             entity.setIsCreateByStaff(request.getIsCreateByStaff());
             billRepositoryJPA.save(entity);
 
-            if (request.getTableIds() != null) {
-                for (Integer tableId : request.getTableIds()) {
-                    BillTablesEntity billTablesEntity = billTablesRepositoryJPA.findByTableIdAndBillIdAndIsActive(tableId, entity.getId(), Constants.IS_ACTIVE);
-                    if (billTablesEntity == null) {
-                        addTableBill(entity.getId(), request.getCreateUserId(), Arrays.asList(new Integer[]{tableId}));
-                    }
-                }
-            }
+            addTableBill(entity.getId(), request.getCreateUserId(), request.getTableIds());
 
-            if (request.getDeletedTableIds() != null) {
-                for (Integer tableId : request.getDeletedTableIds()) {
-                    BillTablesEntity billTablesEntity = billTablesRepositoryJPA.findByTableIdAndBillIdAndIsActive(tableId, entity.getId(), Constants.IS_ACTIVE);
-                    if (billTablesEntity != null) {
-                        billTablesEntity.setIsActive(Constants.IS_NOT_ACTIVE);
-                        billTablesEntity.setUpdateDate(new Date());
-                        billTablesEntity.setUpdateUserId(request.getCreateUserId());
-                        billTablesRepositoryJPA.save(billTablesEntity);
-                    }
-                }
-            }
 
             firestoreBillManagement.updateBill(entity.getId());
             return true;
@@ -536,8 +524,8 @@ public class BillServiceImpl implements BillService {
                 BillTablesEntity billTablesEntity = billTablesRepositoryJPA.findByTableIdAndBillIdAndIsActive(tableId, billId, Constants.IS_ACTIVE);
                 if (billTablesEntity == null) {
                     addBillTables(billId, userId, tableId);
-                    shopTableService.updateShopTableStatus(userId, tableId, Constants.TABLE_STATUS_IN_USE);
                 }
+                shopTableService.updateShopTableStatus(userId, tableId, Constants.TABLE_STATUS_IN_USE);
             }
 
             //xoa ban ko chọn
@@ -548,6 +536,7 @@ public class BillServiceImpl implements BillService {
                 for (Integer tableId : tableIds) {
                     if (tableId.equals(billTableId)) {
                         isExist = true;
+                        break;
                     }
                 }
 
