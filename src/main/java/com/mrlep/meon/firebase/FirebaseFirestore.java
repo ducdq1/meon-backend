@@ -20,9 +20,16 @@ import com.google.api.core.ApiFuture;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.*;
 import com.google.common.collect.ImmutableMap;
+import com.google.gson.Gson;
+import com.mrlep.meon.dto.object.BillTablesItem;
+import com.mrlep.meon.dto.response.DetailBillResponse;
+import com.mrlep.meon.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -190,10 +197,64 @@ public class FirebaseFirestore {
      */
     public static void main(String[] args) throws Exception {
         // default project is will be used if project-id argument is not available
-        String projectId = (args.length == 0) ? null : args[0];
+       /* String projectId = (args.length == 0) ? null : args[0];
         FirebaseFirestore quickStart = (projectId != null) ? new FirebaseFirestore() : new FirebaseFirestore();
         quickStart.run();
-        quickStart.close();
+        quickStart.close();*/
+
+        ClassPathResource resource = new ClassPathResource("serviceAccountKey.json");
+        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(new File("D:\\DATA\\DU_AN\\MeOn\\f0_management\\src\\main\\resources\\serviceAccountKey.json")));
+        FirestoreOptions firestoreOptions =
+                FirestoreOptions.getDefaultInstance().toBuilder()
+                        .setCredentials(credentials)
+                        .build();
+
+        Firestore db = firestoreOptions.getService();
+
+//        Firestore db = FirebaseFirestore.getDb();
+
+        DetailBillResponse response = new DetailBillResponse();
+        for (int i = 200; i < 400; i++) {
+            response.setShopId(5);
+            response.setBillName("BillName "+i);
+            response.setShopName("billName");
+            response.setTotalMoney(100000+i);
+            response.setBillStatus(1);
+
+            DocumentReference docRef = db.collection("BILLS").document(i+"");
+            docRef.set(response);
+        }
+
+
+    }
+
+
+    public static void createBills(DetailBillResponse response) throws Exception {
+        // default project is will be used if project-id argument is not available
+       /* String projectId = (args.length == 0) ? null : args[0];
+        FirebaseFirestore quickStart = (projectId != null) ? new FirebaseFirestore() : new FirebaseFirestore();
+        quickStart.run();
+        quickStart.close();*/
+
+        ClassPathResource resource = new ClassPathResource("serviceAccountKey.json");
+        GoogleCredentials credentials = GoogleCredentials.fromStream(new FileInputStream(new File("D:\\DATA\\DU_AN\\MeOn\\f0_management\\src\\main\\resources\\serviceAccountKey.json")));
+        FirestoreOptions firestoreOptions =
+                FirestoreOptions.getDefaultInstance().toBuilder()
+                        .setCredentials(credentials)
+                        .build();
+
+        Firestore db = firestoreOptions.getService();
+
+//        Firestore db = FirebaseFirestore.getDb();
+
+        for (int i = 200; i < 400; i++) {
+            response.setBillId(i);
+            DocumentReference docRef1 = db.collection("BILLS").document(i+"");
+            //docRef1.set(response);
+            docRef1.delete();
+        }
+
+
     }
 
     /**

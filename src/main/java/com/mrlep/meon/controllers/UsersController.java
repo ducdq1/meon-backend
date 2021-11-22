@@ -1,8 +1,13 @@
 package com.mrlep.meon.controllers;
 
+import com.google.cloud.firestore.Firestore;
 import com.mrlep.meon.dto.request.LoginRequest;
 import com.mrlep.meon.dto.request.RegisterRequest;
 import com.mrlep.meon.dto.request.VerifyOTPRequest;
+import com.mrlep.meon.dto.response.DetailBillResponse;
+import com.mrlep.meon.firebase.FirebaseFirestore;
+import com.mrlep.meon.firebase.FirestoreBillManagement;
+import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.tables.entities.UsersEntity;
 import com.mrlep.meon.services.UsersService;
 import com.mrlep.meon.utils.FnCommon;
@@ -35,6 +40,8 @@ public class UsersController {
 
     @Autowired
     HttpServletRequest request;
+    @Autowired
+    BillRepository billRepository;
 
     @PostMapping(value = "/otp",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getCovidPatientFs(@RequestBody LoginRequest request) {
