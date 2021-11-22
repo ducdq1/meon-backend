@@ -4,7 +4,15 @@ public  class Notification {
     String title;
     String body;
     String sound = "default";
+    boolean alert = true;
 
+    public boolean isAlert() {
+        return alert;
+    }
+
+    public void setAlert(boolean alert) {
+        this.alert = alert;
+    }
 
     public String getTitle() {
         return title;

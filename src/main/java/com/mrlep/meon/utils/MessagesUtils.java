@@ -26,4 +26,14 @@ public class MessagesUtils {
 			return "";
 		}
 	}
+
+	public static String getMessageVi(String msgCode) {
+		try {
+			return messageSource.getMessage(msgCode, null, new Locale("vi"));
+		} catch (Exception e) {
+			LoggingUtils.logVTMException(e);
+			return "";
+		}
+	}
+
 }

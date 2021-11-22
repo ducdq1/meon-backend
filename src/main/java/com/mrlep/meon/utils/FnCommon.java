@@ -709,16 +709,16 @@ public class FnCommon extends FunctionCommon {
     public static String getBillStatusString(Integer status) {
         switch (status) {
             case Constants.BILL_STATUS_PROGRESS:
-                return MessagesUtils.getMessage("bill.status.progress");
+                return MessagesUtils.getMessageVi("bill.status.progress");
 
             case Constants.BILL_STATUS_ACCEPTED:
-                return MessagesUtils.getMessage("bill.status.accept");
+                return MessagesUtils.getMessageVi("bill.status.accept");
 
             case Constants.BILL_STATUS_CANCEL:
-                return MessagesUtils.getMessage("bill.status.cancel");
+                return MessagesUtils.getMessageVi("bill.status.cancel");
 
             case Constants.BILL_STATUS_DONE:
-                return MessagesUtils.getMessage("bill.status.done");
+                return MessagesUtils.getMessageVi("bill.status.done");
             default:
                 return "";
 
@@ -728,19 +728,19 @@ public class FnCommon extends FunctionCommon {
     public static String getOrderStatusString(Integer status) {
         switch (status) {
             case Constants.ORDER_ITEM_STATUS_PROGRESS:
-                return MessagesUtils.getMessage("bill.status.progress");
+                return MessagesUtils.getMessageVi("bill.status.progress");
 
             case Constants.ORDER_ITEM_STATUS_REJECT:
-                return MessagesUtils.getMessage("bill.status.reject");
+                return MessagesUtils.getMessageVi("bill.status.reject");
 
             case Constants.ORDER_ITEM_STATUS_CANCEL:
-                return MessagesUtils.getMessage("bill.status.cancel");
+                return MessagesUtils.getMessageVi("bill.status.cancel");
 
             case Constants.ORDER_ITEM_STATUS_DONE:
-                return MessagesUtils.getMessage("bill.status.done");
+                return MessagesUtils.getMessageVi("bill.status.done");
 
             case Constants.ORDER_ITEM_STATUS_RECONFIRM:
-                return MessagesUtils.getMessage("bill.status.reconfirm");
+                return MessagesUtils.getMessageVi("bill.status.reconfirm");
             default:
                 return "";
 
