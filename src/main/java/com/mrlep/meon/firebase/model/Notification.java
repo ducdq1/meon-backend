@@ -1,6 +1,6 @@
 package com.mrlep.meon.firebase.model;
 
-public  class Notification {
+public class Notification {
     String title;
     String body;
     String sound = "default";
