@@ -39,7 +39,9 @@ public class ExportExcel {
             OrderItem orderItem = new OrderItem();
             orderItem.setMenuName("Cá hồi");
             orderItem.setPrice(10000);
-
+            orderItem.setAmount(10.0);
+            orderItem.setDiscountType(1);
+            orderItem.setDiscountValue(10.0);
 
             writeDate( workbook,  billItem);
             String fileName = "HOA_DON_" + new Date().getTime() / 1000 + ".xlsx";

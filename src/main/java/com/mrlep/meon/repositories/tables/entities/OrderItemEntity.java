@@ -50,6 +50,9 @@ public class OrderItemEntity implements Serializable {
     @Column(name = "MONEY")
     Integer money;
 
+    @Column(name = "DISCOUNT_MONEY")
+    Integer discountMoney;
+
     @Column(name = "PRICE")
     Integer price;
 
@@ -267,5 +270,13 @@ public class OrderItemEntity implements Serializable {
 
     public void setDiscountValue(Double discountValue) {
         this.discountValue = discountValue;
+    }
+
+    public Integer getDiscountMoney() {
+        return discountMoney;
+    }
+
+    public void setDiscountMoney(Integer discountMoney) {
+        this.discountMoney = discountMoney;
     }
 }

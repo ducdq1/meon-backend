@@ -11,11 +11,15 @@ public class Data {
     String type;
     String sender;
     String click_action = "FLUTTER_NOTIFICATION_CLICK";
+    Integer billStatus;
+    String billName;
 
-    public Data(Integer id, String type, String sender) {
+    public Data(Integer id, String type, String sender,Integer billStatus,String billName) {
         this.id = id;
         this.type = type;
         this.sender = sender;
+        this.billStatus = billStatus;
+        this.billName = billName;
     }
 
     public Integer getId() {
@@ -48,5 +52,21 @@ public class Data {
 
     public void setClick_action(String click_action) {
         this.click_action = click_action;
+    }
+
+    public Integer getBillStatus() {
+        return billStatus;
+    }
+
+    public void setBillStatus(Integer billStatus) {
+        this.billStatus = billStatus;
+    }
+
+    public String getBillName() {
+        return billName;
+    }
+
+    public void setBillName(String billName) {
+        this.billName = billName;
     }
 }

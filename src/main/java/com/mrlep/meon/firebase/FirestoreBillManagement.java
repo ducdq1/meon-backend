@@ -294,7 +294,7 @@ public class FirestoreBillManagement {
             message += ": " + description;
         }
 
-        sendNotificationToShop(new Data(billEntity.getId(), "BILL", usersEntity == null ? "" : usersEntity.getPhone()), billEntity.getShopId(), message);
+        sendNotificationToShop(new Data(billEntity.getId(), "BILL", usersEntity == null ? "" : usersEntity.getPhone(),billEntity.getStatus(),billEntity.getName()), billEntity.getShopId(), message);
     }
 
     private void sendOrderStatusNotification(OrderItem orderItem, Integer updateUserId) {
@@ -324,7 +324,7 @@ public class FirestoreBillManagement {
                 message += ": " + description;
             }
             UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(updateUserId, Constants.IS_ACTIVE);
-            sendNotificationToShop(new Data(orderItem.getId(), "ORDER", usersEntity == null ? "" : usersEntity.getPhone()), orderItem.getShopId(), message);
+            sendNotificationToShop(new Data(orderItem.getId(), "ORDER", usersEntity == null ? "" : usersEntity.getPhone(),null,null), orderItem.getShopId(), message);
         }
     }
 

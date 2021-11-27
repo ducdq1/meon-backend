@@ -134,10 +134,12 @@ public class OrderItemlServiceImpl implements OrderItemService {
         int totalMoney = (int) (priceMenu * amount);
         if (entity.getDiscountValue() != null) {
             if (entity.getDiscountType() == Constants.DISCOUNT_TYPE_MONEY) {
-                totalMoney = (int) (totalMoney - entity.getDiscountValue());
+                totalMoney = (int) (totalMoney - (entity.getDiscountValue() == null ? 0 : entity.getDiscountValue()));
+                entity.setDiscountMoney(entity.getDiscountValue() == null ? 0 : entity.getDiscountValue().intValue());
             } else {
                 int discountMoney = (int) (priceMenu * (entity.getDiscountValue() / 100) * amount);
                 totalMoney = totalMoney - discountMoney;
+                entity.setDiscountMoney(discountMoney);
             }
         }
         entity.setMoney(totalMoney);
@@ -197,16 +199,16 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
         OrderItemEntity entity = orderItemRepositoryJPA.findByIdIsAndIsActive(request.getOrderItemId(), Constants.IS_ACTIVE);
         if (entity != null) {
-                request.setPrice(entity.getPrice());
-                validateAddOrderItem(request);
+            request.setPrice(entity.getPrice());
+            validateAddOrderItem(request);
 
-                entity.setUpdateUserId(request.getCreateUserId());
-                entity.setAmount(request.getAmount());
-                updateTotalMoney(entity);
-                orderItemRepositoryJPA.save(entity);
-                billService.updateBillInfo(request.getCreateUserId(), entity.getBillId());
-                firestoreBillManagement.updateOrderItem(entity.getId(), request.getCreateUserId());
-                return true;
+            entity.setUpdateUserId(request.getCreateUserId());
+            entity.setAmount(request.getAmount());
+            updateTotalMoney(entity);
+            orderItemRepositoryJPA.save(entity);
+            billService.updateBillInfo(request.getCreateUserId(), entity.getBillId());
+            firestoreBillManagement.updateOrderItem(entity.getId(), request.getCreateUserId());
+            return true;
         } else {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
@@ -233,6 +235,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 if (cancelMessage != null) {
                     entity.setCancelMessage(cancelMessage);
                 }
+
                 if (reconfirmMessage != null) {
                     entity.setReconfirms(reconfirmMessage);
                 }
