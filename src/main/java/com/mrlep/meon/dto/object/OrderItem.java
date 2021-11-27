@@ -15,6 +15,7 @@ public class OrderItem {
     String billName;
     Integer billId;
     String cancelMessage;
+    Integer billStatus;
     Integer status;
     Double amount;
     Integer money;
@@ -238,5 +239,13 @@ public class OrderItem {
 
     public void setDiscountType(Integer discountType) {
         this.discountType = discountType;
+    }
+
+    public Integer getBillStatus() {
+        return billStatus;
+    }
+
+    public void setBillStatus(Integer billStatus) {
+        this.billStatus = billStatus;
     }
 }
