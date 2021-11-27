@@ -26,7 +26,7 @@ public class DateUtility {
 
     public static final String DATETIME_FORMAT_STR = "dd/MM/yyyy HH:mm";
     public static final String DATETIME_FORMAT_Z = "dd/MM/yyyy HH:mm z";
-
+    public static final String DATE_TIME_FORMAT_STR = "dd-MM-yyyy HH:mm";
     /**
      * The Constant SECOND.
      */

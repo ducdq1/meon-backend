@@ -19,10 +19,7 @@ import com.mrlep.meon.repositories.tables.entities.BillEntity;
 import com.mrlep.meon.repositories.tables.entities.MenuOptionEntity;
 import com.mrlep.meon.repositories.tables.entities.UsersEntity;
 import com.mrlep.meon.services.OrderItemService;
-import com.mrlep.meon.utils.Constants;
-import com.mrlep.meon.utils.FnCommon;
-import com.mrlep.meon.utils.KThreadPoolExecutor;
-import com.mrlep.meon.utils.StringUtils;
+import com.mrlep.meon.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -294,7 +291,8 @@ public class FirestoreBillManagement {
             message += ": " + description;
         }
 
-        sendNotificationToShop(new Data(billEntity.getId(), "BILL", usersEntity == null ? "" : usersEntity.getPhone(),billEntity.getStatus(),billEntity.getName()), billEntity.getShopId(), message);
+        String createDate = DateUtility.getDateStringFormat(billEntity.getCreateDate(),DateUtility.DATE_TIME_FORMAT_STR);
+        sendNotificationToShop(new Data(billEntity.getId(), "BILL", usersEntity == null ? "" : usersEntity.getPhone(),billEntity.getStatus(),billEntity.getName(),createDate), billEntity.getShopId(), message);
     }
 
     private void sendOrderStatusNotification(OrderItem orderItem, Integer updateUserId) {
@@ -324,7 +322,7 @@ public class FirestoreBillManagement {
                 message += ": " + description;
             }
             UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(updateUserId, Constants.IS_ACTIVE);
-            sendNotificationToShop(new Data(orderItem.getId(), "ORDER", usersEntity == null ? "" : usersEntity.getPhone(),null,null), orderItem.getShopId(), message);
+            sendNotificationToShop(new Data(orderItem.getId(), "ORDER", usersEntity == null ? "" : usersEntity.getPhone(),null,null,null), orderItem.getShopId(), message);
         }
     }
 

@@ -13,13 +13,15 @@ public class Data {
     String click_action = "FLUTTER_NOTIFICATION_CLICK";
     Integer billStatus;
     String billName;
+    String createDate;
 
-    public Data(Integer id, String type, String sender,Integer billStatus,String billName) {
+    public Data(Integer id, String type, String sender,Integer billStatus,String billName,String createDate) {
         this.id = id;
         this.type = type;
         this.sender = sender;
         this.billStatus = billStatus;
         this.billName = billName;
+        this.createDate = createDate;
     }
 
     public Integer getId() {
@@ -68,5 +70,13 @@ public class Data {
 
     public void setBillName(String billName) {
         this.billName = billName;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
     }
 }
