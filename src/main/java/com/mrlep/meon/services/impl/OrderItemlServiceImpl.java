@@ -91,7 +91,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
         orderItemRepositoryJPA.save(entity);
         billService.updateBillInfo(request.getCreateUserId(), entity.getBillId());
-        firestoreBillManagement.updateOrderItem(entity.getId(),request.getCreateUserId());
+        firestoreBillManagement.updateOrderItem(entity.getId(), request.getCreateUserId());
 
         menusRepositoryJPA.updateOrderNumber(request.getMenuId());
 
@@ -123,19 +123,24 @@ public class OrderItemlServiceImpl implements OrderItemService {
         Integer priceMenu = getPriceOfMenu(menuEntity, request.getMenuOptionIds());
         entity.setPrice(priceMenu);
 
-        int totalMoney = (int) (priceMenu * request.getAmount());
-        if (menuEntity.getDiscountValue() != null) {
+        updateTotalMoney(entity);
+
+        return entity;
+    }
+
+    private void updateTotalMoney(OrderItemEntity entity) {
+        Integer priceMenu = entity.getPrice();
+        Double amount = entity.getAmount();
+        int totalMoney = (int) (priceMenu * amount);
+        if (entity.getDiscountValue() != null) {
             if (entity.getDiscountType() == Constants.DISCOUNT_TYPE_MONEY) {
-                totalMoney = (int) (totalMoney - menuEntity.getDiscountValue());
+                totalMoney = (int) (totalMoney - entity.getDiscountValue());
             } else {
-                int discountMoney = (int) (priceMenu * (menuEntity.getDiscountValue() / 100) * request.getAmount());
+                int discountMoney = (int) (priceMenu * (entity.getDiscountValue() / 100) * amount);
                 totalMoney = totalMoney - discountMoney;
             }
         }
-
         entity.setMoney(totalMoney);
-
-        return entity;
     }
 
     private Integer getPriceOfMenu(MenuEntity menuEntity, String menuOptionIds) {
@@ -175,7 +180,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
                 orderItemRepositoryJPA.save(entity);
                 billService.updateBillInfo(request.getCreateUserId(), entity.getBillId());
-                firestoreBillManagement.updateOrderItem(entity.getId(),request.getCreateUserId());
+                firestoreBillManagement.updateOrderItem(entity.getId(), request.getCreateUserId());
                 return true;
             } else {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
@@ -184,6 +189,31 @@ public class OrderItemlServiceImpl implements OrderItemService {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
+    }
+
+    @Override
+    public Object updateOrderItemAmount(AddOrderItemRequest request) throws TeleCareException {
+        validateService.validateBillMember(request.getBillId(), request.getCreateUserId(), request.getStaffId());
+
+        OrderItemEntity entity = orderItemRepositoryJPA.findByIdIsAndIsActive(request.getOrderItemId(), Constants.IS_ACTIVE);
+        if (entity != null) {
+            if (entity.getStatus() != Constants.ORDER_ITEM_STATUS_DELIVERED) {
+                request.setPrice(entity.getPrice());
+                validateAddOrderItem(request);
+
+                entity.setUpdateUserId(request.getCreateUserId());
+                entity.setAmount(request.getAmount());
+                updateTotalMoney(entity);
+                orderItemRepositoryJPA.save(entity);
+                billService.updateBillInfo(request.getCreateUserId(), entity.getBillId());
+                firestoreBillManagement.updateOrderItem(entity.getId(), request.getCreateUserId());
+                return true;
+            } else {
+                throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+            }
+        } else {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
     }
 
     @Override
@@ -213,7 +243,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
                 orderItemRepositoryJPA.save(entity);
                 billService.updateBillInfo(userId, entity.getBillId());
-                firestoreBillManagement.updateOrderItem(entity.getId(),userId);
+                firestoreBillManagement.updateOrderItem(entity.getId(), userId);
                 return true;
             } else {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());

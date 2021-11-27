@@ -62,6 +62,26 @@ public class OrderItemsController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
+    @PutMapping(value = "/amount/{orderItemId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> updateOrderItemAmount(@RequestBody AddOrderItemRequest request, @PathVariable Integer orderItemId, @AuthenticationPrincipal Authentication authentication) {
+        Object result;
+        try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            request.setCreateUserId(userId);
+            request.setOrderItemId(orderItemId);
+            result = orderItemService.updateOrderItemAmount(request);
+        } catch (TeleCareException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+
     @PutMapping(value = "/{orderItemId}/status", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updateOrderItemStatus(@PathVariable Integer orderItemId, @RequestBody UpdateStatusRequest request, @AuthenticationPrincipal Authentication authentication) {
         Object result;

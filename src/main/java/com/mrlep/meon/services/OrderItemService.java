@@ -11,6 +11,7 @@ public interface OrderItemService {
     Object getOrderItemsByBill(Integer billId) throws TeleCareException;
     Object addOrderItem(AddOrderItemRequest request) throws TeleCareException;
     Object updateOrderItem(AddOrderItemRequest request) throws TeleCareException;
+    Object updateOrderItemAmount(AddOrderItemRequest request) throws TeleCareException;
     Object updateOrderItemStatus(Integer userId, Integer orderItemId, UpdateStatusRequest request) throws TeleCareException;
     Object deleteOrderItem(Integer orderItemId, Integer userId) throws TeleCareException;
     Object getDetailOrderItems(Integer orderItemId) throws TeleCareException;

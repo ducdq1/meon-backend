@@ -20,6 +20,7 @@ public class BillItem {
     String shopName;
     String shopAvatar;
     String shopAddress;
+    String shopPhone;
     Integer shopId;
     Double vat;
     Integer vatMoney;
@@ -176,7 +177,15 @@ public class BillItem {
         return subMoney;
     }
 
-    public void setSubMoney(Integer subMoney) {
+   public void setSubMoney(Integer subMoney) {
         this.subMoney = subMoney;
+    }
+
+    public String getShopPhone() {
+        return shopPhone;
+    }
+
+    public void setShopPhone(String shopPhone) {
+        this.shopPhone = shopPhone;
     }
 }
