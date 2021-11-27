@@ -197,7 +197,6 @@ public class OrderItemlServiceImpl implements OrderItemService {
 
         OrderItemEntity entity = orderItemRepositoryJPA.findByIdIsAndIsActive(request.getOrderItemId(), Constants.IS_ACTIVE);
         if (entity != null) {
-            if (entity.getStatus() != Constants.ORDER_ITEM_STATUS_DELIVERED) {
                 request.setPrice(entity.getPrice());
                 validateAddOrderItem(request);
 
@@ -208,9 +207,6 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 billService.updateBillInfo(request.getCreateUserId(), entity.getBillId());
                 firestoreBillManagement.updateOrderItem(entity.getId(), request.getCreateUserId());
                 return true;
-            } else {
-                throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
-            }
         } else {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
