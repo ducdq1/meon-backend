@@ -8,14 +8,17 @@ import com.mrlep.meon.services.BillService;
 import com.mrlep.meon.utils.FnCommon;
 import com.mrlep.meon.utils.TeleCareException;
 import com.mrlep.meon.xlibrary.core.constants.FunctionCommon;
+import io.jsonwebtoken.lang.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -67,11 +70,13 @@ public class BillController {
     @PutMapping(value = "/status/{billId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updateTableStatus(@PathVariable Integer billId, @RequestBody UpdateStatusRequest request,
                                                     @AuthenticationPrincipal Authentication authentication,
-                                                    @RequestHeader(value = "permissions") List<String> permissions) {
+                                                    @RequestHeader(value = "permissions",defaultValue = "") String permissions) {
         Object result;
         try {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
-            result = billService.updateBillStatus(userId, billId, permissions, request);
+            String [] ps = permissions.split(";");
+            List<String> listPermissions = Arrays.asList(ps);
+            result = billService.updateBillStatus(userId, billId, listPermissions, request);
         } catch (TeleCareException e) {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
