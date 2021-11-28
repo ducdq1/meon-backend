@@ -26,6 +26,9 @@ public class ConfigValue {
     @Value("${config.export.path.file}")
     private String exportFilePath;
 
+    @Value("${config.root.path}")
+    private String rootPath;
+
     @PostConstruct
     private void initSupportFileTypes() {
         this.mapFileSupportTypes = Arrays.asList(fileSupportTypes);
@@ -77,5 +80,13 @@ public class ConfigValue {
 
     public void setExportFilePath(String exportFilePath) {
         this.exportFilePath = exportFilePath;
+    }
+
+    public String getRootPath() {
+        return rootPath;
+    }
+
+    public void setRootPath(String rootPath) {
+        this.rootPath = rootPath;
     }
 }

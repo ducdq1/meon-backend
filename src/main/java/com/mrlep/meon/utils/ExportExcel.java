@@ -64,21 +64,29 @@ public class ExportExcel {
             workbook.removeSheetAt(1);
 
             String fileName = "HOA_DON_" + new Date().getTime() / 1000 + ".xlsx";
-            String filePath = configValue.getExportFilePath() + File.separator + billItem.getShopId().toString() + File.separator + (new Date().getYear() + 1900) + File.separator + (new Date().getMonth() + 1);
+            String rootFolder = configValue.getRootPath();
+            String staticFolder = configValue.getExportFilePath();
 
-            if (!Files.exists(Paths.get(filePath))) {
-                Files.createDirectories(Paths.get(filePath));
+            String filePath = File.separator + billItem.getShopId().toString() + File.separator + (new Date().getYear() + 1900) + File.separator + (new Date().getMonth() + 1);
+            String excelFilePath = rootFolder + staticFolder + filePath;
+
+            if (!Files.exists(Paths.get(excelFilePath))) {
+                Files.createDirectories(Paths.get(excelFilePath));
             }
 
-            String exportFilePath = filePath + File.separatorChar + fileName;
+            String exportFilePath = excelFilePath + File.separatorChar + fileName;
 
             FileOutputStream fileOut = new FileOutputStream(exportFilePath);
             workbook.write(fileOut);
 
             fileOut.close();
             String finalFilePath = convertToPdf(exportFilePath, filePath);
-            System.out.println("Export bill done....: " + finalFilePath);
-            return finalFilePath;
+            if (finalFilePath != null) {
+                System.out.println("Export bill done....: " + finalFilePath);
+                return (staticFolder + filePath).replace(".xlsx", ".pdf");
+            }
+
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -159,36 +167,29 @@ public class ExportExcel {
 
         String filePathOut = pathInput.replace(".xlsx", ".pdf");
 
-        String command = "/usr/bin/soffice --headless --convert-to pdf --outdir";
+        String command = "/usr/bin/soffice --headless --convert-to pdf --outdir " + folder + " " + pathInput;
 
         String osName = System.getProperty("os.name");
         String[] params;
-
-        if (osName.toLowerCase().contains("window")) {
-            command = "D:\\DATA\\temp\\OfficeToPDF.exe";
-            params = new String[3];
-            params[0] = command;
-            params[1] = pathInput;
-            params[2] = filePathOut;
-        } else {
-            params = new String[3];
-            params[0] = command;
-            params[1] = folder;
-            params[2] = pathInput;
-        }
-
-        System.out.println("Export PDF Command:  " + command);
-
         try {
-            ProcessBuilder pb = new ProcessBuilder("/root/MeOn/export_dpf.sh", folder, pathInput);
-            Process p = pb.start();
-            p.waitFor();
+            if (osName.toLowerCase().contains("window")) {
+                command = "D:\\DATA\\temp\\OfficeToPDF.exe";
+                params = new String[3];
+                params[0] = command;
+                params[1] = pathInput;
+                params[2] = filePathOut;
+                Runtime.getRuntime().exec(params).waitFor();
+            } else {
+                System.out.println("Export PDF Command:  " + command);
+                ProcessBuilder pb = new ProcessBuilder("/root/MeOn/export_dpf.sh", folder, pathInput);
+                Process p = pb.start();
+                p.waitFor();
+            }
 
-            //Runtime.getRuntime().exec(params).waitFor();
             try {
                 File f = new File(pathInput);
                 if (f.exists()) {
-                    //f.delete();
+                    f.delete();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
