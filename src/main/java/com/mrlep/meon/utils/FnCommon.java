@@ -757,4 +757,10 @@ public class FnCommon extends FunctionCommon {
 
         }
     }
+
+    public static String formatNumber(Number number) {
+        String pattern = "###,###,###.####";
+        return StringUtils.formatNumber(pattern, number, true);
+    }
+
 }

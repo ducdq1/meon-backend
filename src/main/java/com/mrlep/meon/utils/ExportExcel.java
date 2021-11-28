@@ -3,6 +3,7 @@ package com.mrlep.meon.utils;
 import com.mrlep.meon.dto.object.BillItem;
 import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.dto.response.DetailBillResponse;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -42,13 +43,25 @@ public class ExportExcel {
             orderItem.setAmount(10.0);
             orderItem.setDiscountType(1);
             orderItem.setDiscountValue(10.0);
+            orderItem.setDiscountMoney(1000);
+            orderItem.setMoney(10000000);
 
-            writeDate( workbook,  billItem);
+            orderItems.add(orderItem);
+            orderItems.add(orderItem);
+            orderItems.add(orderItem);
+            orderItems.add(orderItem);
+            orderItems.add(orderItem);
+            orderItems.add(orderItem);
+
+            writeDate(workbook, billItem, orderItems);
+            workbook.removeSheetAt(1);
+
             String fileName = "HOA_DON_" + new Date().getTime() / 1000 + ".xlsx";
             String filePath = "D:\\DATA\\temp" + File.separatorChar + fileName;
 
             FileOutputStream fileOut = new FileOutputStream(filePath);
             workbook.write(fileOut);
+
             fileOut.close();
             System.out.println("Export bill done....");
         } catch (Exception e) {
@@ -56,15 +69,8 @@ public class ExportExcel {
         }
     }
 
-    private static void writeDate(XSSFWorkbook workbook, DetailBillResponse billItem) {
+    private static void writeDate(XSSFWorkbook workbook, DetailBillResponse billItem, List<OrderItem> orderItems) {
         XSSFSheet sheet = workbook.getSheet("Sheet1");
-
-        XSSFRow cloneRow0 = workbook.getSheet("Sheet2").getRow(10);
-
-        XSSFRow row0 = null;
-        int countRow = 0;
-        int colNum = 0;
-        int countQuotation = 0;
 
         Font fontBold = workbook.getSheet("Sheet2").getRow(6).getCell(1).getCellStyle().getFont();
         Font fontNormal = workbook.getSheet("Sheet2").getRow(4).getCell(1).getCellStyle().getFont();
@@ -77,7 +83,7 @@ public class ExportExcel {
         sheet.getRow(2).getCell(0).setCellValue("Địa chỉ: " + billItem.getShopAddress() + (billItem.getShopPhone() != null ? (" - " + billItem.getShopPhone()) : ""));
 
         String KH = "Bàn: ";
-        XSSFRichTextString TEN_KH = new XSSFRichTextString(KH + String.join(", ",billItem.getTablesName()));
+        XSSFRichTextString TEN_KH = new XSSFRichTextString(KH + String.join(", ", billItem.getTablesName()));
         TEN_KH.applyFont(0, KH.length(), fontBold);
         TEN_KH.applyFont(KH.length(), TEN_KH.length(), fontNormal);
         sheet.getRow(4).getCell(1).setCellValue(TEN_KH);
@@ -89,8 +95,44 @@ public class ExportExcel {
         TIME_TEXT.applyFont(TIME.length(), TIME_TEXT.length(), fontNormal);
         sheet.getRow(4).getCell(4).setCellValue(TIME_TEXT);
 
+        XSSFRow cloneRow0 = workbook.getSheet("Sheet2").getRow(7);
+
+        XSSFRow row0 = null;
+        int colNum = 0;
+        int stt = 0;
+        int rowNum = 7;
+        for (OrderItem orderItem : orderItems) {
+            stt++;
+            colNum = 0;
+            sheet.shiftRows(rowNum, sheet.getLastRowNum(), 1);
+            row0 = createRow(rowNum, sheet, cloneRow0);
+            rowNum++;
+            createCell(colNum++, row0, cloneRow0.getCell(0).getCellStyle(), "" + stt);
+            createCell(colNum++, row0, cloneRow0.getCell(1).getCellStyle(), orderItem.getMenuName());
+            createCell(colNum++, row0, cloneRow0.getCell(2).getCellStyle(), FnCommon.formatNumber(orderItem.getAmount()));
+            createCell(colNum++, row0, cloneRow0.getCell(3).getCellStyle(), FnCommon.formatNumber(orderItem.getPrice()));
+            createCell(colNum++, row0, cloneRow0.getCell(4).getCellStyle(), FnCommon.formatNumber(orderItem.getDiscountMoney()));
+            createCell(colNum++, row0, cloneRow0.getCell(5).getCellStyle(), FnCommon.formatNumber(orderItem.getMoney()));
+        }
+
+
+        sheet.getRow(rowNum+3).getCell(5).setCellValue(FnCommon.formatNumber(billItem.getTotalMoney()));
+
 
     }
 
+    private static XSSFRow createRow(int rowNum, XSSFSheet sheet, XSSFRow cloneRow) {
+        XSSFRow row = sheet.createRow(rowNum);
+        row.setHeight(cloneRow.getHeight());
 
+        return row;
+    }
+
+    private static void createCell(int cellNum, XSSFRow row, CellStyle style, String content) {
+        row.createCell(cellNum).setCellValue(content == null ? "" : !content.equals(": null") ? content : ":");
+        row.getCell(cellNum).setCellStyle(style);
+        row.getCell(cellNum).setCellStyle(style);
+
+
+    }
 }

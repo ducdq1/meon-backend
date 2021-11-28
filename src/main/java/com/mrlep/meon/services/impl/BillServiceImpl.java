@@ -94,6 +94,14 @@ public class BillServiceImpl implements BillService {
     private ShopTableRepository shopTableRepository;
 
     private void validateCreateBill(CreateBillRequest request) throws TeleCareException {
+        if (request.getIsCreateByStaff() != null && request.getIsCreateByStaff() == 1) {
+            Integer userId = request.getCreateUserId();
+            StaffEntity staffEntity = staffRepositoryJPA.getByUserIdAndShopIdAndIsActive(userId, request.getShopId(), Constants.IS_ACTIVE);
+            if (staffEntity == null) {
+                throw new TeleCareException(ErrorApp.ERR_USER_NOT_PERMISSION, MessagesUtils.getMessage("message.error.bill.member.invalid"), ErrorApp.ERR_USER_NOT_PERMISSION.getCode());
+            }
+        }
+
         if (request.getTableIds() != null && !request.getTableIds().isEmpty()) {
             for (Integer tableId : request.getTableIds()) {
                 Integer countTableAndBill;
@@ -111,6 +119,7 @@ public class BillServiceImpl implements BillService {
         } else {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.no.table"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
+
     }
 
     @Override
@@ -253,7 +262,7 @@ public class BillServiceImpl implements BillService {
     private void addBillTables(Integer billId, Integer userId, Integer tableId) throws TeleCareException {
         //luu ban
 
-        Integer countTableAndBill = billRepositoryJPA.checkExistBillAndTable(tableId,billId);
+        Integer countTableAndBill = billRepositoryJPA.checkExistBillAndTable(tableId, billId);
         if (countTableAndBill != null && countTableAndBill > 0) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.table.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }

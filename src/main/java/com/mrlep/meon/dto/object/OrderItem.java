@@ -32,6 +32,7 @@ public class OrderItem {
     private String discountDescription;
     private Double discountValue;
     private Integer discountType;
+    private Integer discountMoney;
 
     public Integer getMenuProcessType() {
         return menuProcessType;
@@ -247,5 +248,13 @@ public class OrderItem {
 
     public void setBillStatus(Integer billStatus) {
         this.billStatus = billStatus;
+    }
+
+    public Integer getDiscountMoney() {
+        return discountMoney;
+    }
+
+    public void setDiscountMoney(Integer discountMoney) {
+        this.discountMoney = discountMoney;
     }
 }
