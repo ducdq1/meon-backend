@@ -81,6 +81,9 @@ public class BillEntity implements Serializable {
     @Column(name = "is_create_by_staff")
     Integer isCreateByStaff;
 
+    @Column(name = "discount_money")
+    Integer discountMoney;
+
     public Integer getShopId() {
         return shopId;
     }
@@ -224,5 +227,13 @@ public class BillEntity implements Serializable {
 
     public void setVatMoney(Integer vatMoney) {
         this.vatMoney = vatMoney;
+    }
+
+    public Integer getDiscountMoney() {
+        return discountMoney;
+    }
+
+    public void setDiscountMoney(Integer discountMoney) {
+        this.discountMoney = discountMoney;
     }
 }

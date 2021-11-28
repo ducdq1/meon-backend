@@ -157,7 +157,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
                         price += menuOptionEntity.getPrice();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         }

@@ -123,6 +123,7 @@ public class FnCommon extends FunctionCommon {
         itemEntity.setCode(errorApp.getCode());
         itemEntity.setDescription(errorApp.getDescription());
         responseEntity.setMess(itemEntity);
+        System.out.println("ERROR: " + itemEntity.getDescription());
         return responseEntity;
     }
 
@@ -229,7 +230,7 @@ public class FnCommon extends FunctionCommon {
             return client.newCall(request).execute();
         } catch (Exception e) {
             LOGGER.error("Has error", e);
-            e.printStackTrace();
+
         }
         return null;
     }
@@ -424,7 +425,7 @@ public class FnCommon extends FunctionCommon {
             return client.newCall(request).execute();
         } catch (Exception e) {
             System.out.println("kiennb1=====request to " + url + " failed!!!");
-            e.printStackTrace();
+
             LOGGER.error("Has error", e);
         }
         return null;

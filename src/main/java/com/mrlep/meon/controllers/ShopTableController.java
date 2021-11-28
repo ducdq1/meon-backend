@@ -36,10 +36,10 @@ public class ShopTableController {
             result = shopTableService.createShopTable(request);
 
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -55,10 +55,10 @@ public class ShopTableController {
             request.setCreateUserId(userId);
             result = shopTableService.updateShopTable(request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -72,10 +72,10 @@ public class ShopTableController {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             result = shopTableService.updateShopTableStatus(userId, tableId, status);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -89,10 +89,10 @@ public class ShopTableController {
 
             result = shopTableService.getShopTables(shopId, areaId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -108,10 +108,10 @@ public class ShopTableController {
 
             result = shopTableService.getShopTablesByStatus(shopId, status, startRecord, pageSize);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -125,10 +125,10 @@ public class ShopTableController {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             result = shopTableService.deleteShopTable(tableId, userId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -142,10 +142,10 @@ public class ShopTableController {
 
             result = shopTableService.getTableDetail(id);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 

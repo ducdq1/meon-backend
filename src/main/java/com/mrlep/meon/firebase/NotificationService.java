@@ -50,18 +50,18 @@ public class NotificationService {
             System.out.println("FireBase response: " + response.getStatusLine().getStatusCode());
 
         } catch (Exception e) {
-            e.printStackTrace();
+
         } finally {
             try {
                 if (response != null)
                     response.close();
             } catch (IOException e) {
-                e.printStackTrace();
+
             }
             try {
                 httpClient.close();
             } catch (IOException e) {
-                e.printStackTrace();
+
             }
         }
     }

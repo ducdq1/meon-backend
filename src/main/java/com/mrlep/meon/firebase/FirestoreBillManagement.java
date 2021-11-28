@@ -125,7 +125,7 @@ public class FirestoreBillManagement {
                     }*/
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         }));
@@ -141,7 +141,7 @@ public class FirestoreBillManagement {
                     Firestore db = new FirebaseFirestore().getDb();
                     db.collection(ORDERS).document(orderItemId.toString()).delete();
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         }));
@@ -156,7 +156,7 @@ public class FirestoreBillManagement {
                     Firestore db = new FirebaseFirestore().getDb();
                     db.collection("BILLS").document(billId.toString()).delete();
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         }));
@@ -171,7 +171,7 @@ public class FirestoreBillManagement {
                     Firestore db = new FirebaseFirestore().getDb();
                     db.collection("BILLS").document(billId.toString()).collection("tables").document(tableId.toString()).delete();
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         }));
@@ -193,7 +193,7 @@ public class FirestoreBillManagement {
                     }
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         }));
@@ -218,7 +218,7 @@ public class FirestoreBillManagement {
 
                     sendOrderStatusNotification(orderItem, updateUserId);
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         }));
@@ -246,7 +246,7 @@ public class FirestoreBillManagement {
                         }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         }));
@@ -267,7 +267,7 @@ public class FirestoreBillManagement {
                         documentReference.set(orderItem);
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
             }
         }));

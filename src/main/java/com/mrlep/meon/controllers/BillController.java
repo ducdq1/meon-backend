@@ -35,10 +35,10 @@ public class BillController {
             result = billService.createBill(request);
 
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -54,10 +54,10 @@ public class BillController {
             request.setCreateUserId(userId);
             result = billService.updateBill(request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -73,10 +73,10 @@ public class BillController {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             result = billService.updateBillStatus(userId, billId, permissions, request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -90,10 +90,10 @@ public class BillController {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             result = billService.joinBill(billId, userId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -107,10 +107,10 @@ public class BillController {
             FnCommon.getUserIdFromToken(authentication);
             result = billService.joinBill(billId, userId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -126,10 +126,10 @@ public class BillController {
             request.setUserId(createUserId);
             result = billService.addBillMember(billId, request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -144,10 +144,10 @@ public class BillController {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             result = billService.addTableBill(billId, userId, tableIds);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -160,10 +160,10 @@ public class BillController {
         try {
             result = billService.getBillsByShop(shopId, request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -176,10 +176,10 @@ public class BillController {
         try {
             result = billService.getDetailBills(billId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -193,10 +193,10 @@ public class BillController {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             result = billService.getBillActiveByUser(userId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -210,10 +210,10 @@ public class BillController {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             result = billService.getBillByTable(shopId, tableId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -228,10 +228,10 @@ public class BillController {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             result = billService.deleteBill(billId, userId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -247,10 +247,10 @@ public class BillController {
             request.setUserId(userId);
             result = billService.searchBillUser(request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -263,10 +263,10 @@ public class BillController {
         try {
             result = billService.getBillMembers(billId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -281,10 +281,10 @@ public class BillController {
             request.setUserId(userId);
             result = billService.addMemberToBlackList(billId, request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 

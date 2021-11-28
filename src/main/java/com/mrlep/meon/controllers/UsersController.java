@@ -49,7 +49,7 @@ public class UsersController {
         try {
             result = usersService.getOTP(request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.getMessage();
@@ -65,10 +65,10 @@ public class UsersController {
         try {
             result = usersService.verifyOTP(request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -81,10 +81,10 @@ public class UsersController {
         try {
             result = usersService.login(request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -98,10 +98,10 @@ public class UsersController {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             result = usersService.logOut(userId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -115,10 +115,10 @@ public class UsersController {
         try {
             result = usersService.register(request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -132,10 +132,10 @@ public class UsersController {
             FnCommon.getUserIdFromToken(authentication);
             result = usersService.getUserByPhone(phoneNumber);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -150,10 +150,10 @@ public class UsersController {
             entity.setId(userID);
             result = usersService.updateUserInfo(entity);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -167,10 +167,10 @@ public class UsersController {
             Integer userID = FnCommon.getUserIdFromToken(authentication);
             result = usersService.updateUserDeviceToken(userID,deviceToken);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 

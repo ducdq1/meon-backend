@@ -31,10 +31,10 @@ public class StatisticsController {
             result = statisticsService.getStatisticsByShop(request);
 
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 

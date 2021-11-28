@@ -33,10 +33,10 @@ public class OrderItemsController {
             result = orderItemService.addOrderItem(request);
 
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -52,10 +52,10 @@ public class OrderItemsController {
             request.setOrderItemId(orderItemId);
             result = orderItemService.updateOrderItem(request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -71,10 +71,10 @@ public class OrderItemsController {
             request.setOrderItemId(orderItemId);
             result = orderItemService.updateOrderItemAmount(request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -89,10 +89,10 @@ public class OrderItemsController {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             result = orderItemService.updateOrderItemStatus(userId, orderItemId, request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -105,10 +105,10 @@ public class OrderItemsController {
         try {
             result = orderItemService.getOrderItemsByBill(billId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -122,10 +122,10 @@ public class OrderItemsController {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             result = orderItemService.deleteOrderItem(orderItemId, userId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -139,10 +139,10 @@ public class OrderItemsController {
             FnCommon.getUserIdFromToken(authentication);
             result = orderItemService.getDetailOrderItems(orderItemId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 

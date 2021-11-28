@@ -62,7 +62,7 @@ public class Base64Util implements MultipartFile {
 //			}
 //			return new Base64Util(b, baseStrs[0]);
 //		} catch (IOException e) {
-//			e.printStackTrace();
+//
 //			return null;
 //		}
 //	}

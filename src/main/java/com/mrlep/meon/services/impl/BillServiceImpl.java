@@ -353,9 +353,8 @@ public class BillServiceImpl implements BillService {
             entity.setUpdateDate(new Date());
             entity.setUpdateUserId(userId);
 
-            Integer totalMoney = getTotalMoney(entity.getId());
+            setTotalMoney(entity);
 
-            entity.setTotalMoney(totalMoney);
             updateBillMoney(entity);
             if (request.getSubMoney() != null) {
                 entity.setSubMoney(request.getSubMoney());
@@ -410,7 +409,7 @@ public class BillServiceImpl implements BillService {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.status"), ErrorApp.ERROR_INPUTPARAMS.getCode());
             }
 
-            entity.setTotalMoney(getTotalMoney(entity.getId()));
+            setTotalMoney(entity);
             updateBillMoney(entity);
 
             billRepositoryJPA.save(entity);
@@ -451,15 +450,19 @@ public class BillServiceImpl implements BillService {
     }
 
 
-    private Integer getTotalMoney(Integer billId) throws TeleCareException {
-        List<OrderItem> orderItemEntities = (List<OrderItem>) orderItemRepository.getOrderItemOfBill(billId);
+    private void setTotalMoney(BillEntity billEntity) throws TeleCareException {
+        List<OrderItem> orderItemEntities = (List<OrderItem>) orderItemRepository.getOrderItemOfBill(billEntity.getId());
         Integer totalMoney = 0;
+        Integer discountMoney = 0;
         for (OrderItem orderItemEntity : orderItemEntities) {
             if (FnCommon.validateOrderItemStatus(orderItemEntity.getStatus())) {
                 totalMoney += orderItemEntity.getMoney() == null ? 0 : orderItemEntity.getMoney();
+                discountMoney += orderItemEntity.getDiscountMoney() == null ? 0 : orderItemEntity.getDiscountMoney();
             }
         }
-        return totalMoney;
+
+        billEntity.setDiscountMoney(discountMoney);
+        billEntity.setTotalMoney(totalMoney);
     }
 
     @Override

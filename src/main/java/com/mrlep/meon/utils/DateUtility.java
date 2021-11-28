@@ -635,7 +635,7 @@ public class DateUtility {
             c.setTime(sdf.parse(strToDate));
         } catch (ParseException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+
         }
         c.add(Calendar.DATE, 1); // number of days to add
         String output = sdf.format(c.getTime()); // dt is now the new date
@@ -651,7 +651,7 @@ public class DateUtility {
             c.setTime(sdf.parse(strToDate));
         } catch (ParseException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+
         }
         c.add(Calendar.MINUTE, 1);  // number of days to add
         String output = sdf.format(c.getTime());  // dt is now the new date

@@ -214,7 +214,7 @@ public class NlpUtils {
                 words[i] = updateUpperState(correctVnAccentWord(words[i]), uppers);
             } catch (Exception e) {
                 LOGGER.info(e);
-                e.printStackTrace();
+
             }
         }
         return String.join(" ", words);

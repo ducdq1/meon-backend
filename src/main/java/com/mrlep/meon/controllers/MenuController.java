@@ -40,7 +40,7 @@ public class MenuController {
         try {
             result = menusService.getMenuGroups(shopId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.getMessage();
@@ -60,7 +60,7 @@ public class MenuController {
 
             result = menusService.createMenuGroup(request);
         }  catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             e.getMessage();
@@ -78,7 +78,7 @@ public class MenuController {
             request.setCreateUserId(userId);
             result = menusService.updateMenuGroup(menuGroupId, request);
         }  catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             e.getMessage();
@@ -95,7 +95,7 @@ public class MenuController {
 
             result = menusService.deleteMenuGroup(menuGroupId);
         }  catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             e.getMessage();
@@ -112,7 +112,7 @@ public class MenuController {
         try {
             result = menusService.getMenus(shopId, menuGroupId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.getMessage();
@@ -128,7 +128,7 @@ public class MenuController {
         try {
             result = menusService.getMenus(shopId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.getMessage();
@@ -144,7 +144,7 @@ public class MenuController {
         try {
             result = menusService.getMenuDetail(menuId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e),e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.getMessage();
@@ -163,7 +163,7 @@ public class MenuController {
             request.setCreateUserId(userId);
             result = menusService.createMenu(request);
         }  catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e),e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             e.getMessage();
@@ -181,7 +181,7 @@ public class MenuController {
             request.setCreateUserId(userId);
             result = menusService.updateMenu(menuId, request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.getMessage();
@@ -197,7 +197,7 @@ public class MenuController {
         try {
             result = menusService.deleteMenu(menuId);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
             e.getMessage();
@@ -214,7 +214,7 @@ public class MenuController {
         try {
             result = menusService.getRecommendMenus(request);
         } catch (TeleCareException e) {
-            e.printStackTrace();
+
             return new ResponseEntity<>(FnCommon.responseToClient(e),e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.getMessage();
