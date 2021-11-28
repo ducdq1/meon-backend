@@ -159,7 +159,7 @@ public class ExportExcel {
 
         String filePathOut = pathInput.replace(".xlsx", ".pdf");
 
-        String command = "libreoffice --headless --convert-to pdf " + pathInput;
+        String command = "libreoffice --headless --convert-to pdf";
 
         String osName = System.getProperty("os.name");
         String[] params;
@@ -171,8 +171,9 @@ public class ExportExcel {
             params[1] = pathInput;
             params[2] = filePathOut;
         } else {
-            params = new String[1];
+            params = new String[2];
             params[0] = command;
+            params[1] = pathInput;
         }
 
         try {
