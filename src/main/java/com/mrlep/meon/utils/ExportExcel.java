@@ -80,10 +80,11 @@ public class ExportExcel {
             workbook.write(fileOut);
 
             fileOut.close();
-            String finalFilePath = convertToPdf(exportFilePath, filePath);
-            if (finalFilePath != null) {
+            String pdfFilePath = convertToPdf(exportFilePath, filePath);
+            if (pdfFilePath != null) {
+                String finalFilePath = (staticFolder + filePath + + File.separatorChar + fileName ).replace(".xlsx", ".pdf");
                 System.out.println("Export bill done....: " + finalFilePath);
-                return (staticFolder + filePath).replace(".xlsx", ".pdf");
+                return finalFilePath;
             }
 
             return null;
