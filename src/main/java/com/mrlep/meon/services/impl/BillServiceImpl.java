@@ -379,11 +379,17 @@ public class BillServiceImpl implements BillService {
                         : Constants.ORDER_ITEM_STATUS_CANCEL;
                 orderItemRepositoryJPA.updateOrderItemStatus(entity.getId(), orderStatus);
                 firestoreBillManagement.updateOrderItemsStatus(billId);
+
+                //tao file export
+                if (status.intValue() == Constants.BILL_STATUS_DONE) {
+                    String billFile = exportExcel.exportBill(entity.getId());
+                    entity.setBillFile(billFile);
+                    billRepositoryJPA.save(entity);
+                }
+
             }
 
-            String billFile = exportExcel.exportBill(entity.getId());
-            entity.setBillFile(billFile);
-            billRepositoryJPA.save(entity);
+
             firestoreBillManagement.updateBill(entity.getId());
             firestoreBillManagement.sendBillStatusNotification(entity);
             return true;

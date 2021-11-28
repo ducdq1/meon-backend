@@ -5,6 +5,7 @@ import com.mrlep.meon.dto.object.BillMembersItem;
 import com.mrlep.meon.dto.object.BillTablesItem;
 import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.repositories.tables.entities.OrderItemEntity;
+import com.mrlep.meon.utils.Constants;
 import lombok.Data;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class DetailBillResponse {
     String subMoneyDescription;
     Integer subMoney;
     Integer preMoney;
+    String billFile;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     Integer numberMembers;
@@ -273,5 +275,16 @@ public class DetailBillResponse {
 
     public void setPreMoney(Integer preMoney) {
         this.preMoney = preMoney;
+    }
+
+    public String getBillFile() {
+        if (billFile != null) {
+            return Constants.DOMAIN + billFile;
+        }
+        return billFile;
+    }
+
+    public void setBillFile(String billFile) {
+        this.billFile = billFile;
     }
 }
