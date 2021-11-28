@@ -159,7 +159,7 @@ public class ExportExcel {
 
         String filePathOut = pathInput.replace(".xlsx", ".pdf");
 
-        String command = "/usr/bin/soffice --headless --convert-to pdf --outdir ";
+        String command = "/usr/bin/soffice --headless --convert-to pdf --outdir";
 
         String osName = System.getProperty("os.name");
         String[] params;
