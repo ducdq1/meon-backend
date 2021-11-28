@@ -29,6 +29,7 @@ public class DetailBillResponse {
     Integer vatMoney;
     String subMoneyDescription;
     Integer subMoney;
+    Integer preMoney;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     Integer numberMembers;
@@ -264,5 +265,13 @@ public class DetailBillResponse {
 
     public void setShopPhone(String shopPhone) {
         this.shopPhone = shopPhone;
+    }
+
+    public Integer getPreMoney() {
+        return preMoney;
+    }
+
+    public void setPreMoney(Integer preMoney) {
+        this.preMoney = preMoney;
     }
 }

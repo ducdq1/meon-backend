@@ -1,75 +1,92 @@
 package com.mrlep.meon.utils;
 
+import com.mrlep.meon.config.ConfigValue;
 import com.mrlep.meon.dto.object.BillItem;
+import com.mrlep.meon.dto.object.BillTablesItem;
 import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.dto.response.DetailBillResponse;
+import com.mrlep.meon.repositories.BillRepository;
+import com.mrlep.meon.repositories.OrderItemRepository;
+import com.mrlep.meon.repositories.ShopTableRepository;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Component
 public class ExportExcel {
+    @Autowired
+    private ConfigValue configValue;
 
-    public static void main(String args[]) {
+    @Autowired
+    private BillRepository billRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private ShopTableRepository shopTableRepository;
+
+    public String exportBill(Integer billId) {
         XSSFWorkbook workbook;
-        String path = "D:\\DATA\\HOA_DON.xlsx";
+        String path = configValue.getTemplateFilePath();
         InputStream fs;
         try {
             System.out.println("Start export bill");
             fs = new FileInputStream(path);
             workbook = new XSSFWorkbook(fs);
 
-            DetailBillResponse billItem = new DetailBillResponse();
-            billItem.setShopName("Quán A Hoàng");
-            billItem.setShopAddress("234 nguyễn văn linh");
-            billItem.setShopPhone("034555666");
-            billItem.setCreateDate("33/44/2021");
-            List<String> tableNames = new ArrayList<>();
-            tableNames.add("Bàn 01");
-            billItem.setTablesName(tableNames);
+            DetailBillResponse billItem = billRepository.getDetailBill(billId);
+            if (billItem == null) {
+                return null;
+            }
 
+            List<BillTablesItem> billTablesItems = shopTableRepository.getTableOfBill(billId);
+            List<String> tablesName = new ArrayList<>();
+            for (BillTablesItem billTablesItem : billTablesItems) {
+                tablesName.add(billTablesItem.getTableName());
+            }
 
-            List<OrderItem> orderItems = new ArrayList<>();
-            OrderItem orderItem = new OrderItem();
-            orderItem.setMenuName("Cá hồi");
-            orderItem.setPrice(10000);
-            orderItem.setAmount(10.0);
-            orderItem.setDiscountType(1);
-            orderItem.setDiscountValue(10.0);
-            orderItem.setDiscountMoney(1000);
-            orderItem.setMoney(10000000);
-
-            orderItems.add(orderItem);
-            orderItems.add(orderItem);
-            orderItems.add(orderItem);
-            orderItems.add(orderItem);
-            orderItems.add(orderItem);
-            orderItems.add(orderItem);
-
-            writeDate(workbook, billItem, orderItems);
+            billItem.setTablesName(tablesName);
+            List<OrderItem> orderItems = orderItemRepository.getOrderItemOfBill(billId);
+            writeData(workbook, billItem, orderItems);
             workbook.removeSheetAt(1);
 
             String fileName = "HOA_DON_" + new Date().getTime() / 1000 + ".xlsx";
-            String filePath = "D:\\DATA\\temp" + File.separatorChar + fileName;
+            String filePath = configValue.getExportFilePath() + File.separator + billItem.getShopId().toString() + File.separator + (new Date().getYear() + 1900) + File.separator + (new Date().getMonth() + 1);
+
+            if (!Files.exists(Paths.get(filePath))) {
+                Files.createDirectories(Paths.get(filePath));
+            }
+
+            filePath += File.separatorChar + fileName;
 
             FileOutputStream fileOut = new FileOutputStream(filePath);
             workbook.write(fileOut);
 
             fileOut.close();
-            System.out.println("Export bill done....");
+            String finalFilePath = convertToPdf(filePath);
+            System.out.println("Export bill done....: " + finalFilePath);
+            return finalFilePath;
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
+
+        return null;
     }
 
-    private static void writeDate(XSSFWorkbook workbook, DetailBillResponse billItem, List<OrderItem> orderItems) {
+    private static void writeData(XSSFWorkbook workbook, DetailBillResponse billItem, List<OrderItem> orderItems) {
         XSSFSheet sheet = workbook.getSheet("Sheet1");
 
         Font fontBold = workbook.getSheet("Sheet2").getRow(6).getCell(1).getCellStyle().getFont();
@@ -116,7 +133,10 @@ public class ExportExcel {
         }
 
 
-        sheet.getRow(rowNum+3).getCell(5).setCellValue(FnCommon.formatNumber(billItem.getTotalMoney()));
+        sheet.getRow(rowNum).getCell(5).setCellValue(FnCommon.formatNumber(billItem.getPreMoney()));
+        sheet.getRow(rowNum + 1).getCell(5).setCellValue(FnCommon.formatNumber(billItem.getVat()));
+        sheet.getRow(rowNum + 2).getCell(5).setCellValue(FnCommon.formatNumber(billItem.getSubMoney()));
+        sheet.getRow(rowNum + 3).getCell(5).setCellValue(FnCommon.formatNumber(billItem.getTotalMoney()));
 
 
     }
@@ -134,5 +154,98 @@ public class ExportExcel {
         row.getCell(cellNum).setCellStyle(style);
 
 
+    }
+
+
+    public static String convertToPdf(String pathInput) {
+
+        String filePathOut = pathInput.replace(".xlsx", ".pdf");
+
+        String command = "libreoffice --headless --convert-to pdf " + pathInput;
+
+        String osName = System.getProperty("os.name");
+        String[] params;
+
+        if (osName.toLowerCase().contains("window")) {
+            command = "D:\\DATA\\temp\\OfficeToPDF.exe";
+            params = new String[3];
+            params[0] = command;
+            params[1] = pathInput;
+            params[2] = filePathOut;
+        } else {
+            params = new String[1];
+            params[0] = command;
+        }
+
+        try {
+            Runtime.getRuntime().exec(params).waitFor();
+            try {
+                File f = new File(pathInput);
+                if (f.exists()) {
+                    f.delete();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return filePathOut;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void main(String args[]) {
+        XSSFWorkbook workbook;
+        String path = "D:\\DATA\\HOA_DON.xlsx";
+        InputStream fs;
+        try {
+            System.out.println("Start export bill");
+            fs = new FileInputStream(path);
+            workbook = new XSSFWorkbook(fs);
+
+            DetailBillResponse billItem = new DetailBillResponse();
+            billItem.setShopName("Quán A Hoàng");
+            billItem.setShopAddress("234 nguyễn văn linh");
+            billItem.setShopPhone("034555666");
+            billItem.setCreateDate("33/44/2021");
+            List<String> tableNames = new ArrayList<>();
+            tableNames.add("Bàn 01");
+            billItem.setTablesName(tableNames);
+            billItem.setPreMoney(50000);
+            billItem.setTotalMoney(100000);
+            billItem.setSubMoney(20000);
+            billItem.setVat(10.5);
+
+            List<OrderItem> orderItems = new ArrayList<>();
+            OrderItem orderItem = new OrderItem();
+            orderItem.setMenuName("Cá hồi");
+            orderItem.setPrice(10000);
+            orderItem.setAmount(10.0);
+            orderItem.setDiscountType(1);
+            orderItem.setDiscountValue(10.0);
+            orderItem.setDiscountMoney(1000);
+            orderItem.setMoney(10000000);
+
+            orderItems.add(orderItem);
+            orderItems.add(orderItem);
+            orderItems.add(orderItem);
+            orderItems.add(orderItem);
+            orderItems.add(orderItem);
+            orderItems.add(orderItem);
+
+            writeData(workbook, billItem, orderItems);
+            workbook.removeSheetAt(1);
+
+            String fileName = "HOA_DON_" + new Date().getTime() / 1000 + ".xlsx";
+            String filePath = "D:\\DATA\\temp" + File.separatorChar + fileName;
+
+            FileOutputStream fileOut = new FileOutputStream(filePath);
+            workbook.write(fileOut);
+
+            fileOut.close();
+            System.out.println("Export bill done....");
+        } catch (Exception e) {
+
+        }
     }
 }

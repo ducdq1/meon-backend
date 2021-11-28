@@ -20,6 +20,12 @@ public class ConfigValue {
     private String folderFiles;
     @Value("${config.folder.path.files}")
     private String folderPathFiles;
+    @Value("${config.template.path.file}")
+    private String templateFilePath;
+
+    @Value("${config.export.path.file}")
+    private String exportFilePath;
+
     @PostConstruct
     private void initSupportFileTypes() {
         this.mapFileSupportTypes = Arrays.asList(fileSupportTypes);
@@ -55,5 +61,21 @@ public class ConfigValue {
 
     public void setFolderPathFiles(String folderPathFiles) {
         this.folderPathFiles = folderPathFiles;
+    }
+
+    public String getTemplateFilePath() {
+        return templateFilePath;
+    }
+
+    public void setTemplateFilePath(String templateFilePath) {
+        this.templateFilePath = templateFilePath;
+    }
+
+    public String getExportFilePath() {
+        return exportFilePath;
+    }
+
+    public void setExportFilePath(String exportFilePath) {
+        this.exportFilePath = exportFilePath;
     }
 }

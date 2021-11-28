@@ -132,17 +132,18 @@ public class OrderItemlServiceImpl implements OrderItemService {
         Integer priceMenu = entity.getPrice();
         Double amount = entity.getAmount();
         int totalMoney = (int) (priceMenu * amount);
+        int discountMoney = 0;
         if (entity.getDiscountValue() != null) {
             if (entity.getDiscountType() == Constants.DISCOUNT_TYPE_MONEY) {
-                totalMoney = (int) (totalMoney - (entity.getDiscountValue() == null ? 0 : entity.getDiscountValue()));
-                entity.setDiscountMoney(entity.getDiscountValue() == null ? 0 : entity.getDiscountValue().intValue());
+                discountMoney = (int) (entity.getDiscountValue() * amount);
             } else {
-                int discountMoney = (int) (priceMenu * (entity.getDiscountValue() / 100) * amount);
-                totalMoney = totalMoney - discountMoney;
-                entity.setDiscountMoney(discountMoney);
+                discountMoney = (int) (priceMenu * (entity.getDiscountValue() / 100) * amount);
             }
         }
-        entity.setMoney(totalMoney);
+
+        entity.setDiscountMoney(discountMoney);
+        entity.setMoney(totalMoney - discountMoney);
+
     }
 
     private Integer getPriceOfMenu(MenuEntity menuEntity, String menuOptionIds) {

@@ -29,7 +29,8 @@ public class BillRepositoryImpl extends CommonDataBaseRepository implements Bill
         sql.append(" SELECT b.id billId, b.name billName, b.status billStatus,b.description,b.total_Money totalMoney,u.full_name userName, ");
         sql.append(" u.phone, u.avatar,b.shop_id shopId,s.name shopName, s.image_url shopAvatar, ");
         sql.append(" b.create_user_id createUserId , DATE_FORMAT(b.create_date, '%d-%m-%Y %H:%i') createDate ,b.reconfirm_message reconfirmMessage" +
-                " ,b.cancel_message cancelMessage,s.vat,b.vat_money vatMoney,b.sub_money subMoney,b.sub_money_description subMoneyDescription,s.phone shopPhone,s.address shopAddress ");
+                " ,b.cancel_message cancelMessage,s.vat,b.vat_money vatMoney,b.sub_money subMoney,b.sub_money_description subMoneyDescription,s.phone shopPhone,s.address shopAddress, ");
+        sql.append(" b.pre_money preMoney ");
         sql.append("  FROM BILL b JOIN USERS u on u.id = b.create_user_id  ");
         sql.append(" JOIN SHOP s ON s.id = b.shop_id ");
         sql.append("  WHERE b.id=:billId AND b.is_active = 1 ");

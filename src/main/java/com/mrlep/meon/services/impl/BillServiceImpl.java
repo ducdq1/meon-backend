@@ -93,6 +93,9 @@ public class BillServiceImpl implements BillService {
     @Autowired
     private ShopTableRepository shopTableRepository;
 
+    @Autowired
+    private ExportExcel exportExcel;
+
     private void validateCreateBill(CreateBillRequest request) throws TeleCareException {
         if (request.getIsCreateByStaff() != null && request.getIsCreateByStaff() == 1) {
             Integer userId = request.getCreateUserId();
@@ -378,8 +381,10 @@ public class BillServiceImpl implements BillService {
                 firestoreBillManagement.updateOrderItemsStatus(billId);
             }
 
+            String billFile = exportExcel.exportBill(entity.getId());
+            entity.setBillFile(billFile);
+            billRepositoryJPA.save(entity);
             firestoreBillManagement.updateBill(entity.getId());
-
             firestoreBillManagement.sendBillStatusNotification(entity);
             return true;
         }
@@ -462,6 +467,7 @@ public class BillServiceImpl implements BillService {
         }
 
         billEntity.setDiscountMoney(discountMoney);
+        billEntity.setPreMoney(totalMoney);
         billEntity.setTotalMoney(totalMoney);
     }
 

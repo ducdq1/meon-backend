@@ -63,6 +63,9 @@ public class BillEntity implements Serializable {
     @Column(name = "description")
     String description;
 
+    @Column(name = "pre_money")
+    Integer preMoney;
+
     @Column(name = "total_money")
     Integer totalMoney;
 
@@ -83,6 +86,9 @@ public class BillEntity implements Serializable {
 
     @Column(name = "discount_money")
     Integer discountMoney;
+
+    @Column(name = "bill_file")
+    String billFile;
 
     public Integer getShopId() {
         return shopId;
@@ -235,5 +241,21 @@ public class BillEntity implements Serializable {
 
     public void setDiscountMoney(Integer discountMoney) {
         this.discountMoney = discountMoney;
+    }
+
+    public Integer getPreMoney() {
+        return preMoney;
+    }
+
+    public void setPreMoney(Integer preMoney) {
+        this.preMoney = preMoney;
+    }
+
+    public String getBillFile() {
+        return billFile;
+    }
+
+    public void setBillFile(String billFile) {
+        this.billFile = billFile;
     }
 }
