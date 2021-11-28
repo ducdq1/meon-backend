@@ -180,7 +180,10 @@ public class ExportExcel {
         System.out.println("Export PDF Command:  " + command);
 
         try {
-            Runtime.getRuntime().exec(params).waitFor();
+            ProcessBuilder pb = new ProcessBuilder(command, folder, pathInput);
+             pb.start();
+
+            //Runtime.getRuntime().exec(params).waitFor();
             try {
                 File f = new File(pathInput);
                 if (f.exists()) {
