@@ -76,7 +76,7 @@ public class ExportExcel {
             workbook.write(fileOut);
 
             fileOut.close();
-            String finalFilePath = convertToPdf(exportFilePath,filePath);
+            String finalFilePath = convertToPdf(exportFilePath, filePath);
             System.out.println("Export bill done....: " + finalFilePath);
             return finalFilePath;
         } catch (Exception e) {
@@ -155,7 +155,7 @@ public class ExportExcel {
     }
 
 
-    public static String convertToPdf(String pathInput,String folder) {
+    public static String convertToPdf(String pathInput, String folder) {
 
         String filePathOut = pathInput.replace(".xlsx", ".pdf");
 
@@ -180,8 +180,9 @@ public class ExportExcel {
         System.out.println("Export PDF Command:  " + command);
 
         try {
-            ProcessBuilder pb = new ProcessBuilder("/root/MeOn/export_dpf.sh" ,folder,pathInput);
-             pb.start();
+            ProcessBuilder pb = new ProcessBuilder("/root/MeOn/export_dpf.sh", folder, pathInput);
+            Process p = pb.start();
+            p.waitFor();
 
             //Runtime.getRuntime().exec(params).waitFor();
             try {
