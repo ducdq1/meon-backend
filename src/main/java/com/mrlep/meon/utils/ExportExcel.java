@@ -70,13 +70,13 @@ public class ExportExcel {
                 Files.createDirectories(Paths.get(filePath));
             }
 
-            filePath += File.separatorChar + fileName;
+            String exportFilePath = filePath + File.separatorChar + fileName;
 
-            FileOutputStream fileOut = new FileOutputStream(filePath);
+            FileOutputStream fileOut = new FileOutputStream(exportFilePath);
             workbook.write(fileOut);
 
             fileOut.close();
-            String finalFilePath = convertToPdf(filePath);
+            String finalFilePath = convertToPdf(exportFilePath,filePath);
             System.out.println("Export bill done....: " + finalFilePath);
             return finalFilePath;
         } catch (Exception e) {
@@ -155,11 +155,11 @@ public class ExportExcel {
     }
 
 
-    public static String convertToPdf(String pathInput) {
+    public static String convertToPdf(String pathInput,String folder) {
 
         String filePathOut = pathInput.replace(".xlsx", ".pdf");
 
-        String command = "libreoffice --headless --convert-to pdf";
+        String command = "libreoffice --headless --convert-to pdf  --outdir " +folder +" " + pathInput;
 
         String osName = System.getProperty("os.name");
         String[] params;
@@ -175,6 +175,8 @@ public class ExportExcel {
             params[0] = command;
             params[1] = pathInput;
         }
+
+        System.out.println("Export PDF Command:  " + command);
 
         try {
             Runtime.getRuntime().exec(params).waitFor();
