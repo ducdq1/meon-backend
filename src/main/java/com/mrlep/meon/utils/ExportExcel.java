@@ -180,7 +180,7 @@ public class ExportExcel {
         System.out.println("Export PDF Command:  " + command);
 
         try {
-            ProcessBuilder pb = new ProcessBuilder(command, folder, pathInput);
+            ProcessBuilder pb = new ProcessBuilder("/root/MeOn/export_dpf.sh");
              pb.start();
 
             //Runtime.getRuntime().exec(params).waitFor();
