@@ -78,72 +78,56 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Override
     public StatisticsOrderResponse getStatisticsOrderByShop(StatisticsBillRequest request) throws TeleCareException {
         StatisticsOrderResponse response = new StatisticsOrderResponse();
-        if (request.getType() != null) {
-            Calendar cal = Calendar.getInstance();
-            cal.setFirstDayOfWeek(Calendar.MONDAY);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.clear(Calendar.MINUTE);
-            cal.clear(Calendar.SECOND);
-            cal.clear(Calendar.MILLISECOND);
+        Calendar cal = Calendar.getInstance();
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.clear(Calendar.MINUTE);
+        cal.clear(Calendar.SECOND);
+        cal.clear(Calendar.MILLISECOND);
 
-            Date lastFromDate = null;
-            Date lastToDate = null;
+        Date lastFromDate = null;
+        Date lastToDate = null;
 
-            switch (request.getType()) {
-                case Constants.STATICTIS_WEEKLY:
-                    cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-                    request.setFromDate(cal.getTime());
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+        request.setFromDate(cal.getTime());
 
-                    cal.add(Calendar.DATE, 6);
-                    request.setToDate(cal.getTime());
+        cal.add(Calendar.DATE, 6);
+        request.setToDate(cal.getTime());
 
-                    cal.add(Calendar.DATE, -8);
-                    cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-                    lastFromDate = cal.getTime();
+        cal.add(Calendar.DATE, -8);
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+        lastFromDate = cal.getTime();
 
-                    cal.add(Calendar.DATE, 6);
-                    lastToDate = cal.getTime();
-                    break;
+        cal.add(Calendar.DATE, 6);
+        lastToDate = cal.getTime();
 
-                case Constants.STATICTIS_MONTHLY:
-                    cal.set(Calendar.DAY_OF_MONTH, 1);
-                    request.setFromDate(cal.getTime());
-                    request.setToDate(new Date());
-                    break;
-                default:
-                    request.setFromDate(new Date());
-                    request.setToDate(new Date());
-                    break;
+        List<StatisticsBillItem> currentItems = statisticsRepository.statisticsOder(request);
+        request.setFromDate(lastFromDate);
+        request.setToDate(lastToDate);
+        List<StatisticsBillItem> lastItems = statisticsRepository.statisticsOder(request);
+        response.setCurrentItems(currentItems);
+        response.setLastItems(lastItems);
+        Long currentValue = 0L;
+        if (currentItems != null) {
+
+            for (StatisticsBillItem item : currentItems) {
+                currentValue += (item.getValue() != null ? item.getValue() : 0L);
             }
-
-            List<StatisticsBillItem> currentItems = statisticsRepository.statisticsOder(request);
-            request.setFromDate(lastFromDate);
-            request.setToDate(lastToDate);
-            List<StatisticsBillItem> lastItems = statisticsRepository.statisticsOder(request);
-            response.setCurrentItems(currentItems);
-            response.setLastItems(lastItems);
-            Long currentValue = 0L;
-            if (currentItems != null) {
-
-                for (StatisticsBillItem item : currentItems) {
-                    currentValue += (item.getValue() != null ? item.getValue() : 0L);
-                }
-            }
-
-            Long lastValue = 0L;
-            if (lastItems != null) {
-                for (StatisticsBillItem item : lastItems) {
-                    lastValue += (item.getValue() != null ? item.getValue() : 0L);
-                }
-            }
-
-            response.setCurrentTotalValue(currentValue);
-            response.setLastTotalValue(lastValue);
-            Double percent = (currentValue.doubleValue() * 100 / lastValue.doubleValue());
-            Double growPercent = percent  - 100.0 ;
-
-            response.setGrowPercent(growPercent);
         }
+
+        Long lastValue = 0L;
+        if (lastItems != null) {
+            for (StatisticsBillItem item : lastItems) {
+                lastValue += (item.getValue() != null ? item.getValue() : 0L);
+            }
+        }
+
+        response.setCurrentTotalValue(currentValue);
+        response.setLastTotalValue(lastValue);
+        Double percent = (currentValue.doubleValue() * 100 / lastValue.doubleValue());
+        Double growPercent = percent - 100.0;
+
+        response.setGrowPercent(growPercent);
 
 
         return response;
