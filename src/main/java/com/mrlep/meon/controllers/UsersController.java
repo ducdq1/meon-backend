@@ -1,6 +1,7 @@
 package com.mrlep.meon.controllers;
 
 import com.google.cloud.firestore.Firestore;
+import com.mrlep.meon.dto.request.ChangePassRequest;
 import com.mrlep.meon.dto.request.LoginRequest;
 import com.mrlep.meon.dto.request.RegisterRequest;
 import com.mrlep.meon.dto.request.VerifyOTPRequest;
@@ -97,6 +98,23 @@ public class UsersController {
         try {
             Integer userId = FnCommon.getUserIdFromToken(authentication);
             result = usersService.logOut(userId);
+        } catch (TeleCareException e) {
+
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/change-pass",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> changePasss(@AuthenticationPrincipal Authentication authentication, @RequestBody ChangePassRequest request) {
+        Object result;
+        try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            result = usersService.changePass(userId,request);
         } catch (TeleCareException e) {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);

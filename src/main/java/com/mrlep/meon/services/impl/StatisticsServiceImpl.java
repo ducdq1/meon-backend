@@ -2,10 +2,7 @@ package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.dto.object.*;
 import com.mrlep.meon.dto.request.*;
-import com.mrlep.meon.dto.response.DetailBillResponse;
-import com.mrlep.meon.dto.response.SearchBillResponse;
-import com.mrlep.meon.dto.response.StatisticsBillResponse;
-import com.mrlep.meon.dto.response.StatisticsOrderResponse;
+import com.mrlep.meon.dto.response.*;
 import com.mrlep.meon.firebase.FirestoreBillManagement;
 import com.mrlep.meon.repositories.*;
 import com.mrlep.meon.repositories.tables.*;
@@ -131,5 +128,10 @@ public class StatisticsServiceImpl implements StatisticsService {
 
 
         return response;
+    }
+
+    @Override
+    public StatisticsOrderByMonthResponse getStatisticsOrderByMonth(Integer shopId) throws TeleCareException {
+        return null;
     }
 }

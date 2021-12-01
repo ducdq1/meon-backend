@@ -6,6 +6,7 @@ import com.mrlep.meon.dto.request.StatisticsBillRequest;
 import com.mrlep.meon.dto.response.DetailBillResponse;
 import com.mrlep.meon.dto.response.SearchBillResponse;
 import com.mrlep.meon.dto.response.StatisticsBillResponse;
+import com.mrlep.meon.dto.response.StatisticsOrderByMonthResponse;
 import com.mrlep.meon.repositories.BillRepository;
 import com.mrlep.meon.repositories.StatisticsRepository;
 import com.mrlep.meon.utils.Constants;
@@ -16,6 +17,7 @@ import com.mrlep.meon.xlibrary.core.entities.ResultSelectEntity;
 import com.mrlep.meon.xlibrary.core.repositories.CommonDataBaseRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -98,5 +100,29 @@ public class StatisticsRepositoryImpl extends CommonDataBaseRepository implement
 
         return (List<StatisticsBillItem>) getListData(sql, params, null, null, StatisticsBillItem.class);
     }
+
+    @Override
+    public StatisticsOrderByMonthResponse getStatisticsOrderByMonth(Integer shopId) {
+        HashMap<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder();
+
+        sql.append(" select count(b.id ) currentTotalValue from " +
+                "order_item b     " +
+                "where b.status = :status and exists (select id from bill bi where bi.shop_id = :shopId and bi.id = b.bill_id) " +
+                "and b.create_date between date(now()-10) and now()");
+
+        params.put("shopId", shopId);
+        params.put("status", Constants.ORDER_ITEM_STATUS_DELIVERED);
+
+        Calendar cal = Calendar.getInstance();
+        int res = cal.getActualMaximum(Calendar.DATE);
+
+        System.out.println("statisticsOrder ");
+//        System.out.println("From date: " + DateUtility.format(request.getFromDate()));
+//        System.out.println("To date: " + DateUtility.format(request.getToDate()));
+
+        return (StatisticsOrderByMonthResponse) getFirstData(sql, params,   StatisticsOrderByMonthResponse.class);
+    }
+
 
 }

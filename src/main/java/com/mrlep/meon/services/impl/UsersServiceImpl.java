@@ -2,6 +2,7 @@ package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.config.JwtTokenUtil;
 import com.mrlep.meon.dto.object.StaffItem;
+import com.mrlep.meon.dto.request.ChangePassRequest;
 import com.mrlep.meon.dto.request.LoginRequest;
 import com.mrlep.meon.dto.request.RegisterRequest;
 import com.mrlep.meon.dto.request.VerifyOTPRequest;
@@ -80,6 +81,18 @@ public class UsersServiceImpl implements UsersService {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.login.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
         usersEntity.setDeviceToken(null);
+        usersRepositoryJPA.save(usersEntity);
+        return true;
+    }
+
+    @Override
+    public Object changePass(Integer userId, ChangePassRequest request) throws TeleCareException {
+        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(userId,Constants.IS_ACTIVE);
+        if (usersEntity == null || !usersEntity.getPass().equals(request.getPass())) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.login.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        usersEntity.setPass(request.getNewPass());
         usersRepositoryJPA.save(usersEntity);
         return true;
     }
