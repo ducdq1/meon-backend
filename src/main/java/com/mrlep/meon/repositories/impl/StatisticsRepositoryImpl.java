@@ -105,21 +105,30 @@ public class StatisticsRepositoryImpl extends CommonDataBaseRepository implement
     public StatisticsOrderByMonthResponse getStatisticsOrderByMonth(Integer shopId) {
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-
-        sql.append(" select count(b.id ) currentTotalValue from " +
-                "order_item b     " +
+        sql.append(" select ");
+        sql.append(" ( select count(b.id ) lastTotalValue from order_item b     " +
                 "where b.status = :status and exists (select id from bill bi where bi.shop_id = :shopId and bi.id = b.bill_id) " +
-                "and b.create_date between date(now()-10) and now()");
+                "and b.create_date between :fromDate1 and :toDate1 ) currentTotalValue,");
+        sql.append(" ( select count(b.id ) currentTotalValue from  order_item b " +
+                "where b.status = :status and exists (select id from bill bi where bi.shop_id = :shopId and bi.id = b.bill_id) " +
+                "and b.create_date between :fromDate2 and :toDate2 ) lastTotalValue ");
 
         params.put("shopId", shopId);
         params.put("status", Constants.ORDER_ITEM_STATUS_DELIVERED);
 
         Calendar cal = Calendar.getInstance();
-        int res = cal.getActualMaximum(Calendar.DATE);
+        int max = cal.getActualMaximum(Calendar.DATE);
+        cal.set(Calendar.DATE, 1);
+        params.put("fromDate1", cal.getTime());
+        cal.set(Calendar.DATE, max);
+        params.put("toDate1", cal.getTime());
 
-        System.out.println("statisticsOrder ");
-//        System.out.println("From date: " + DateUtility.format(request.getFromDate()));
-//        System.out.println("To date: " + DateUtility.format(request.getToDate()));
+        cal.add(Calendar.MONTH,-1);
+        cal.set(Calendar.DATE, 1);
+        params.put("fromDate2", cal.getTime());
+        max = cal.getActualMaximum(Calendar.DATE);
+        cal.set(Calendar.DATE, max);
+        params.put("toDate2", cal.getTime());
 
         return (StatisticsOrderByMonthResponse) getFirstData(sql, params,   StatisticsOrderByMonthResponse.class);
     }

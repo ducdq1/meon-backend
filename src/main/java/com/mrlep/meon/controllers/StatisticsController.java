@@ -23,7 +23,7 @@ public class StatisticsController {
     @Autowired
     private StatisticsService statisticsService;
 
-    @PostMapping(path = "/bill" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/bill", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> createStaff(@RequestBody StatisticsBillRequest request, @AuthenticationPrincipal Authentication authentication) {
         Object result;
         try {
@@ -41,7 +41,7 @@ public class StatisticsController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/order" ,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/order", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> order(@RequestBody StatisticsBillRequest request, @AuthenticationPrincipal Authentication authentication) {
         Object result;
         try {
@@ -53,6 +53,20 @@ public class StatisticsController {
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
 
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/order/by-month/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> orderByMonth(@PathVariable Integer shopId, @AuthenticationPrincipal Authentication authentication) {
+        Object result;
+        try {
+            result = statisticsService.getStatisticsOrderByMonth(shopId);
+        } catch (TeleCareException e) {
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 

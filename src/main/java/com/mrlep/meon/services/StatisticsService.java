@@ -8,6 +8,7 @@ import com.mrlep.meon.dto.response.StatisticsOrderResponse;
 import com.mrlep.meon.repositories.tables.entities.QuickSelectMessageEntity;
 import com.mrlep.meon.utils.TeleCareException;
 
+import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -19,5 +20,5 @@ import java.util.List;
 public interface StatisticsService {
     StatisticsBillResponse getStatisticsByShop(StatisticsBillRequest request)throws TeleCareException;
     StatisticsOrderResponse getStatisticsOrderByShop(StatisticsBillRequest request)throws TeleCareException;
-    StatisticsOrderByMonthResponse getStatisticsOrderByMonth(Integer shopId)throws TeleCareException;
+    StatisticsOrderByMonthResponse getStatisticsOrderByMonth(Integer shopId) throws TeleCareException, ParseException;
 }

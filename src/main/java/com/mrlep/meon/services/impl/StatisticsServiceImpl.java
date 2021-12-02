@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.*;
 
 @Service
@@ -123,7 +125,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         response.setLastTotalValue(lastValue);
         Double percent = (currentValue.doubleValue() * 100 / lastValue.doubleValue());
         Double growPercent = percent - 100.0;
-
+        growPercent = Math.round(growPercent*100)/100D;
         response.setGrowPercent(growPercent);
 
 
@@ -132,6 +134,20 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public StatisticsOrderByMonthResponse getStatisticsOrderByMonth(Integer shopId) throws TeleCareException {
-        return null;
+        StatisticsOrderByMonthResponse response = statisticsRepository.getStatisticsOrderByMonth(shopId);
+        Long currentValue = response.getCurrentTotalValue();
+        Long lastTotalValue = response.getLastTotalValue();
+
+        if (currentValue != null && lastTotalValue != null && lastTotalValue > 0) {
+            Double percent = (currentValue.doubleValue() * 100 / lastTotalValue.doubleValue());
+            Double growPercent = percent - 100.0;
+
+            growPercent = Math.round(growPercent*100)/100D;
+
+            response.setGrowPercent(growPercent);
+
+
+        }
+        return response;
     }
 }
