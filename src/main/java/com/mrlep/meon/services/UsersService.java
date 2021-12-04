@@ -1,9 +1,6 @@
 package com.mrlep.meon.services;
 
-import com.mrlep.meon.dto.request.ChangePassRequest;
-import com.mrlep.meon.dto.request.LoginRequest;
-import com.mrlep.meon.dto.request.RegisterRequest;
-import com.mrlep.meon.dto.request.VerifyOTPRequest;
+import com.mrlep.meon.dto.request.*;
 import com.mrlep.meon.repositories.tables.entities.UsersEntity;
 import com.mrlep.meon.utils.TeleCareException;
 
@@ -21,6 +18,9 @@ public interface UsersService {
     Object getOTP(LoginRequest request) throws TeleCareException;
     Object verifyOTP(VerifyOTPRequest request) throws TeleCareException;
     Object getUserByPhone(String phone) throws TeleCareException;
+    Object resetPassForStaff(ResetPassRequest request) throws TeleCareException;
+    Object confirmResetPassForStaff(ResetPassRequest request) throws TeleCareException;
+    Object getShopForResetPassForStaff(ResetPassRequest request) throws TeleCareException;
 
     Object updateUserInfo(UsersEntity entity)  throws TeleCareException;
     Object updateUserDeviceToken(Integer userId,String deviceToken)  throws TeleCareException;

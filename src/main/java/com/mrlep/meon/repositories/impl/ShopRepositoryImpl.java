@@ -30,8 +30,8 @@ public class ShopRepositoryImpl extends CommonDataBaseRepository implements Shop
         sql.append(" s.like_number likeNumber, s.open_time openTime,s.close_time closeTime,s.special_tag, s.is_verify isVerify,s.vat, ");
         if (request.getLat() != null && request.getLng() != null) {
             sql.append(" concat(ABS(lat - :userLat) + ABS(lng - :userLng),'m')  AS distance ");
-            params.put("userLat",request.getLat());
-            params.put("userLng",request.getLng());
+            params.put("userLat", request.getLat());
+            params.put("userLng", request.getLng());
         } else {
             sql.append(" '0m' AS distance ");
         }
@@ -64,7 +64,7 @@ public class ShopRepositoryImpl extends CommonDataBaseRepository implements Shop
     }
 
     @Override
-    public  List<StaffItem> getShopOfsStaff(Integer userId) {
+    public List<StaffItem> getShopOfsStaff(Integer userId) {
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT b.id,s.id shopId,u.id userId, b.permission permission, b.IDENTITY_NUMBER  identityNumber,b. certification,");
@@ -74,6 +74,24 @@ public class ShopRepositoryImpl extends CommonDataBaseRepository implements Shop
         sql.append("  WHERE b.status =1 AND u.id=:userId AND b.is_active = 1 AND u.is_active = 1 ORDER BY b.create_date DESC");
         params.put("userId", userId);
 
-        return  (List<StaffItem>) getListData(sql, params,null,null, StaffItem.class);
+        return (List<StaffItem>) getListData(sql, params, null, null, StaffItem.class);
+    }
+
+    @Override
+    public List<ShopItem> getShopByStaff(Integer userId) {
+        HashMap<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append(" Select  s.id,s.name,s.image_Url avatar  FROM shop s JOIN STAFF st ON st.shop_id = s.id AND st.user_id =:userId  WHERE st.is_active = 1 AND s.is_active = 1  limit 1  ");
+        params.put("userId", userId);
+        return (List<ShopItem>) getListData(sql, params, null, null, ShopItem.class);
+    }
+
+    @Override
+    public List<ShopItem> getShopNotByStaff(Integer userId) {
+        HashMap<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append(" Select  s.id,s.name,s.image_Url avatar FROM shop s WHERE s.id not in (select shop_id FROM STAFF st WHERE st.user_id =:userId)  limit 5 ");
+        params.put("userId", userId);
+        return (List<ShopItem>) getListData(sql, params, null, null, ShopItem.class);
     }
 }

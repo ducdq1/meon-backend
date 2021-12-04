@@ -1,17 +1,17 @@
 package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.config.JwtTokenUtil;
+import com.mrlep.meon.dto.object.ShopItem;
 import com.mrlep.meon.dto.object.StaffItem;
-import com.mrlep.meon.dto.request.ChangePassRequest;
-import com.mrlep.meon.dto.request.LoginRequest;
-import com.mrlep.meon.dto.request.RegisterRequest;
-import com.mrlep.meon.dto.request.VerifyOTPRequest;
+import com.mrlep.meon.dto.request.*;
 import com.mrlep.meon.dto.response.LoginResponse;
 import com.mrlep.meon.repositories.ShopRepository;
 import com.mrlep.meon.repositories.tables.OTPRepositoryJPA;
+import com.mrlep.meon.repositories.tables.ShopRepositoryJPA;
 import com.mrlep.meon.repositories.tables.StaffRepositoryJPA;
 import com.mrlep.meon.repositories.tables.UsersRepositoryJPA;
 import com.mrlep.meon.repositories.tables.entities.OTPEntity;
+import com.mrlep.meon.repositories.tables.entities.ShopEntity;
 import com.mrlep.meon.repositories.tables.entities.StaffEntity;
 import com.mrlep.meon.repositories.tables.entities.UsersEntity;
 import com.mrlep.meon.services.UsersService;
@@ -22,10 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Autogen class: Lop danh muc chi so sp02
@@ -47,8 +44,12 @@ public class UsersServiceImpl implements UsersService {
 
     @Autowired
     private StaffRepositoryJPA staffRepositoryJPA;
+
     @Autowired
     private ShopRepository shopRepository;
+    @Autowired
+    private ShopRepositoryJPA shopRepositoryJPA;
+
 
     @Override
     public Object login(LoginRequest request) throws TeleCareException {
@@ -76,7 +77,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public Object logOut(Integer userId) throws TeleCareException {
-        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(userId,Constants.IS_ACTIVE);
+        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(userId, Constants.IS_ACTIVE);
         if (usersEntity == null) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.login.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
@@ -87,7 +88,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public Object changePass(Integer userId, ChangePassRequest request) throws TeleCareException {
-        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(userId,Constants.IS_ACTIVE);
+        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(userId, Constants.IS_ACTIVE);
         if (usersEntity == null || !usersEntity.getPass().equals(request.getPass())) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.login.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
@@ -159,17 +160,57 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public Object getUserByPhone(String phone) throws TeleCareException {
-        UsersEntity usersEntity = usersRepositoryJPA.getByPhoneAndIsActive(phone,Constants.IS_ACTIVE);
-        if(usersEntity == null){
+        UsersEntity usersEntity = usersRepositoryJPA.getByPhoneAndIsActive(phone, Constants.IS_ACTIVE);
+        if (usersEntity == null) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.account.notexist"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
-        return  usersEntity;
+        return usersEntity;
+    }
+
+    @Override
+    public Object resetPassForStaff(ResetPassRequest request) throws TeleCareException {
+        UsersEntity usersEntity = usersRepositoryJPA.getByPhoneAndIsActive(request.getPhone(), Constants.IS_ACTIVE);
+        if (usersEntity == null || StringUtils.isNullOrEmpty(request.getPass())) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.account.notexist"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+        usersEntity.setPass(request.getPass());
+        usersRepositoryJPA.save(usersEntity);
+
+        return true;
+    }
+
+    @Override
+    public Object confirmResetPassForStaff(ResetPassRequest request) throws TeleCareException {
+        UsersEntity usersEntity = usersRepositoryJPA.getByPhoneAndIsActive(request.getPhone(), Constants.IS_ACTIVE);
+        if (usersEntity == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.account.notexist"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        StaffEntity entity = staffRepositoryJPA.getByUserIdAndShopIdAndIsActive(usersEntity.getId(), request.getShopId(), Constants.IS_ACTIVE);
+        if (entity == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.account.notexist"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        return usersEntity.getId();
+    }
+
+    @Override
+    public Object getShopForResetPassForStaff(ResetPassRequest request) throws TeleCareException {
+        UsersEntity usersEntity = usersRepositoryJPA.getByPhoneAndIsActive(request.getPhone(), Constants.IS_ACTIVE);
+        if (usersEntity == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.account.notexist"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+        List<ShopItem> randomShops = new ArrayList<>();
+        randomShops.addAll(shopRepository.getShopByStaff(usersEntity.getId()));
+        randomShops.addAll(shopRepository.getShopNotByStaff(usersEntity.getId()));
+        Collections.shuffle(randomShops);
+        return randomShops;
     }
 
     @Override
     public Object updateUserInfo(UsersEntity entity) throws TeleCareException {
 
-        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(entity.getId(),Constants.IS_ACTIVE);
+        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(entity.getId(), Constants.IS_ACTIVE);
         if (usersEntity == null) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.phone.exists"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
@@ -188,7 +229,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public Object updateUserDeviceToken(Integer userId, String deviceToken) throws TeleCareException {
-        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(userId,Constants.IS_ACTIVE);
+        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(userId, Constants.IS_ACTIVE);
         if (usersEntity == null) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.phone.exists"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }

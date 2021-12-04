@@ -11,4 +11,7 @@ import java.util.List;
 public interface ShopRepository {
     ResultSelectEntity getRecommendShop(SearchShopsRequest request);
     List<StaffItem> getShopOfsStaff(Integer userId);
+
+    List<ShopItem> getShopByStaff(Integer userId);
+    List<ShopItem> getShopNotByStaff(Integer userId);
 }

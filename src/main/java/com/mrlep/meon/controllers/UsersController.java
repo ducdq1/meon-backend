@@ -1,10 +1,7 @@
 package com.mrlep.meon.controllers;
 
 import com.google.cloud.firestore.Firestore;
-import com.mrlep.meon.dto.request.ChangePassRequest;
-import com.mrlep.meon.dto.request.LoginRequest;
-import com.mrlep.meon.dto.request.RegisterRequest;
-import com.mrlep.meon.dto.request.VerifyOTPRequest;
+import com.mrlep.meon.dto.request.*;
 import com.mrlep.meon.dto.response.DetailBillResponse;
 import com.mrlep.meon.firebase.FirebaseFirestore;
 import com.mrlep.meon.firebase.FirestoreBillManagement;
@@ -132,6 +129,54 @@ public class UsersController {
         Object result;
         try {
             result = usersService.register(request);
+        } catch (TeleCareException e) {
+
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/reset-pass/shops",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getShopsForResetPass(@RequestBody ResetPassRequest request, @RequestHeader Optional<String> lang) {
+        Object result;
+        try {
+            result = usersService.getShopForResetPassForStaff(request);
+        } catch (TeleCareException e) {
+
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/reset-pass",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> resetPass(@RequestBody ResetPassRequest request, @RequestHeader Optional<String> lang) {
+        Object result;
+        try {
+            result = usersService.resetPassForStaff(request);
+        } catch (TeleCareException e) {
+
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/confirm-reset-pass",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> confirmResetPass(@RequestBody ResetPassRequest request, @RequestHeader Optional<String> lang) {
+        Object result;
+        try {
+            result = usersService.confirmResetPassForStaff(request);
         } catch (TeleCareException e) {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);

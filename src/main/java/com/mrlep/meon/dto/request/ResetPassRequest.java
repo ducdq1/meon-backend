@@ -1,10 +1,10 @@
 package com.mrlep.meon.dto.request;
 
-public class LoginRequest {
+public class ResetPassRequest {
     private String phone;
-    private String pass;
-    private boolean isShopMode;
+    private Integer userId;
     private Integer shopId;
+    private String pass;
 
     public String getPhone() {
         return phone;
@@ -14,22 +14,13 @@ public class LoginRequest {
         this.phone = phone;
     }
 
-    public String getPass() {
-        return pass;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setPass(String pass) {
-        this.pass = pass;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
-
-    public boolean isShopMode() {
-        return isShopMode;
-    }
-
-    public void setShopMode(boolean shopMode) {
-        isShopMode = shopMode;
-    }
-
 
     public Integer getShopId() {
         return shopId;
@@ -37,5 +28,13 @@ public class LoginRequest {
 
     public void setShopId(Integer shopId) {
         this.shopId = shopId;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
     }
 }

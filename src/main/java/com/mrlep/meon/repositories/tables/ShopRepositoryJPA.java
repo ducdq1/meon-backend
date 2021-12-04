@@ -18,6 +18,12 @@ public interface ShopRepositoryJPA extends JpaRepository<ShopEntity, Integer> {
     ShopEntity getByCreateUserIdAndShopId(Integer createUserId, Integer shopId);
     ShopEntity getByIdAndIsActive(Integer id,Integer isActive);
 
+    @Query(value = " Select s.* FROM shop s JOIN STAFF st ON st.shop_id = s.id AND st.user_id =:userId  WHERE st.is_active = 1 AND s.is_active = 1  limit 1 ",nativeQuery = true)
+    List<ShopEntity> getByStaff(Integer userId);
+
+    @Query(value = "Select  s.* FROM shop s WHERE s.id not in (select shop_id FROM STAFF st WHERE st.user_id =:userId)  limit 5 ",nativeQuery = true)
+    List<ShopEntity> getNotByStaff(Integer userId);
+
 //    @Query(value = "UPDATE shop m SET m.order_number = m.order_number + 1 WHERE m.id= :shopId ", nativeQuery = true)
 //    void updateOrderNumber(Integer shopId);
 }
