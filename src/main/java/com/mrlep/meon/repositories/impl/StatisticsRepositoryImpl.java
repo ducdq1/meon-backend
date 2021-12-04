@@ -18,6 +18,7 @@ import com.mrlep.meon.xlibrary.core.repositories.CommonDataBaseRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class StatisticsRepositoryImpl extends CommonDataBaseRepository implement
         sql.append(" select sum(if(b.total_money is null,0,b.total_money)) value, DATE_FORMAT( t.create_date, '%d/%m/%Y') date from temp t  left JOIN  ");
         sql.append(" BILL b  on date(b.create_date) = date(t.create_date)  and  b.shop_id = :shopId ");
         sql.append(" AND b.status =:status ");
-        sql.append(" group by DATE_FORMAT( t.create_date, '%d/%m/%Y') ");
+        sql.append(" group by date  order by t.create_date");
 
         params.put("shopId", request.getShopId());
         params.put("toDate", request.getToDate());
@@ -119,16 +120,26 @@ public class StatisticsRepositoryImpl extends CommonDataBaseRepository implement
         Calendar cal = Calendar.getInstance();
         int max = cal.getActualMaximum(Calendar.DATE);
         cal.set(Calendar.DATE, 1);
-        params.put("fromDate1", cal.getTime());
+        Date fromDate1 = cal.getTime();
+        params.put("fromDate1", fromDate1);
+
         cal.set(Calendar.DATE, max);
-        params.put("toDate1", cal.getTime());
+        Date toDate1 = cal.getTime();
+        params.put("toDate1", toDate1);
+        System.out.println("statisticsOrder by Month ");
+        System.out.println(String.format("This Month: %s - %s",DateUtility.format(fromDate1),DateUtility.format(toDate1)));
 
         cal.add(Calendar.MONTH,-1);
         cal.set(Calendar.DATE, 1);
-        params.put("fromDate2", cal.getTime());
+        Date fromDate2 = cal.getTime();
+        params.put("fromDate2", fromDate2);
+
         max = cal.getActualMaximum(Calendar.DATE);
         cal.set(Calendar.DATE, max);
-        params.put("toDate2", cal.getTime());
+        Date toDate2 = cal.getTime();
+        params.put("toDate2", toDate2);
+        System.out.println(String.format("Last Month: %s - %s",DateUtility.format(fromDate2),DateUtility.format(toDate2)));
+
 
         return (StatisticsOrderByMonthResponse) getFirstData(sql, params,   StatisticsOrderByMonthResponse.class);
     }

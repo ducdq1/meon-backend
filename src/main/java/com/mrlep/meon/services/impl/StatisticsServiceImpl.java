@@ -67,9 +67,9 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
 
         response = statisticsRepository.statisticsTotalBill(request);
-        if (response != null && response.getTotalMoney() != null) {
+        //if (response != null && response.getTotalMoney() != null) {
             response.setItems(statisticsRepository.statisticsBill(request));
-        }
+        //}
 
         return response;
     }
