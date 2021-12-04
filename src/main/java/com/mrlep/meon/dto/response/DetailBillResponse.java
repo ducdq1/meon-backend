@@ -31,6 +31,7 @@ public class DetailBillResponse {
     String subMoneyDescription;
     Integer subMoney;
     Integer preMoney;
+    Integer discountMoney;
     String billFile;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -238,6 +239,9 @@ public class DetailBillResponse {
     }
 
     public Integer getVatMoney() {
+        if(vatMoney == null){
+            return 0;
+        }
         return vatMoney;
     }
 
@@ -254,6 +258,9 @@ public class DetailBillResponse {
     }
 
     public Integer getSubMoney() {
+        if(subMoney == null){
+            return 0;
+        }
         return subMoney;
     }
 
@@ -270,6 +277,9 @@ public class DetailBillResponse {
     }
 
     public Integer getPreMoney() {
+        if(preMoney == null){
+            return 0;
+        }
         return preMoney;
     }
 
@@ -286,5 +296,16 @@ public class DetailBillResponse {
 
     public void setBillFile(String billFile) {
         this.billFile = billFile;
+    }
+
+    public Integer getDiscountMoney() {
+        if(discountMoney == null){
+            return 0;
+        }
+        return discountMoney;
+    }
+
+    public void setDiscountMoney(Integer discountMoney) {
+        this.discountMoney = discountMoney;
     }
 }

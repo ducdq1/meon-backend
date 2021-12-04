@@ -142,7 +142,7 @@ public class ExportExcel {
         }
 
 
-        sheet.getRow(rowNum).getCell(5).setCellValue(FnCommon.formatNumber(billItem.getPreMoney()));
+        sheet.getRow(rowNum).getCell(5).setCellValue(FnCommon.formatNumber(billItem.getPreMoney() - billItem.getDiscountMoney()));
         sheet.getRow(rowNum + 1).getCell(5).setCellValue(FnCommon.formatNumber(billItem.getVat()));
         sheet.getRow(rowNum + 2).getCell(5).setCellValue(FnCommon.formatNumber(billItem.getSubMoney()));
         sheet.getRow(rowNum + 3).getCell(5).setCellValue(FnCommon.formatNumber(billItem.getTotalMoney()));

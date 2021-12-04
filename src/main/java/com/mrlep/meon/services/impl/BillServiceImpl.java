@@ -473,7 +473,7 @@ public class BillServiceImpl implements BillService {
         }
 
         billEntity.setDiscountMoney(discountMoney);
-        billEntity.setPreMoney(totalMoney);
+        billEntity.setPreMoney(totalMoney + discountMoney);
         billEntity.setTotalMoney(totalMoney);
     }
 
