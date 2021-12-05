@@ -90,7 +90,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
         entity = setOrderInfo(request, entity);
 
         orderItemRepositoryJPA.save(entity);
-        billService.updateBillInfo(request.getCreateUserId(), entity.getBillId());
+        billService.updateBillInfo(entity.getBillId());
         firestoreBillManagement.updateOrderItem(entity.getId(), request.getCreateUserId());
 
         menusRepositoryJPA.updateOrderNumber(request.getMenuId());
@@ -182,7 +182,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 entity = setOrderInfo(request, entity);
 
                 orderItemRepositoryJPA.save(entity);
-                billService.updateBillInfo(request.getCreateUserId(), entity.getBillId());
+                billService.updateBillInfo(entity.getBillId());
                 firestoreBillManagement.updateOrderItem(entity.getId(), request.getCreateUserId());
                 return true;
             } else {
@@ -207,7 +207,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
             entity.setAmount(request.getAmount());
             updateTotalMoney(entity);
             orderItemRepositoryJPA.save(entity);
-            billService.updateBillInfo(request.getCreateUserId(), entity.getBillId());
+            billService.updateBillInfo(entity.getBillId());
             firestoreBillManagement.updateOrderItem(entity.getId(), request.getCreateUserId());
             return true;
         } else {
@@ -242,7 +242,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 }
 
                 orderItemRepositoryJPA.save(entity);
-                billService.updateBillInfo(userId, entity.getBillId());
+                billService.updateBillInfo(entity.getBillId());
                 firestoreBillManagement.updateOrderItem(entity.getId(), userId);
                 return true;
             } else {
@@ -265,7 +265,7 @@ public class OrderItemlServiceImpl implements OrderItemService {
                 entity.setUpdateUserId(userId);
                 orderItemRepositoryJPA.save(entity);
                 firestoreBillManagement.deleteBillOrderItem(entity.getBillId(), orderItemId);
-                billService.updateBillInfo(userId, entity.getBillId());
+                billService.updateBillInfo(entity.getBillId());
                 return true;
             } else {
                 throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.order.item.status.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());

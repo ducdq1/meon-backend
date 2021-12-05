@@ -127,6 +127,9 @@ public class DetailBillResponse {
     }
 
     public Integer getBillStatus() {
+        if(billStatus == null){
+            return -1;
+        }
         return billStatus;
     }
 

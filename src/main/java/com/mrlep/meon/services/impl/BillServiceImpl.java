@@ -177,6 +177,18 @@ public class BillServiceImpl implements BillService {
             return null;
         }
 
+        if (Constants.BILL_STATUS_DONE != detailBillResponse.getBillStatus().intValue()) {
+            Double billVAT = detailBillResponse.getVat();
+            ShopEntity shopEntity = shopRepositoryJPA.getByIdAndIsActive(detailBillResponse.getShopId(), Constants.IS_ACTIVE);
+            if (shopEntity != null) {
+                Double shopVAT = shopEntity.getVat();
+                if (Double.compare(billVAT, shopVAT) != 0) {
+                    updateBillInfo(billId);
+                    detailBillResponse = billRepository.getDetailBill(billId);
+                }
+            }
+        }
+
         List<OrderItem> orderItemEntitiesList = (List<OrderItem>) orderItemlService.getOrderItemsByBill(billId);
         if (orderItemEntitiesList != null) {
             getMenuOptions(orderItemEntitiesList);
@@ -411,8 +423,8 @@ public class BillServiceImpl implements BillService {
         }
     }
 
-
-    public void updateBillInfo(Integer userId, Integer billId) throws TeleCareException {
+    @Override
+    public void updateBillInfo(Integer billId) throws TeleCareException {
         BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
         if (entity != null) {
 

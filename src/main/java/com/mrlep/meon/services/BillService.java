@@ -35,7 +35,7 @@ public interface BillService {
 
     SearchBillResponse searchBillUser(SearchBillRequest request) throws TeleCareException;
 
-    void updateBillInfo(Integer userId, Integer billId) throws TeleCareException;
+    void updateBillInfo(Integer userId) throws TeleCareException;
 
     Object addMemberToBlackList(Integer billId,AddBillMemberRequest request ) throws TeleCareException;
 }
