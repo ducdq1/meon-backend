@@ -21,6 +21,7 @@ public interface UsersService {
     Object resetPassForStaff(ResetPassRequest request) throws TeleCareException;
     Object confirmResetPassForStaff(ResetPassRequest request) throws TeleCareException;
     Object getShopForResetPassForStaff(ResetPassRequest request) throws TeleCareException;
+    Object getUsersForUserResetPass(ResetPassRequest request) throws TeleCareException;
 
     Object updateUserInfo(UsersEntity entity)  throws TeleCareException;
     Object updateUserDeviceToken(Integer userId,String deviceToken)  throws TeleCareException;

@@ -60,6 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/users/reset-pass/shops").permitAll()
 				.antMatchers("/users/reset-pass").permitAll()
 				.antMatchers("/users/confirm-reset-pass").permitAll()
+				.antMatchers("/users/reset-pass/users").permitAll()
 				.antMatchers("/users/otp").permitAll()
 				.antMatchers("/shops/recommend").permitAll()
 				.antMatchers("/shops/**").permitAll()

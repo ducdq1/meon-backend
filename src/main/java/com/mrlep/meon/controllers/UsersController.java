@@ -156,6 +156,22 @@ public class UsersController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
+    @PostMapping(value = "/reset-pass/users",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getUsersForResetPass(@RequestBody ResetPassRequest request, @RequestHeader Optional<String> lang) {
+        Object result;
+        try {
+            result = usersService.getUsersForUserResetPass(request);
+        } catch (TeleCareException e) {
+
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/reset-pass",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> resetPass(@RequestBody ResetPassRequest request, @RequestHeader Optional<String> lang) {
         Object result;

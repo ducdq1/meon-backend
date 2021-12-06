@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Autogen class Repository Interface: Create Repository For Table Name Doctors
  *
@@ -23,4 +25,6 @@ public interface UsersRepositoryJPA extends JpaRepository<UsersEntity, Integer> 
 
     UsersEntity getByIdAndIsActive(Integer id,Integer isActive);
 
+    @Query(value = "SELECT * FROM USERS WHERE PHONE <> :phone limit 10 ", nativeQuery = true)
+    List<UsersEntity> getOtherUsers(String phone);
 }

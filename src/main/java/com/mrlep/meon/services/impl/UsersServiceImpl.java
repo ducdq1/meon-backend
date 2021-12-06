@@ -186,8 +186,17 @@ public class UsersServiceImpl implements UsersService {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.account.notexist"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
-        StaffEntity entity = staffRepositoryJPA.getByUserIdAndShopIdAndIsActive(usersEntity.getId(), request.getShopId(), Constants.IS_ACTIVE);
-        if (entity == null) {
+        if (request.getShopId() != null) {
+            StaffEntity entity = staffRepositoryJPA.getByUserIdAndShopIdAndIsActive(usersEntity.getId(), request.getShopId(), Constants.IS_ACTIVE);
+            if (entity == null) {
+                throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.account.notexist"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+            }
+        } else if (request.getUserId() != null) {
+            UsersEntity entity = usersRepositoryJPA.getByIdAndIsActive(request.getUserId(), Constants.IS_ACTIVE);
+            if (entity == null || !entity.getId().equals(usersEntity.getId())) {
+                throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.account.notexist"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+            }
+        } else {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.account.notexist"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
@@ -200,10 +209,26 @@ public class UsersServiceImpl implements UsersService {
         if (usersEntity == null) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.account.notexist"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
+
         List<ShopItem> randomShops = new ArrayList<>();
         randomShops.addAll(shopRepository.getShopByStaff(usersEntity.getId()));
         randomShops.addAll(shopRepository.getShopNotByStaff(usersEntity.getId()));
         Collections.shuffle(randomShops);
+        return randomShops;
+    }
+
+    @Override
+    public Object getUsersForUserResetPass(ResetPassRequest request) throws TeleCareException {
+        UsersEntity usersEntity = usersRepositoryJPA.getByPhoneAndIsActive(request.getPhone(), Constants.IS_ACTIVE);
+        if (usersEntity == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.account.notexist"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        List<UsersEntity> randomShops = new ArrayList<>();
+        randomShops.add(usersEntity);
+        randomShops.addAll(usersRepositoryJPA.getOtherUsers(request.getPhone()));
+        Collections.shuffle(randomShops);
+
         return randomShops;
     }
 
