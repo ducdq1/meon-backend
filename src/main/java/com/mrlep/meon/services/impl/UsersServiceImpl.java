@@ -3,9 +3,11 @@ package com.mrlep.meon.services.impl;
 import com.mrlep.meon.config.JwtTokenUtil;
 import com.mrlep.meon.dto.object.ShopItem;
 import com.mrlep.meon.dto.object.StaffItem;
+import com.mrlep.meon.dto.object.UserItem;
 import com.mrlep.meon.dto.request.*;
 import com.mrlep.meon.dto.response.LoginResponse;
 import com.mrlep.meon.repositories.ShopRepository;
+import com.mrlep.meon.repositories.UserRepository;
 import com.mrlep.meon.repositories.tables.OTPRepositoryJPA;
 import com.mrlep.meon.repositories.tables.ShopRepositoryJPA;
 import com.mrlep.meon.repositories.tables.StaffRepositoryJPA;
@@ -50,6 +52,8 @@ public class UsersServiceImpl implements UsersService {
     @Autowired
     private ShopRepositoryJPA shopRepositoryJPA;
 
+    @Autowired
+    private UserRepository usersRepository;
 
     @Override
     public Object login(LoginRequest request) throws TeleCareException {
@@ -224,9 +228,8 @@ public class UsersServiceImpl implements UsersService {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.account.notexist"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
-        List<UsersEntity> randomShops = new ArrayList<>();
-        randomShops.add(usersEntity);
-        randomShops.addAll(usersRepositoryJPA.getOtherUsers(request.getPhone()));
+        List<UserItem> randomShops = new ArrayList<>();
+        randomShops.addAll(usersRepository.getUserItem(usersEntity.getId()));
         Collections.shuffle(randomShops);
 
         return randomShops;
@@ -246,7 +249,9 @@ public class UsersServiceImpl implements UsersService {
 
         usersEntity.setIsActive(Constants.IS_ACTIVE);
         usersEntity.setFullName(entity.getFullName());
-        usersEntity.setAvatar(entity.getAvatar());
+        usersEntity.setAddress(entity.getAddress());
+        usersEntity.setGender(entity.getGender());
+        usersEntity.setBirthDay(entity.getBirthDay());
         usersEntity.setIsReceiveNotification(entity.getIsReceiveNotification());
         usersRepositoryJPA.save(usersEntity);
         return usersEntity;

@@ -34,9 +34,18 @@ public class UsersEntity implements Serializable {
     @Column(name = "AVATAR")
     String avatar;
 
+    @Column(name = "ADDRESS")
+    String address;
+
+    @Column(name = "BIRTHDAY")
+    Date birthDay;
+
     @JsonIgnore
     @Column(name = "PASS")
     String pass;
+
+    @Column(name = "GENDER")
+    Integer gender;
 
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
@@ -158,5 +167,29 @@ public class UsersEntity implements Serializable {
 
     public void setDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Date getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(Date birthDay) {
+        this.birthDay = birthDay;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
     }
 }
