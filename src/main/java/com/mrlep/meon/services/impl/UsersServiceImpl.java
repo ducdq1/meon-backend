@@ -1,5 +1,6 @@
 package com.mrlep.meon.services.impl;
 
+import com.mrlep.meon.config.ConfigValue;
 import com.mrlep.meon.config.JwtTokenUtil;
 import com.mrlep.meon.dto.object.ShopItem;
 import com.mrlep.meon.dto.object.StaffItem;
@@ -12,18 +13,18 @@ import com.mrlep.meon.repositories.tables.OTPRepositoryJPA;
 import com.mrlep.meon.repositories.tables.ShopRepositoryJPA;
 import com.mrlep.meon.repositories.tables.StaffRepositoryJPA;
 import com.mrlep.meon.repositories.tables.UsersRepositoryJPA;
-import com.mrlep.meon.repositories.tables.entities.OTPEntity;
-import com.mrlep.meon.repositories.tables.entities.ShopEntity;
-import com.mrlep.meon.repositories.tables.entities.StaffEntity;
-import com.mrlep.meon.repositories.tables.entities.UsersEntity;
+import com.mrlep.meon.repositories.tables.entities.*;
 import com.mrlep.meon.services.UsersService;
 import com.mrlep.meon.utils.*;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -54,6 +55,31 @@ public class UsersServiceImpl implements UsersService {
 
     @Autowired
     private UserRepository usersRepository;
+    @Autowired
+    private ConfigValue configValue;
+
+    @Override
+    public Object uploadAvatar(MultipartFile file, Integer createUserId) throws TeleCareException {
+        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(createUserId, Constants.IS_ACTIVE);
+        if (usersEntity == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.login.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
+        String folderFile = configValue.getFolderFiles();
+        String folderPathFile = configValue.getFolderPathFiles();
+        String path = folderFile + File.separator + (new Date().getYear() + 1900) + File.separator + (new Date().getMonth() + 1) + File.separator;
+        folderPathFile += File.separator + path;
+        String fileName = FnCommon.uploadFile(folderPathFile, file, FilenameUtils.getExtension(file.getOriginalFilename()));
+        if (fileName != null) {
+            usersEntity.setAvatar(path + fileName);
+            usersEntity.setUpdateDate(new Date());
+            usersEntity.setUpdateUserId(createUserId);
+            usersRepositoryJPA.save(usersEntity);
+            return usersEntity;
+        }
+
+        return null;
+    }
 
     @Override
     public Object login(LoginRequest request) throws TeleCareException {

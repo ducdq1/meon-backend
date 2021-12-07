@@ -1,6 +1,7 @@
 package com.mrlep.meon.repositories.tables.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mrlep.meon.utils.Constants;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -138,6 +139,9 @@ public class UsersEntity implements Serializable {
     }
 
     public String getAvatar() {
+        if(avatar !=null && !avatar.startsWith("http")){
+             return Constants.DOMAIN + avatar;
+        }
         return avatar;
     }
 
