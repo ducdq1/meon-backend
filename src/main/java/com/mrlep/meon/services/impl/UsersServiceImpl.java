@@ -65,6 +65,11 @@ public class UsersServiceImpl implements UsersService {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.login.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
+       String fileType = FilenameUtils.getExtension(file.getOriginalFilename());
+        if (StringUtils.isNullOrEmpty(fileType) || !configValue.getMapFileSupportTypes().contains(fileType) || fileType.contains("mp4")) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("file.extension.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+
         String folderFile = configValue.getFolderFiles();
         String folderPathFile = configValue.getFolderPathFiles();
         String path = folderFile + File.separator + (new Date().getYear() + 1900) + File.separator + (new Date().getMonth() + 1) + File.separator;
