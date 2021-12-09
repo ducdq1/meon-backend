@@ -65,6 +65,24 @@ public class ShopController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
+    @DeleteMapping(value = "/{shopId}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> deleteShop(@PathVariable Integer shopId,@AuthenticationPrincipal Authentication authentication) {
+        Object result;
+        try {
+            Integer userId = FnCommon.getUserIdFromToken(authentication);
+            result = shopService.deleteShop(shopId,userId);
+        } catch (TeleCareException e) {
+
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }catch (Exception e) {
+
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
+
     @GetMapping(value = "/{shopId}",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getShopById(@PathVariable Integer shopId) {
         Object result;

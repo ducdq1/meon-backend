@@ -123,6 +123,20 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
+    public Object deleteShop(Integer shopId, Integer userId) throws TeleCareException {
+        ShopEntity entity = shopRepositoryJPA.getByCreateUserIdAndShopId(userId, shopId);
+        if (entity == null) {
+            throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.bill.member.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
+        }
+        entity.setIsActive(Constants.IS_NOT_ACTIVE);
+        entity.setUpdateDate(new Date());
+        entity.setUpdateUserId(userId);
+        shopRepositoryJPA.save(entity);
+
+        return true;
+    }
+
+    @Override
     public Object getShopsByStaff(Integer userId) throws TeleCareException {
         return shopRepository.getShopOfsStaff(userId);
     }
