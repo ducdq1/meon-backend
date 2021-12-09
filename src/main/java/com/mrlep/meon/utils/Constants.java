@@ -4,7 +4,7 @@ import com.squareup.okhttp.MediaType;
 import org.springframework.http.HttpStatus;
 
 public class Constants {
-    public static final String DOMAIN = "http://147.182.165.105/";
+    public static final String DOMAIN = "http://meonfood.com/";
 
     public static final String REQUEST_MAPPING_V1 = "/api/v1";
     public static final String F0_MANAGEMENT = "/f0-management";

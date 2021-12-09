@@ -179,12 +179,15 @@ public class BillServiceImpl implements BillService {
 
         if (Constants.BILL_STATUS_DONE != detailBillResponse.getBillStatus().intValue()) {
             Double billVAT = detailBillResponse.getVat();
-            ShopEntity shopEntity = shopRepositoryJPA.getByIdAndIsActive(detailBillResponse.getShopId(), Constants.IS_ACTIVE);
-            if (shopEntity != null) {
-                Double shopVAT = shopEntity.getVat();
-                if (Double.compare(billVAT, shopVAT) != 0) {
-                    updateBillInfo(billId);
-                    detailBillResponse = billRepository.getDetailBill(billId);
+
+            if (billVAT != null) {
+                ShopEntity shopEntity = shopRepositoryJPA.getByIdAndIsActive(detailBillResponse.getShopId(), Constants.IS_ACTIVE);
+                if (shopEntity != null) {
+                    Double shopVAT = shopEntity.getVat();
+                    if (Double.compare(billVAT, shopVAT) != 0) {
+                        updateBillInfo(billId);
+                        detailBillResponse = billRepository.getDetailBill(billId);
+                    }
                 }
             }
         }
