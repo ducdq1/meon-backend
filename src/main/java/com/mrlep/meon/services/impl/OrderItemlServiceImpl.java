@@ -297,4 +297,9 @@ public class OrderItemlServiceImpl implements OrderItemService {
         }
         return null;
     }
+
+    @Override
+    public Object getOrderItemsTopList(Integer shopId, Integer processType) throws TeleCareException {
+        return orderItemRepository.countOrderItems(shopId, processType);
+    }
 }

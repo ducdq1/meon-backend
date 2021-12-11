@@ -1,5 +1,6 @@
 package com.mrlep.meon.repositories.impl;
 
+import com.mrlep.meon.dto.object.CountOrderItem;
 import com.mrlep.meon.dto.object.OrderItem;
 import com.mrlep.meon.repositories.OrderItemRepository;
 import com.mrlep.meon.utils.Constants;
@@ -92,5 +93,20 @@ public class OrderItemRepositoryImpl extends CommonDataBaseRepository implements
         params.put("statusDone", Constants.BILL_STATUS_DONE);
 
         return (List<OrderItem>) getListData(sql, params, 0, null, OrderItem.class);
+    }
+
+    @Override
+    public List<CountOrderItem> countOrderItems(Integer shopId, Integer processType) {
+        HashMap<String, Object> params = new HashMap<>();
+        StringBuilder sql = new StringBuilder();
+
+        sql.append(" select count(*) orderNumber,menu_id menuId,m.name menuName,m.image_url menuImageUrl,m.price,m.tags  from order_item i   ");
+        sql.append(" join menu m on m.id = i.menu_id and m.shop_id = :shopId and process_type = :processType ");
+        sql.append(" Where status = :statusDone  group by menu_id order by 1 desc ");
+        params.put("statusDone", Constants.ORDER_ITEM_STATUS_DELIVERED);
+        params.put("shopId", shopId);
+        params.put("processType", processType);
+
+        return (List<CountOrderItem>) getListData(sql, params, 0, null, CountOrderItem.class);
     }
 }

@@ -149,4 +149,20 @@ public class OrderItemsController {
         return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/top-list/{processType}/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getOrderItemTopList(@PathVariable Integer processType,@PathVariable Integer shopId) {
+        Object result;
+        try {
+            result = orderItemService.getOrderItemsTopList(shopId,processType);
+        } catch (TeleCareException e) {
+
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+
+            return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(FunctionCommon.responseToClient(result), HttpStatus.OK);
+    }
+
 }
