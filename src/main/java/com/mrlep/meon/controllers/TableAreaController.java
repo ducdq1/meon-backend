@@ -34,7 +34,7 @@ public class TableAreaController {
         } catch (TeleCareException e) {
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -53,7 +53,7 @@ public class TableAreaController {
         } catch (TeleCareException e) {
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -74,7 +74,7 @@ public class TableAreaController {
             } catch (TeleCareException e) {
                 return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
             } catch (Exception e) {
-                e.getMessage();
+                e.printStackTrace();
                 return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
             }
 
@@ -91,7 +91,7 @@ public class TableAreaController {
         } catch (TeleCareException e) {
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 

@@ -339,6 +339,11 @@ public class BillServiceImpl implements BillService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Object updateBillStatus(Integer userId, Integer billId, List<String> permissions, UpdateStatusRequest request) throws TeleCareException {
+        Integer status = request.getStatus();
+        if (request.getAdminUserId() == null) {
+            validateService.validateBillStatusPermission(permissions, status);
+        }
+
         BillEntity entity = billRepositoryJPA.findByIdAndIsActive(billId, Constants.IS_ACTIVE);
         if (entity != null) {
 
@@ -353,11 +358,9 @@ public class BillServiceImpl implements BillService {
                 }
             }
 
-            Integer status = request.getStatus();
+
             String cancelMessage = request.getCancelMessage();
             String reconfirmMessage = request.getReconfirmMessage();
-
-            validateService.validateBillStatusPermission(permissions, status);
 
             if (cancelMessage != null) {
                 entity.setCancelMessage(cancelMessage);
@@ -372,8 +375,8 @@ public class BillServiceImpl implements BillService {
             entity.setUpdateUserId(userId);
 
             setTotalMoney(entity);
-
             updateBillMoney(entity);
+
             if (request.getSubMoney() != null) {
                 entity.setSubMoney(request.getSubMoney());
                 entity.setTotalMoney(entity.getTotalMoney() + request.getSubMoney());

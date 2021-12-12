@@ -43,7 +43,7 @@ public class MenuController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -63,7 +63,7 @@ public class MenuController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -81,7 +81,7 @@ public class MenuController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -98,7 +98,7 @@ public class MenuController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -115,7 +115,7 @@ public class MenuController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -131,7 +131,7 @@ public class MenuController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -147,7 +147,7 @@ public class MenuController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e),e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -166,7 +166,7 @@ public class MenuController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e),e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -184,7 +184,7 @@ public class MenuController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -200,7 +200,7 @@ public class MenuController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -217,7 +217,7 @@ public class MenuController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e),e.getCodeError().intValue() == 401 ? HttpStatus.UNAUTHORIZED : HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 

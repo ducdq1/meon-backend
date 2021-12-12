@@ -111,6 +111,19 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
+    public Object checkUser(LoginRequest request) throws TeleCareException {
+        validateLogin(request);
+
+        UsersEntity usersEntity = usersRepositoryJPA.getUserByPhoneAndPass(request.getPhone().trim(), request.getPass());
+        if (usersEntity == null) {
+            return false;
+        }
+
+
+        return true;
+    }
+
+    @Override
     public Object logOut(Integer userId) throws TeleCareException {
         UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(userId, Constants.IS_ACTIVE);
         if (usersEntity == null) {

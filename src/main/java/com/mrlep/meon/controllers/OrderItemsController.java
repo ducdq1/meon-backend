@@ -36,7 +36,7 @@ public class OrderItemsController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -55,7 +55,7 @@ public class OrderItemsController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -74,7 +74,7 @@ public class OrderItemsController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -92,7 +92,7 @@ public class OrderItemsController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -108,7 +108,7 @@ public class OrderItemsController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -125,7 +125,7 @@ public class OrderItemsController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -142,7 +142,7 @@ public class OrderItemsController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -150,15 +150,14 @@ public class OrderItemsController {
     }
 
     @GetMapping(value = "/top-list/{processType}/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getOrderItemTopList(@PathVariable Integer processType,@PathVariable Integer shopId) {
+    public ResponseEntity<Object> getOrderItemTopList(@PathVariable Integer processType, @PathVariable Integer shopId, @RequestParam(value = "filter", required = false, defaultValue = "WEEKLY") String filter) {
         Object result;
         try {
-            result = orderItemService.getOrderItemsTopList(shopId,processType);
+            result = orderItemService.getOrderItemsTopList(shopId, processType, filter);
         } catch (TeleCareException e) {
-
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 

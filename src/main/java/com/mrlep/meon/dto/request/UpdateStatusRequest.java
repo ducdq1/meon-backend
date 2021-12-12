@@ -12,6 +12,7 @@ public class UpdateStatusRequest {
     private Integer staffId;
     private String subMoneyDescription;
     private Integer subMoney;
+    private Integer adminUserId;
 
     public Integer getStatus() {
         return status;
@@ -59,5 +60,13 @@ public class UpdateStatusRequest {
 
     public void setSubMoney(Integer subMoney) {
         this.subMoney = subMoney;
+    }
+
+    public Integer getAdminUserId() {
+        return adminUserId;
+    }
+
+    public void setAdminUserId(Integer adminUserId) {
+        this.adminUserId = adminUserId;
     }
 }

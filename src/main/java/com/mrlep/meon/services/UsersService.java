@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface UsersService {
     Object uploadAvatar(MultipartFile file, Integer createUserId) throws TeleCareException;
     Object login(LoginRequest request) throws TeleCareException;
+    Object checkUser(LoginRequest request) throws TeleCareException;
     Object logOut(Integer userId) throws TeleCareException;
     Object changePass(Integer userId, ChangePassRequest request) throws TeleCareException;
     Object register(RegisterRequest request) throws TeleCareException;

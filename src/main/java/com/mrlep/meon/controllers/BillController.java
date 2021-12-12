@@ -41,7 +41,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -60,7 +60,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -68,7 +68,7 @@ public class BillController {
     }
 
     @PutMapping(value = "/status/{billId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> updateTableStatus(@PathVariable Integer billId, @RequestBody UpdateStatusRequest request,
+    public ResponseEntity<Object> updateBillStatus(@PathVariable Integer billId, @RequestBody UpdateStatusRequest request,
                                                     @AuthenticationPrincipal Authentication authentication,
                                                     @RequestHeader(value = "permissions",defaultValue = "") String permissions) {
         Object result;
@@ -81,7 +81,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -98,7 +98,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -115,7 +115,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -134,7 +134,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -152,7 +152,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -168,7 +168,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -184,7 +184,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -201,7 +201,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -218,7 +218,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -236,7 +236,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -255,7 +255,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -271,7 +271,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 
@@ -289,7 +289,7 @@ public class BillController {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 

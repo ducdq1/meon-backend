@@ -37,7 +37,7 @@ public class HomePageController {
         try {
             result = homeBanenrService.getHomeBanners();
         } catch (Exception e) {
-            e.getMessage();
+            e.printStackTrace();
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         }
 

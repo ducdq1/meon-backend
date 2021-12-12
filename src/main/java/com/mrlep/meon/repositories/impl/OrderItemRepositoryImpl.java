@@ -7,6 +7,8 @@ import com.mrlep.meon.utils.Constants;
 import com.mrlep.meon.xlibrary.core.repositories.CommonDataBaseRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -96,16 +98,39 @@ public class OrderItemRepositoryImpl extends CommonDataBaseRepository implements
     }
 
     @Override
-    public List<CountOrderItem> countOrderItems(Integer shopId, Integer processType) {
+    public List<CountOrderItem> countOrderItems(Integer shopId, Integer processType, String filter) {
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
         sql.append(" select count(*) orderNumber,menu_id menuId,m.name menuName,m.image_url menuImageUrl,m.price,m.tags  from order_item i   ");
         sql.append(" join menu m on m.id = i.menu_id and m.shop_id = :shopId and process_type = :processType ");
-        sql.append(" Where status = :statusDone  group by menu_id order by 1 desc ");
+        sql.append(" Where status = :statusDone and i.create_date  between :fromDate and :toDate group by menu_id order by 1 desc ");
         params.put("statusDone", Constants.ORDER_ITEM_STATUS_DELIVERED);
         params.put("shopId", shopId);
         params.put("processType", processType);
+        Date fromDate = new Date();
+        Date toDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.clear(Calendar.MINUTE);
+        cal.clear(Calendar.SECOND);
+        cal.clear(Calendar.MILLISECOND);
+
+        switch (filter) {
+            case Constants.STATICTIS_WEEKLY:
+                cal.add(Calendar.DATE, -7);
+                fromDate = cal.getTime();
+                break;
+
+            case Constants.STATICTIS_MONTHLY:
+                cal.set(Calendar.DAY_OF_MONTH, 1);
+                fromDate = cal.getTime();
+                break;
+        }
+
+        params.put("fromDate", fromDate);
+        params.put("toDate", toDate);
 
         return (List<CountOrderItem>) getListData(sql, params, 0, null, CountOrderItem.class);
     }
