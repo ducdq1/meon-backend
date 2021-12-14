@@ -98,7 +98,7 @@ public class OrderItemRepositoryImpl extends CommonDataBaseRepository implements
     }
 
     @Override
-    public List<CountOrderItem> countOrderItems(Integer shopId, Integer processType, String filter) {
+    public List<CountOrderItem> countOrderItems(Integer shopId, Integer processType, String filter,Integer limit) {
         HashMap<String, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
 
@@ -132,6 +132,6 @@ public class OrderItemRepositoryImpl extends CommonDataBaseRepository implements
         params.put("fromDate", fromDate);
         params.put("toDate", toDate);
 
-        return (List<CountOrderItem>) getListData(sql, params, 0, null, CountOrderItem.class);
+        return (List<CountOrderItem>) getListData(sql, params, 0, limit, CountOrderItem.class);
     }
 }

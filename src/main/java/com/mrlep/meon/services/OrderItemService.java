@@ -15,5 +15,5 @@ public interface OrderItemService {
     Object updateOrderItemStatus(Integer userId, Integer orderItemId, UpdateStatusRequest request) throws TeleCareException;
     Object deleteOrderItem(Integer orderItemId, Integer userId) throws TeleCareException;
     Object getDetailOrderItems(Integer orderItemId) throws TeleCareException;
-    Object getOrderItemsTopList(Integer shopId, Integer processType,String filter) throws TeleCareException;
+    Object getOrderItemsTopList(Integer shopId, Integer processType,String filter,Integer limit) throws TeleCareException;
 }

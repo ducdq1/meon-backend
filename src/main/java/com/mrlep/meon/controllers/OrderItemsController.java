@@ -150,10 +150,12 @@ public class OrderItemsController {
     }
 
     @GetMapping(value = "/top-list/{processType}/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getOrderItemTopList(@PathVariable Integer processType, @PathVariable Integer shopId, @RequestParam(value = "filter", required = false, defaultValue = "WEEKLY") String filter) {
+    public ResponseEntity<Object> getOrderItemTopList(@PathVariable Integer processType, @PathVariable Integer shopId,
+                                                      @RequestParam(value = "filter", required = false, defaultValue = "WEEKLY") String filter,
+                                                      @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit) {
         Object result;
         try {
-            result = orderItemService.getOrderItemsTopList(shopId, processType, filter);
+            result = orderItemService.getOrderItemsTopList(shopId, processType, filter,limit);
         } catch (TeleCareException e) {
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {

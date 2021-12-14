@@ -127,10 +127,11 @@ public class UsersController {
     }
 
     @PostMapping(value = "/check-user",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> checkUser( @RequestBody LoginRequest request) {
+    public ResponseEntity<Object> checkUser(@AuthenticationPrincipal Authentication authentication, @RequestBody LoginRequest request) {
         Object result;
         try {
-            result = usersService.checkUser(request);
+           Integer userId = FnCommon.getUserIdFromToken(authentication);
+            result = usersService.checkUser( userId, request);
         } catch (TeleCareException e) {
 
             return new ResponseEntity<>(FnCommon.responseToClient(e), HttpStatus.BAD_REQUEST);

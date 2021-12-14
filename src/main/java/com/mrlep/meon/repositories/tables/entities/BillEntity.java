@@ -40,6 +40,10 @@ public class BillEntity implements Serializable {
     @Column(name = "STATUS")
     Integer status;
 
+
+    @Column(name = "number_members")
+    Integer numberMembers;
+
     @JsonIgnore
     @Column(name = "IS_ACTIVE")
     Integer isActive;
@@ -257,5 +261,13 @@ public class BillEntity implements Serializable {
 
     public void setBillFile(String billFile) {
         this.billFile = billFile;
+    }
+
+    public Integer getNumberMembers() {
+        return numberMembers;
+    }
+
+    public void setNumberMembers(Integer numberMembers) {
+        this.numberMembers = numberMembers;
     }
 }

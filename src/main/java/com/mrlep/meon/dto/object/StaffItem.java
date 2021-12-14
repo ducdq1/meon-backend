@@ -1,7 +1,10 @@
 package com.mrlep.meon.dto.object;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.mrlep.meon.repositories.tables.entities.PaymentInfoEntity;
 import lombok.Data;
+
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
@@ -20,6 +23,7 @@ public class StaffItem {
     String shopAvatar;
     String shopAddress;
     String shopName;
+    List<PaymentInfoEntity> paymentInfos;
 
     public Integer getId() {
         return id;
@@ -131,5 +135,13 @@ public class StaffItem {
 
     public void setShopName(String shopName) {
         this.shopName = shopName;
+    }
+
+    public List<PaymentInfoEntity> getPaymentInfos() {
+        return paymentInfos;
+    }
+
+    public void setPaymentInfos(List<PaymentInfoEntity> paymentInfos) {
+        this.paymentInfos = paymentInfos;
     }
 }

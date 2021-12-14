@@ -55,6 +55,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Autowired
     private UserRepository usersRepository;
+
     @Autowired
     private ConfigValue configValue;
 
@@ -65,7 +66,7 @@ public class UsersServiceImpl implements UsersService {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("message.error.login.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
 
-       String fileType = FilenameUtils.getExtension(file.getOriginalFilename());
+        String fileType = FilenameUtils.getExtension(file.getOriginalFilename());
         if (StringUtils.isNullOrEmpty(fileType) || !configValue.getMapFileSupportTypes().contains(fileType) || fileType.contains("mp4")) {
             throw new TeleCareException(ErrorApp.ERROR_INPUTPARAMS, MessagesUtils.getMessage("file.extension.invalid"), ErrorApp.ERROR_INPUTPARAMS.getCode());
         }
@@ -111,11 +112,10 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public Object checkUser(LoginRequest request) throws TeleCareException {
-        validateLogin(request);
+    public Object checkUser(Integer userId, LoginRequest request) throws TeleCareException {
 
-        UsersEntity usersEntity = usersRepositoryJPA.getUserByPhoneAndPass(request.getPhone().trim(), request.getPass());
-        if (usersEntity == null) {
+        UsersEntity usersEntity = usersRepositoryJPA.getByIdAndIsActive(userId, Constants.IS_ACTIVE);
+        if (usersEntity == null || StringUtils.isNullOrEmpty(request.getPass()) || !usersEntity.getPass().equals(request.getPass())) {
             return false;
         }
 

@@ -115,15 +115,15 @@ public class MenusServiceImpl implements MenusService {
     @Override
     public Object getMenus(Integer shopId, Integer menuGroupId) throws TeleCareException {
         if (menuGroupId >= 0) {
-            return menuRepositoryJPA.getAllByShopIdAndMenuGroupIdAndIsActive(shopId, menuGroupId, Constants.IS_ACTIVE);
+            return menuRepositoryJPA.getAllByShopIdAndMenuGroupIdAndIsActiveOrderByOrderPriorityDesc(shopId, menuGroupId, Constants.IS_ACTIVE);
         } else {
-            return menuRepositoryJPA.getAllByShopIdAndIsActive(shopId, Constants.IS_ACTIVE);
+            return menuRepositoryJPA.getAllByShopIdAndIsActiveOrderByOrderPriorityDesc(shopId, Constants.IS_ACTIVE);
         }
     }
 
     @Override
     public Object getMenus(Integer shopId) throws TeleCareException {
-        List<MenuEntity> menuEntities = menuRepositoryJPA.getAllByShopIdAndIsActive(shopId, Constants.IS_ACTIVE);
+        List<MenuEntity> menuEntities = menuRepositoryJPA.getAllByShopIdAndIsActiveOrderByOrderPriorityDesc(shopId, Constants.IS_ACTIVE);
         for (MenuEntity menuEntity : menuEntities) {
             menuEntity.setMedias(mediaRepositoryJPA.findAllByIsActiveAndObjectTypeAndObjectId(Constants.IS_ACTIVE,Constants.MENU_MEDIA_TYPE,menuEntity.getId()));
         }

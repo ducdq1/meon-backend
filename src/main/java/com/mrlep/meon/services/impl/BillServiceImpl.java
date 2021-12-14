@@ -222,7 +222,7 @@ public class BillServiceImpl implements BillService {
                 tablesName.add(billTablesItem.getTableName());
             }
             billItem.setTablesName(tablesName);
-            billItem.setNumberMembers(billMembersRepositoryJPA.countMembersOfBill(billItem.getBillId()));
+            //billItem.setNumberMembers(billMembersRepositoryJPA.countMembersOfBill(billItem.getBillId()));
         }
 
         return selectEntity;
@@ -248,7 +248,7 @@ public class BillServiceImpl implements BillService {
         entity.setStatus(Constants.BILL_STATUS_PROGRESS);
         entity.setReconfirmMessage(request.getReconfirmMessage());
         entity.setIsCreateByStaff(request.getIsCreateByStaff());
-
+        entity.setNumberMembers(request.getMembers());
         if (request.getIsCreateByStaff() != null && request.getIsCreateByStaff() == 1) {
             entity.setStatus(Constants.BILL_STATUS_ACCEPTED);
         }
@@ -324,6 +324,7 @@ public class BillServiceImpl implements BillService {
             entity.setTotalMoney(request.getTotalMoney());
             entity.setCancelMessage(request.getCancelMessage());
             entity.setIsCreateByStaff(request.getIsCreateByStaff());
+            entity.setNumberMembers(request.getMembers());
             billRepositoryJPA.save(entity);
 
             addTableBill(entity.getId(), request.getCreateUserId(), request.getTableIds());

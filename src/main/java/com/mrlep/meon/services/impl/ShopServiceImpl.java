@@ -1,12 +1,15 @@
 package com.mrlep.meon.services.impl;
 
 import com.mrlep.meon.dto.object.ShopItem;
+import com.mrlep.meon.dto.object.StaffItem;
 import com.mrlep.meon.dto.request.CreateShopRequest;
 import com.mrlep.meon.dto.request.SearchShopsRequest;
 import com.mrlep.meon.dto.response.ShopsOfStaffResponse;
 import com.mrlep.meon.repositories.ShopRepository;
+import com.mrlep.meon.repositories.tables.PaymentInfoRepositoryJPA;
 import com.mrlep.meon.repositories.tables.ShopRepositoryJPA;
 import com.mrlep.meon.repositories.tables.UsersRepositoryJPA;
+import com.mrlep.meon.repositories.tables.entities.PaymentInfoEntity;
 import com.mrlep.meon.repositories.tables.entities.ShopEntity;
 import com.mrlep.meon.repositories.tables.entities.UsersEntity;
 import com.mrlep.meon.services.ShopService;
@@ -32,7 +35,8 @@ public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private ShopRepository shopRepository;
-
+    @Autowired
+    private PaymentInfoRepositoryJPA paymentInfoRepositoryJPA;
     @Autowired
     private UsersRepositoryJPA usersRepositoryJPA;
 
@@ -138,6 +142,11 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public Object getShopsByStaff(Integer userId) throws TeleCareException {
-        return shopRepository.getShopOfsStaff(userId);
+        List<StaffItem> shopItems = shopRepository.getShopOfsStaff(userId);
+        for (StaffItem item : shopItems) {
+            List<PaymentInfoEntity> paymentInfos = paymentInfoRepositoryJPA.getAllByShopIdAndIsActive(item.getShopId(), Constants.IS_ACTIVE);
+            item.setPaymentInfos(paymentInfos);
+        }
+        return shopItems;
     }
 }

@@ -14,5 +14,5 @@ public interface OrderItemRepository {
     List<OrderItem> getOrderItemOfBill(Integer billId);
     List<OrderItem> getOrderItemDeliveredOfBill(Integer billId);
     List<OrderItem> getAllOrderItem();
-    List<CountOrderItem> countOrderItems(Integer shopId,Integer processType, String filter);
+    List<CountOrderItem> countOrderItems(Integer shopId,Integer processType, String filter,Integer limit);
 }

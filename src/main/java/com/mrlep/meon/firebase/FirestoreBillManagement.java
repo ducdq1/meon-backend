@@ -66,7 +66,7 @@ public class FirestoreBillManagement {
         }
         response.setTablesName(tablesName);
         response.setNumberOrders(orderItemRepositoryJPA.countOrderItemOfBill(billId));
-        response.setNumberMembers(billMembersRepositoryJPA.countMembersOfBill(billId));
+       // response.setNumberMembers(billMembersRepositoryJPA.countMembersOfBill(billId));
         System.out.println("Update bill " + billId + " status " + response.getBillStatus());
         KThreadPoolExecutor.executeAccessLog((new Runnable() {
             @Override
